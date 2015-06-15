@@ -151,17 +151,17 @@ namespace core {
 						wchar_t message[100];
 						for (int i = 0; i < ITERATIONS; i++)
 						{
-							swprintf(message, sizeof(message), L"%s %i", L"HELLO EVENT", i);
-							tc.TrackEvent(message);
+							/*swprintf(message, sizeof(message), L"%s %i", L"HELLO EVENT", i);
+							tc.TrackEvent(message);*/
 
 							swprintf(message, sizeof(message), L"%s %i", L"MY METRIC", i);
 							tc.TrackMetric(message, 42.5);
-
+/*
 							swprintf(message, sizeof(message), L"%s %i", L"PAGE VIEW", i);
 							tc.TrackPageView(message);
 
 							swprintf(message, sizeof(message), L"%s %i", L"MY SPECIAL MESSAGE", i);
-							tc.TrackTrace(message);
+							tc.TrackTrace(message);*/
 						}
 						tc.Flush();
 

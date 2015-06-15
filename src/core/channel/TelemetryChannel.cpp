@@ -3,6 +3,7 @@
 #include "../Contracts/Contracts.h"
 #include "../Common/Utils.h"
 #include "../Common/StringWriter.h"
+#include "../Common/TraceLoggingHelper.h"
 #include <stdlib.h> 
 #include <time.h>
 #include <locale>
@@ -10,32 +11,6 @@
 
 using namespace ApplicationInsights::core;
 
-#ifdef WINAPI_FAMILY_PARTITION
-#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
-#include <TraceLoggingProvider.h>  
-#include <TraceLoggingActivity.h>  
-
-#ifdef __cplusplus  
-extern "C" {
-#endif  
-	TRACELOGGING_DECLARE_PROVIDER(g_hAppInsightsProvider);
-#ifdef __cplusplus  
-}
-#endif  
-
-#define TraceLoggingOptionMicrosoftTelemetry() \
-TraceLoggingOptionGroup(0x4f50731a, 0x89cf, 0x4782, 0xb3, 0xe0, 0xdc, 0xe8, 0xc9, 0x4, 0x76, 0xba)
-
-#define MICROSOFT_KEYWORD_TELEMETRY     0x0000200000000000 
-
-TRACELOGGING_DEFINE_PROVIDER(
-	g_hAppInsightsProvider,
-	"ApplicationInsightsProvider",
-	(0x1FFB0DCF, 0x15A6, 0x42FA, 0x83, 0x9B, 0x1F, 0xB1, 0x83, 0xAF, 0x7B, 0x0A),// {1FFB0DCF-15A6-42FA-839B-1FB183AF7B0A}
-	TraceLoggingOptionMicrosoftTelemetry());
-
-#endif
-#endif
 const int MAX_BUFFER_SIZE = 50;
 
 /// <summary>
@@ -45,7 +20,7 @@ const int MAX_BUFFER_SIZE = 50;
 TelemetryChannel::TelemetryChannel(TelemetryClientConfig &config) 
 : m_config(&config)
 {
-	srand((int)time(0));
+	srand((int)time_t(0));
 	m_channelId = rand();
 	m_seqNum = 0;
 	m_maxBufferSize = MAX_BUFFER_SIZE;
@@ -53,8 +28,6 @@ TelemetryChannel::TelemetryChannel(TelemetryClientConfig &config)
 #ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 	hRespRecv = CreateEventEx(nullptr, L"RecvResp", 0, EVENT_MODIFY_STATE | SYNCHRONIZE);
-
-	HRESULT hResult = TraceLoggingRegister(g_hAppInsightsProvider);
 #endif
 #endif
 }
@@ -64,11 +37,6 @@ TelemetryChannel::TelemetryChannel(TelemetryClientConfig &config)
 /// </summary>
 TelemetryChannel::~TelemetryChannel()
 {
-#ifdef WINAPI_FAMILY_PARTITION
-#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
-	TraceLoggingUnregister(g_hAppInsightsProvider);
-#endif
-#endif
 
 }
 
@@ -89,17 +57,9 @@ void TelemetryChannel::Enqueue(TelemetryContext &context, Domain &telemetry)
 
 #ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
-	//if (TraceLoggingProviderEnabled(g_hAppInsightsProvider, 0, 0))
-	if(false)
+	if (etwLogger.IsLoggingEnabled())
 	{
-		//Assumption: UTC is available
-		json.WriteObjectValue(&data);
-		auto partB = content.ToString();
-		TraceLoggingWrite(
-			g_hAppInsightsProvider, 
-			"Part B data",
-			TraceLoggingKeyword(MICROSOFT_KEYWORD_TELEMETRY),
-			TraceLoggingWideString(partB.c_str()));
+		etwLogger.LogPartBData(telemetry);
 	}
 	else
 	{

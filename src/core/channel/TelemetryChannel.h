@@ -11,7 +11,8 @@
 
 #ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
-#include <Windows.h>
+
+#include "../Common/TraceLoggingHelper.h"
 #endif 
 #endif
 
@@ -57,6 +58,7 @@ namespace ApplicationInsights
 #ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 			HANDLE hRespRecv;
+			TraceLoggingHelper etwLogger;
 #endif
 #endif
 			bool TelemetryChannel::IsUTCAvailable();
