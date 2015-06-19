@@ -21,7 +21,7 @@ TraceLoggingOptionGroup(0x0d943590, 0xb235, 0x5bdb, 0xf8, 0x54, 0x89, 0x52, 0x0f
 
 TRACELOGGING_DEFINE_PROVIDER(
 	g_hAppInsightsProvider,
-	"ApplicationInsightsProvider",
+	"ApplicationInsights",
 	(0x1FFB0DCF, 0x15A6, 0x42FA, 0x83, 0x9B, 0x1F, 0xB1, 0x83, 0xAF, 0x7B, 0x0A),// {1FFB0DCF-15A6-42FA-839B-1FB183AF7B0A}
 	TraceLoggingOptionMicrosoftTelemetry());
 
@@ -181,7 +181,7 @@ void TraceLoggingHelper::LogMetric(MetricData* metric)
 
 	TraceLoggingWrite(
 		g_hAppInsightsProvider,
-		"Part B data",
+		"MetricData",
 		TraceLoggingKeyword(MICROSOFT_KEYWORD_TELEMETRY),
 		TraceLoggingStruct(2, "Data"),
 		TraceLoggingWideString(metric->GetBaseType().c_str(), "baseType"),
@@ -189,7 +189,7 @@ void TraceLoggingHelper::LogMetric(MetricData* metric)
 		TraceLoggingInt32(metric->GetVer(), "ver"),
 		TraceLoggingPackedData(&MetricData[0], MetricData.size()),		//content
 			TraceLoggingPackedStructArray(7, "metrics"),
-			TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "name"),
+			TraceLoggingPackedMetadata(TlgInUNICODESTRING, "name"),
 			TraceLoggingPackedMetadata(TlgInINT32, "kind"),
 			TraceLoggingPackedMetadata(TlgInDOUBLE, "value"),
 			TraceLoggingPackedMetadata(TlgInINT32, "count"),
@@ -198,8 +198,8 @@ void TraceLoggingHelper::LogMetric(MetricData* metric)
 			TraceLoggingPackedMetadata(TlgInDOUBLE, "stdDev"),
 		TraceLoggingPackedData(&PropData[0], PropData.size()),		//content
 			TraceLoggingPackedStructArray(2, "properties"),
-			TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "key"),
-			TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "value")
+			TraceLoggingPackedMetadata(TlgInUNICODESTRING, "key"),
+			TraceLoggingPackedMetadata(TlgInUNICODESTRING, "value")
 		);
 }
 
@@ -218,7 +218,7 @@ void TraceLoggingHelper::LogEvent(EventData* eventData)
 
 	TraceLoggingWrite(
 		g_hAppInsightsProvider,
-		"Part B data",
+		"EventData",
 		TraceLoggingKeyword(MICROSOFT_KEYWORD_TELEMETRY),
 		TraceLoggingStruct(2, "Data"),
 		TraceLoggingWideString(eventData->GetBaseType().c_str(), "baseType"),
@@ -227,11 +227,11 @@ void TraceLoggingHelper::LogEvent(EventData* eventData)
 		TraceLoggingWideString(eventData->GetName().c_str(), "name"),
 		TraceLoggingPackedData(&pbPropData[0], pbPropData.size()),	//content
 		TraceLoggingPackedStructArray(2, "properties"),
-		TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "key"),
-		TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "value"),
+		TraceLoggingPackedMetadata(TlgInUNICODESTRING, "key"),
+		TraceLoggingPackedMetadata(TlgInUNICODESTRING, "value"),
 		TraceLoggingPackedData(&pbMeasurementData[0], pbMeasurementData.size()),		//content
 		TraceLoggingPackedStructArray(2, "measurements"),
-		TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "key"),
+		TraceLoggingPackedMetadata(TlgInUNICODESTRING, "key"),
 		TraceLoggingPackedMetadata(TlgInDOUBLE, "value")
 		);
 }
@@ -251,7 +251,7 @@ void TraceLoggingHelper::LogPageView(PageViewData* pageViewData)
 
 	TraceLoggingWrite(
 		g_hAppInsightsProvider,
-		"Part B data",
+		"PageViewData",
 		TraceLoggingKeyword(MICROSOFT_KEYWORD_TELEMETRY),
 		TraceLoggingStruct(2, "Data"),
 		TraceLoggingWideString(pageViewData->GetBaseType().c_str(), "baseType"),
@@ -262,11 +262,11 @@ void TraceLoggingHelper::LogPageView(PageViewData* pageViewData)
 		TraceLoggingWideString(pageViewData->GetDuration().c_str(), "duration"),
 		TraceLoggingPackedData(&pbPropData[0], pbPropData.size()),		//content
 		TraceLoggingPackedStructArray(2, "properties"),
-		TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "key"),
-		TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "value"),
-		TraceLoggingPackedData(&pbMeasurementData, pbMeasurementData.size()),		//content
+		TraceLoggingPackedMetadata(TlgInUNICODESTRING, "key"),
+		TraceLoggingPackedMetadata(TlgInUNICODESTRING, "value"),
+		TraceLoggingPackedData(&pbMeasurementData[0], pbMeasurementData.size()),		//content
 		TraceLoggingPackedStructArray(2, "measurements"),
-		TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "key"),
+		TraceLoggingPackedMetadata(TlgInUNICODESTRING, "key"),
 		TraceLoggingPackedMetadata(TlgInDOUBLE, "value")
 		);
 }
@@ -286,7 +286,7 @@ void TraceLoggingHelper::LogPageViewPerf(PageViewPerfData* pageViewPerfData)
 
 	TraceLoggingWrite(
 		g_hAppInsightsProvider,
-		"Part B data",
+		"PageViewPerfData",
 		TraceLoggingKeyword(MICROSOFT_KEYWORD_TELEMETRY),
 		TraceLoggingStruct(2, "Data"),
 		TraceLoggingWideString(pageViewPerfData->GetBaseType().c_str(), "baseType"),
@@ -302,11 +302,11 @@ void TraceLoggingHelper::LogPageViewPerf(PageViewPerfData* pageViewPerfData)
 		TraceLoggingWideString(pageViewPerfData->GetDomProcessing().c_str(), "domProcessing"),
 		TraceLoggingPackedData(&pbPropData[0], pbPropData.size()),		//content
 		TraceLoggingPackedStructArray(2, "properties"),
-		TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "key"),
-		TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "value"),
+		TraceLoggingPackedMetadata(TlgInUNICODESTRING, "key"),
+		TraceLoggingPackedMetadata(TlgInUNICODESTRING, "value"),
 		TraceLoggingPackedData(&pbMeasurementData[0], pbMeasurementData.size()),		//content
 		TraceLoggingPackedStructArray(2, "measurements"),
-		TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "key"),
+		TraceLoggingPackedMetadata(TlgInUNICODESTRING, "key"),
 		TraceLoggingPackedMetadata(TlgInDOUBLE, "value")
 		);
 }
@@ -329,7 +329,7 @@ void TraceLoggingHelper::LogMessage(MessageData* messageData)
 
 	TraceLoggingWrite(
 		g_hAppInsightsProvider,
-		"Part B data",
+		"MessageData",
 		TraceLoggingKeyword(MICROSOFT_KEYWORD_TELEMETRY),
 		TraceLoggingStruct(2, "Data"),
 		TraceLoggingWideString(messageData->GetBaseType().c_str(), "baseType"),
@@ -339,8 +339,8 @@ void TraceLoggingHelper::LogMessage(MessageData* messageData)
 		TraceLoggingInt32(sevLevel, "severityLevel"),
 		TraceLoggingPackedData(&pbPropData[0], pbPropData.size()),		//content
 		TraceLoggingPackedStructArray(2, "properties"),
-		TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "key"),
-		TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "value")
+		TraceLoggingPackedMetadata(TlgInUNICODESTRING, "key"),
+		TraceLoggingPackedMetadata(TlgInUNICODESTRING, "value")
 		);
 }
 
@@ -368,7 +368,7 @@ void TraceLoggingHelper::LogException(ExceptionData* exceptionData)
 
 	//TraceLoggingWrite(
 	//	g_hAppInsightsProvider,
-	//	"Part B data",
+	//	"ExceptionData",
 	//	TraceLoggingKeyword(MICROSOFT_KEYWORD_TELEMETRY),
 	//	TraceLoggingStruct(2, "Data"),
 	//	TraceLoggingWideString(exceptionData.GetBaseType().c_str(), "baseType"),
@@ -380,15 +380,15 @@ void TraceLoggingHelper::LogException(ExceptionData* exceptionData)
 	//		TraceLoggingPackedStructArray(7, "exceptionDetails"),
 	//		TraceLoggingPackedMetadata(TlgInINT32, "id"),
 	//		TraceLoggingPackedMetadata(TlgInINT32, "outerId"),
-	//		TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "typeName")
-	//		TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "message")
+	//		TraceLoggingPackedMetadata(TlgInUNICODESTRING, "typeName")
+	//		TraceLoggingPackedMetadata(TlgInUNICODESTRING, "message")
 	//		TraceLoggingPackedMetadata(TlgInBOOL32, "hasFullStack")
-	//		TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "stack"),
+	//		TraceLoggingPackedMetadata(TlgInUNICODESTRING, "stack"),
 	//		TraceLoggingPackedStructArray(5, "parsedStack"),
 	//			TraceLoggingPackedMetadata(TlgInINT32, "level"),
-	//			TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "method"),
-	//			TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "assembly"),
-	//			TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "fileName"),
+	//			TraceLoggingPackedMetadata(TlgInUNICODESTRING, "method"),
+	//			TraceLoggingPackedMetadata(TlgInUNICODESTRING, "assembly"),
+	//			TraceLoggingPackedMetadata(TlgInUNICODESTRING, "fileName"),
 	//			TraceLoggingPackedMetadata(TlgInINT32, "line"),
 	//	TraceLoggingInt32(sevLevel, "severityLevel"),
 	//	TraceLoggingWideString(exceptionData.GetProblemId().c_str(), "problemId"),
@@ -396,12 +396,12 @@ void TraceLoggingHelper::LogException(ExceptionData* exceptionData)
 	//	TraceLoggingPackedData(&cbPropData, sizeof(UINT16)),  //count
 	//	TraceLoggingPackedData(&pbPropData, pbPropData.size()),		//content
 	//		TraceLoggingPackedStructArray(2, "properties"),
-	//		TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "key"),
-	//		TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "value"),
+	//		TraceLoggingPackedMetadata(TlgInUNICODESTRING, "key"),
+	//		TraceLoggingPackedMetadata(TlgInUNICODESTRING, "value"),
 	//	TraceLoggingPackedData(&cbMeasurementData, sizeof(UINT16)),  //count
 	//	TraceLoggingPackedData(&pbMeasurementData, pbMeasurementData.size()),		//content
 	//		TraceLoggingPackedStructArray(2, "measurements"),
-	//		TraceLoggingPackedMetadata(TlgInCOUNTEDSTRING, "key"),
+	//		TraceLoggingPackedMetadata(TlgInUNICODESTRING, "key"),
 	//		TraceLoggingPackedMetadata(TlgInDOUBLE, "value")
 	//	);
 }
