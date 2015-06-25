@@ -127,7 +127,7 @@ namespace core { namespace tests
             Assert::AreEqual(wstr(L"bar"), context.GetApplication().GetVer().GetValue());
         };
 
-        TEST_METHOD(SessionAndRenewSessionWorkAsExpected)
+        TEST_METHOD(RenewSessionWorkAsExpected)
         {
 			std::wstring iKey = L"MY_KEY";
 			TelemetryContext context(iKey);

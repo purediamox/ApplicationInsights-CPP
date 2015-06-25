@@ -156,11 +156,13 @@ namespace core {
 
 				MockTelemetryChannel *channel = MockTelemetryChannel::GetInstance(config);
 				channel->SetBufferSize(2);
+				channel->Send();
 				std::list<std::wstring> buffer;
 				int channelId = channel->GetChannelId();
 				int seqOffset = channel->GetSeqNum();
+				Assert::AreEqual((int)channel->GetBuffer().size(), 0, L"Failed to clear queue before the test started");
 
-				for (int i = 1; i < 3; i++)
+				for (int i = 0; i < 3; i++)
 				{
 #ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
@@ -182,7 +184,7 @@ namespace core {
 #endif					
 				}
 				Sleep(10000);
-				Assert::AreEqual(channel->GetSeqNum(), 2 + seqOffset, L"Failed: seq number updates after enqueue");
+				Assert::AreEqual(channel->GetSeqNum(), 3 + seqOffset, L"Failed: seq number updates after enqueue");
 				Assert::AreEqual(channel->GetChannelId(), channelId, L"Failed: channel ID changed");
 				Assert::AreEqual((int)channel->GetBuffer().size(), 1, L"Failed to auto send queue");
 			};
