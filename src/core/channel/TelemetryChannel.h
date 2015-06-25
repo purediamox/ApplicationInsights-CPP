@@ -22,11 +22,11 @@ namespace ApplicationInsights
 		class TELEMETRYCLIENT_API TelemetryChannel
 		{
 		public:
-			/// <summary>
-			/// Initializes a new instance of the <see cref="TelemetryChannel"/> class.
-			/// </summary>
-			/// <param name="config">The configuration.</param>
-			TelemetryChannel(TelemetryClientConfig &config);
+			static TelemetryChannel& GetInstance(TelemetryClientConfig &config)
+			{
+				static TelemetryChannel instance(config);
+				return instance;
+			}
 
 			/// <summary>
 			/// Finalizes an instance of the <see cref="TelemetryChannel"/> class.
@@ -36,9 +36,10 @@ namespace ApplicationInsights
 			/// <summary>
 			/// Enqueues the specified context.
 			/// </summary>
+			/// <param name="iKey">The iKey.</param>
 			/// <param name="context">The context.</param>
 			/// <param name="telemetry">The telemetry.</param>
-			void Enqueue(TelemetryContext &context, Domain &telemetry);
+			void TelemetryChannel::Enqueue(std::wstring &iKey, TelemetryContext &context, Domain &telemetry);
 
 			/// <summary>
 			/// Sends this instance.
@@ -46,6 +47,18 @@ namespace ApplicationInsights
 			void Send();
 
 		protected:
+			/// <summary>
+			/// Initializes a new instance of the <see cref="TelemetryChannel"/> class.
+			/// </summary>
+			/// <param name="config">The configuration.</param>
+			TelemetryChannel(TelemetryClientConfig &config);
+
+			/// <summary>
+			/// removing the copy constructor and assignment operator
+			/// </summary>
+			TelemetryChannel(TelemetryChannel const&) = delete;
+			void operator =(TelemetryChannel const&) = delete;
+
 			int m_channelId;
 			int m_seqNum;
 			int m_maxBufferSize;

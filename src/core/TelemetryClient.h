@@ -82,6 +82,14 @@ namespace ApplicationInsights
 			void TrackMetric(const std::wstring& name, const double& value);
 
 			/// <summary>
+			/// Tracks the metric.
+			/// </summary>
+			/// <param name="name">The name.</param>
+			/// <param name="value">The value.</param>
+			/// <param name="properties">The properties.</param>
+			void TrackMetric(const std::wstring& name, const double& value, const wstring_wstring_map& properties);
+
+			/// <summary>
 			/// Tracks the page view.
 			/// </summary>
 			/// <param name="pageName">Name of the page.</param>
@@ -115,6 +123,11 @@ namespace ApplicationInsights
 			/// Tracks the session start.
 			/// </summary>
 			void TrackSessionStart();
+
+			/// <summary>
+			/// Tracks the session end.
+			/// </summary>
+			void TrackSessionEnd();
 
 			/// <summary>
 			/// Tracks the specified telemetry.
@@ -164,6 +177,9 @@ namespace ApplicationInsights
 
 			// The telemetry channel for this client.
 			TelemetryChannel *m_channel;
+
+			// The instrumentation key for this client.
+			std::wstring m_instrumentationKey;
 		};
 	}
 }

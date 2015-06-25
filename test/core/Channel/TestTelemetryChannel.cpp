@@ -1,14 +1,17 @@
 #include "../targetver.h"
 #include "../specializations.h"
+#include "Common/Utils.h"
 #include "CppUnitTest.h"
 #include "Channel/TelemetryChannel.h"
 #include "TelemetryClientConfig.h"
 #include "TelemetryContext.h"
+#include <stdio.h>
 #include <regex>
 
 #ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 #include <memory>
+#include <ppl.h>
 #include <ppltasks.h>
 using namespace concurrency;
 #endif
@@ -29,7 +32,11 @@ namespace core {
 		class MockTelemetryChannel : public TelemetryChannel
 		{
 		public:
-			MockTelemetryChannel(TelemetryClientConfig &config) : TelemetryChannel(config) {}
+			static MockTelemetryChannel* GetInstance(TelemetryClientConfig config)
+			{
+				return (MockTelemetryChannel*)&TelemetryChannel::GetInstance(config);
+			}
+
 			int GetChannelId() { return m_channelId; }
 			int GetSeqNum() { return m_seqNum; }
 			const TelemetryClientConfig *GetConfig() { return m_config; }
@@ -69,19 +76,26 @@ namespace core {
 		TEST_CLASS(TestTelemetryChannel)
 		{
 		public:
+			TEST_CLASS_INITIALIZE(initialize)
+			{
+				Sleep(5000);
+			}
 
-			TEST_METHOD(CtorWorksAsExpected)
+			TEST_METHOD_CLEANUP(cleanup)
+			{
+				Sleep(5000);
+			}
+
+			TEST_METHOD(GetInstanceWorksAsExpected)
 			{
 				wstr iKey = L"foo";
 				TelemetryClientConfig config(iKey);
 
-				MockTelemetryChannel channel(config);
-				
-				Assert::AreNotEqual(0, channel.GetChannelId());
-				Assert::AreEqual(0, channel.GetSeqNum());
-				Assert::AreEqual(iKey, channel.GetConfig()->GetIKey());
-			};
+				TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
 
+				Assert::IsNotNull(channel);
+			};
+			
 			TEST_METHOD(EnqueueWorksAsExpected)
 			{
 				wstr iKey = L"foo";
@@ -89,20 +103,19 @@ namespace core {
 				TelemetryContext context(iKey);
 				context.InitContext();
 
-				MockTelemetryChannel channel(config);
+				MockTelemetryChannel *channel = MockTelemetryChannel::GetInstance(config);
 				std::vector<std::wstring> buffer;
-				int channelId = channel.GetChannelId();
+				int channelId = channel->GetChannelId();
 				for (int i = 0; i < 5; i++)
 				{
 					MessageData telemetry;
 					telemetry.SetMessage(L"Hello");
+					channel->Enqueue(iKey, context, (Domain)telemetry);
 
-					channel.Enqueue(context, (Domain)telemetry);
-
-					buffer = channel.GetBuffer();
+					buffer = channel->GetBuffer();
 					Assert::AreEqual(i + 1, (int)buffer.size());
-					Assert::AreEqual(channelId, channel.GetChannelId());
-					Assert::AreEqual(i+1, channel.GetSeqNum());
+					Assert::AreEqual(channelId, channel->GetChannelId());
+					Assert::AreEqual(i+1, channel->GetSeqNum());
 
 					std::wstring envelope = *buffer.rbegin();
 					std::wstring::size_type namePos = envelope.find(L"Microsoft.ApplicationInsights.Message");
@@ -136,54 +149,42 @@ namespace core {
 			TEST_METHOD(EnqueueAutoSendsWhenMaxBufferSizeIsReached)
 			{
 				wstr iKey = L"foo";
+				auto ui = task_continuation_context::use_current();
 				TelemetryClientConfig config(iKey);
 				TelemetryContext context(iKey);
 				context.InitContext();
 
-				MockTelemetryChannel channel(config);
-				channel.SetBufferSize(2);
+				MockTelemetryChannel *channel = MockTelemetryChannel::GetInstance(config);
+				channel->SetBufferSize(2);
 				std::list<std::wstring> buffer;
-				int channelId = channel.GetChannelId();
+				int channelId = channel->GetChannelId();
+				int seqOffset = channel->GetSeqNum();
 
-				for (int i = 1; i < 5; i++)
+				for (int i = 1; i < 3; i++)
 				{
-					Assert::AreEqual(channel.GetSeqNum(), i - 1, L"Failed: seq number is not updating");
-					
 #ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 
-					auto testTask = create_task([&channel, &context, &i]() -> bool {
+					auto testTask = create_task([&iKey, &config, &context, &i, &seqOffset]() -> bool {
+						MockTelemetryChannel *channel = MockTelemetryChannel::GetInstance(config);
 #endif	
 #endif
-					MessageData telemetry;
-					telemetry.SetMessage(L"Hello");
+						MessageData telemetry;
+						telemetry.SetMessage(L"Hello");
 
-					channel.Enqueue(context, (Domain)telemetry);
-
+						channel->Enqueue(iKey, context, (Domain)telemetry);
+						
 #ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
-					if (i % 2 == 0)
-					{
-						channel.WaitForResponse();
-					}
-					return true;
+						return true;
 					});
-					Sleep(1000);
 #endif
-#endif
-					
-					if (i % 2 == 0)
-					{
-						Assert::AreEqual((int)channel.GetBuffer().size(), 0, L"Failed to auto send");
-					}
-					else
-					{
-						Assert::IsTrue((int)channel.GetBuffer().size() > 0, L"Failed to queue data");
-					}
-
-					Assert::AreEqual(channel.GetSeqNum(), i, L"Failed: seq number updates after enqueue");
-					Assert::AreEqual(channel.GetChannelId(), channelId, L"Failed: channel ID changed");
+#endif					
 				}
+				Sleep(10000);
+				Assert::AreEqual(channel->GetSeqNum(), 2 + seqOffset, L"Failed: seq number updates after enqueue");
+				Assert::AreEqual(channel->GetChannelId(), channelId, L"Failed: channel ID changed");
+				Assert::AreEqual((int)channel->GetBuffer().size(), 1, L"Failed to auto send queue");
 			};
 
 			TEST_METHOD(SendWorksAsExpected)
@@ -193,35 +194,161 @@ namespace core {
 				TelemetryContext context(iKey);
 				context.InitContext();
 
-				MockTelemetryChannel channel(config);
-				std::list<std::wstring> buffer;
-				int channelId = channel.GetChannelId();
-				int seqNum = -1;
-
+				MockTelemetryChannel *channel = MockTelemetryChannel::GetInstance(config);
+				channel->SetBufferSize(5);
+				channel->Send();
+				int channelId = channel->GetChannelId();
 #ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
-				auto testTask = create_task([&channel, &context, &seqNum]() -> bool {
+				auto testTask = create_task([&iKey, &context, &config]() -> bool {
+				MockTelemetryChannel *channel = MockTelemetryChannel::GetInstance(config);
 #endif	
 #endif
+				std::list<std::wstring> buffer;
+				
 				MessageData telemetry;
 				telemetry.SetMessage(L"Hello");
 
-				channel.Enqueue(context, (Domain)telemetry);
-				seqNum  = channel.GetSeqNum();
-				Assert::IsTrue((channel.GetBuffer().size() > 0), L"Failed to queue data");
-				channel.Send();
+				channel->Enqueue(iKey, context, (Domain)telemetry);
+				Assert::IsTrue((channel->GetBuffer().size() > 0), L"Failed to queue data");
+				channel->Send();
 
 #ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
-				DWORD ret = channel.WaitForResponse();
+				DWORD ret = channel->WaitForResponse();
 				return true;
 				});
 				Sleep(5000);
 #endif
 #endif
-				Assert::AreEqual((int)channel.GetBuffer().size(), 0, L"Failed to clear queue");
-				Assert::AreEqual(channel.GetSeqNum(), seqNum, L"Failed: seq number changed from sending");
-				Assert::AreEqual(channel.GetChannelId(), channelId, L"Failed: channel ID changed");
+				Assert::AreEqual((int)channel->GetBuffer().size(), 0, L"Failed to clear queue");
+				Assert::AreEqual(channel->GetChannelId(), channelId, L"Failed: channel ID changed");
+			};
+
+			TEST_METHOD(GetInstanceWorksIsThreadSafe)
+			{
+				wstr iKey = L"foo";
+				TelemetryClientConfig config(iKey);
+
+				// A task_group object that can be used from multiple threads.
+				task_group tasks;
+
+				// Concurrently add several tasks to the task_group object.
+				parallel_invoke(
+					[&config] { TelemetryChannel *channel = &TelemetryChannel::GetInstance(config); },
+					[&config] { TelemetryChannel *channel = &TelemetryChannel::GetInstance(config); },
+					[&config] { TelemetryChannel *channel = &TelemetryChannel::GetInstance(config); },
+					[&config] { TelemetryChannel *channel = &TelemetryChannel::GetInstance(config); },
+					[&config] { TelemetryChannel *channel = &TelemetryChannel::GetInstance(config); }
+				);
+			};
+
+			TEST_METHOD(EnqueueIsThreadSafe)
+			{
+				wstr iKey = L"foo";
+				TelemetryClientConfig config(iKey);
+				TelemetryContext context(iKey);
+				context.InitContext();
+
+				MockTelemetryChannel *channel = MockTelemetryChannel::GetInstance(config);
+				channel->SetBufferSize(3);
+				channel->Send();
+				int seqOffset = channel->GetSeqNum();
+
+				// A task_group object that can be used from multiple threads.
+				task_group tasks;
+
+				// Concurrently add several tasks to the task_group object.
+				parallel_invoke(
+					[&config, &iKey, &context] {
+					TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
+					MessageData telemetry;
+					telemetry.SetMessage(L"Hello 1");
+					channel->Enqueue(iKey, context, (Domain)telemetry);
+				},
+					[&config, &iKey, &context] {
+					TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
+					MessageData telemetry;
+					telemetry.SetMessage(L"Hello 2");
+					channel->Enqueue(iKey, context, (Domain)telemetry);
+				},
+					[&config, &iKey, &context] {
+					TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
+					MessageData telemetry;
+					telemetry.SetMessage(L"Hello 3");
+					channel->Enqueue(iKey, context, (Domain)telemetry);
+				},
+					[&config, &iKey, &context] {
+					TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
+					MessageData telemetry;
+					telemetry.SetMessage(L"Hello 4");
+					channel->Enqueue(iKey, context, (Domain)telemetry);
+				},
+					[&config, &iKey, &context] {
+					TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
+					MessageData telemetry;
+					telemetry.SetMessage(L"Hello 5");
+					channel->Enqueue(iKey, context, (Domain)telemetry);
+				}
+				);
+
+				Sleep(10000);
+				Assert::AreEqual((int)channel->GetBuffer().size(), 2, L"Failed to clear queue");
+				Assert::AreEqual((int)channel->GetSeqNum(), 5 + seqOffset, L"Failed to update sequence number");
+			};
+
+			TEST_METHOD(SendIsThreadSafe)
+			{
+				wstr iKey = L"foo";
+				TelemetryClientConfig config(iKey);
+				TelemetryContext context(iKey);
+				context.InitContext();
+
+				MockTelemetryChannel *channel = MockTelemetryChannel::GetInstance(config);
+				channel->SetBufferSize(1);
+				channel->Send();
+				int seqOffset = channel->GetSeqNum();
+
+				// A task_group object that can be used from multiple threads.
+				task_group tasks;
+
+				// Concurrently add several tasks to the task_group object.
+				parallel_invoke(
+					[&config, &iKey, &context] {
+					TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
+					MessageData telemetry;
+					telemetry.SetMessage(L"Hello 1");
+					channel->Enqueue(iKey, context, (Domain)telemetry);
+				},
+					[&config, &iKey, &context] {
+					TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
+					MessageData telemetry;
+					telemetry.SetMessage(L"Hello 2");
+					channel->Enqueue(iKey, context, (Domain)telemetry);
+				},
+					[&config, &iKey, &context] {
+					TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
+					MessageData telemetry;
+					telemetry.SetMessage(L"Hello 3");
+					channel->Enqueue(iKey, context, (Domain)telemetry);
+				},
+					[&config, &iKey, &context] {
+					TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
+					MessageData telemetry;
+					telemetry.SetMessage(L"Hello 4");
+					channel->Enqueue(iKey, context, (Domain)telemetry);
+				},
+					[&config, &iKey, &context] {
+					TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
+					MessageData telemetry;
+					telemetry.SetMessage(L"Hello 5");
+					channel->Enqueue(iKey, context, (Domain)telemetry);
+				}
+				);
+
+				Sleep(10000);
+				Assert::AreEqual((int)channel->GetBuffer().size(), 0, L"Failed to clear queue");
+				Assert::AreEqual((int)channel->GetSeqNum(), 5 + seqOffset, L"Failed to update sequence number");
 			};
 		};
 	}

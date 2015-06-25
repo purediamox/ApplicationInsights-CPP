@@ -18,11 +18,14 @@ namespace core {
 			class MockTelemetryChannel : public TelemetryChannel
 			{
 			public:
-				MockTelemetryChannel(TelemetryClientConfig config)
-					: TelemetryChannel(config), recvTelemetry(nullptr)
+				static MockTelemetryChannel* GetInstance(TelemetryClientConfig config)
 				{
+					MockTelemetryChannel* instance = (MockTelemetryChannel*)&TelemetryChannel::GetInstance(config);
+					instance->recvTelemetry = nullptr;
+					return instance;
 				}
 
+				
 				std::vector<std::wstring> GetBuffer()
 				{
 					return m_buffer;

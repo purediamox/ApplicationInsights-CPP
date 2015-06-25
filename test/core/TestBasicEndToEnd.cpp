@@ -44,9 +44,9 @@ namespace core {
 			class MockTelemetryChannel : public TelemetryChannel
 			{
 			public:
-				MockTelemetryChannel(TelemetryClientConfig config)
-					: TelemetryChannel(config)
+				static MockTelemetryChannel* GetInstance(TelemetryClientConfig config)
 				{
+					return (MockTelemetryChannel*)&TelemetryChannel::GetInstance(config);
 				}
 
 #ifdef WINAPI_FAMILY_PARTITION
@@ -76,6 +76,9 @@ namespace core {
 				const HttpResponse& GetResponse() const {
 					return resp;
 				}
+
+			private:
+				TelemetryChannel* channel;
 			};
 
 			class MockTelemetryClient : public TelemetryClient
@@ -137,17 +140,13 @@ namespace core {
 				TEST_METHOD(BasicEndToEnd)
 				{
 					std::wstring iKey = L"ba0f19ca-aa77-4838-ac05-dbba85d6b677";
-					MockTelemetryClient tc = MockTelemetryClient(iKey);
+					MockTelemetryClient tc(iKey);
 
 #ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // phone or store					
 					auto testTask = create_task([&tc]() -> bool {
 #endif	
 #endif	
-						//int iterations = 2;
-						//std::wstring iKey = L"ba0f19ca-aa77-4838-ac05-dbba85d6b677";
-						//MockTelemetryClient tc = MockTelemetryClient(iKey);
-
 						wchar_t message[100];
 						for (int i = 0; i < ITERATIONS; i++)
 						{

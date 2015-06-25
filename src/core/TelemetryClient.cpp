@@ -22,10 +22,11 @@ using namespace ApplicationInsights::core;
 /// <param name="iKey">The ikey.</param>
 TelemetryClient::TelemetryClient(std::wstring& iKey)
 {
+	m_instrumentationKey = iKey;
 	m_config = new TelemetryClientConfig(iKey);
 	m_context = new TelemetryContext(iKey);
 	m_context->InitContext();
-	m_channel = new TelemetryChannel(*m_config);
+	m_channel = &TelemetryChannel::GetInstance(*m_config);
 }
 
 /// <summary>
@@ -47,7 +48,6 @@ TelemetryClient::~TelemetryClient()
 	Flush();
 
 	// Free allocated memory
-	Utils::SafeDelete(m_channel);
 	Utils::SafeDelete(m_context);
 	Utils::SafeDelete(m_config);
 }
@@ -131,6 +131,18 @@ void TelemetryClient::TrackTrace(const std::wstring& message, const wstring_wstr
 /// <param name="value">The value.</param>
 void TelemetryClient::TrackMetric(const std::wstring& name, const double& value)
 {
+	wstring_wstring_map properties;
+	TrackMetric(name, value, properties);
+}
+
+/// <summary>
+/// Tracks the metric.
+/// </summary>
+/// <param name="name">The name.</param>
+/// <param name="value">The value.</param>
+/// <param name="properties">The properties.</param>
+void TelemetryClient::TrackMetric(const std::wstring& name, const double& value, const wstring_wstring_map& properties)
+{
 	MetricData telemetry;
 	DataPoint data;
 	data.SetCount(1);
@@ -143,6 +155,12 @@ void TelemetryClient::TrackMetric(const std::wstring& name, const double& value)
 	metricsList.push_back(&data);
 
 	telemetry.SetMetrics(metricsList);
+	
+	if (properties.size() > 0)
+	{
+		telemetry.SetProperties(properties);
+	}
+
 	Track(telemetry);
 }
 
@@ -224,6 +242,18 @@ void TelemetryClient::TrackSessionStart()
 }
 
 /// <summary>
+/// Tracks the session end.
+/// </summary>
+void TelemetryClient::TrackSessionEnd()
+{
+	SessionStateData session;
+	session.SetState(SessionState::End);
+
+	Track(session);
+}
+
+
+/// <summary>
 /// Tracks the specified telemetry.
 /// </summary>
 /// <param name="telemetry">The telemetry.</param>
@@ -231,7 +261,7 @@ void TelemetryClient::Track(Domain& telemetry)
 {
 	if (IsTrackingEnabled())
 	{
-		m_channel->Enqueue(*m_context, telemetry);
+		m_channel->Enqueue(m_instrumentationKey, *m_context, telemetry);
 	}
 }
 

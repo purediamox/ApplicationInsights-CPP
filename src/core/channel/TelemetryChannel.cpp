@@ -10,7 +10,8 @@
 
 using namespace ApplicationInsights::core;
 
-#ifdef WINAPI_FAMILY_PARTITION
+#ifdef WINAPI_FAMILY_PARTITION	//If it is Windows
+#include <Windows.h> 
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 #include <TraceLoggingProvider.h>  
 #include <TraceLoggingActivity.h>  
@@ -37,6 +38,7 @@ TRACELOGGING_DEFINE_PROVIDER(
 #endif
 #endif
 const int MAX_BUFFER_SIZE = 50;
+CRITICAL_SECTION cs;
 
 /// <summary>
 /// Initializes a new instance of the <see cref="TelemetryChannel"/> class.
@@ -45,6 +47,8 @@ const int MAX_BUFFER_SIZE = 50;
 TelemetryChannel::TelemetryChannel(TelemetryClientConfig &config) 
 : m_config(&config)
 {
+	InitializeCriticalSectionEx(&cs, 0, 0);
+
 	srand((int)time(0));
 	m_channelId = rand();
 	m_seqNum = 0;
@@ -68,6 +72,7 @@ TelemetryChannel::~TelemetryChannel()
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 	TraceLoggingUnregister(g_hAppInsightsProvider);
 #endif
+	DeleteCriticalSection(&cs);
 #endif
 
 }
@@ -77,7 +82,7 @@ TelemetryChannel::~TelemetryChannel()
 /// </summary>
 /// <param name="context">The context.</param>
 /// <param name="telemetry">The telemetry.</param>
-void TelemetryChannel::Enqueue(TelemetryContext &context, Domain &telemetry)
+void TelemetryChannel::Enqueue(std::wstring &iKey, TelemetryContext &context, Domain &telemetry)
 {
 	Data data;
 	data.SetBaseData(telemetry);
@@ -105,9 +110,11 @@ void TelemetryChannel::Enqueue(TelemetryContext &context, Domain &telemetry)
 	{
 #endif
 #endif
+		EnterCriticalSection(&cs);
+
 		Envelope envelope;
 		envelope.SetData(data);
-		envelope.SetIKey(m_config->GetIKey());
+		envelope.SetIKey(iKey);
 		envelope.SetTime(Utils::GetCurrentDateTime());
 		envelope.SetName(telemetry.GetEnvelopeName());
 		envelope.SetSeq(std::to_wstring(m_channelId) + L":" + std::to_wstring(m_seqNum++));
@@ -117,18 +124,21 @@ void TelemetryChannel::Enqueue(TelemetryContext &context, Domain &telemetry)
 		envelope.SetTags(tags);
 
 		json.WriteObjectValue(&envelope);
+
 		m_buffer.push_back(content.ToString());
-
-		if ((int)m_buffer.size() >= m_maxBufferSize)
-		{
-			Send();
-		}
-
+		
 		if (context.GetSession().GetIsNew().HasValue() && context.GetSession().GetIsNew().GetValue() == L"True")
 		{
 			Nullable<std::wstring> strFalse = std::wstring(L"False");
 			context.GetSession().SetIsFirst(strFalse);
 			context.GetSession().SetIsNew(strFalse);
+		}
+		
+		LeaveCriticalSection(&cs);
+
+		if ((int)m_buffer.size() >= m_maxBufferSize)
+		{
+			Send();
 		}
 #ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
@@ -144,13 +154,19 @@ void TelemetryChannel::Send()
 {
 	if (m_buffer.size() > 0)
 	{
+		EnterCriticalSection(&cs);
 		std::wstring buffer;
+		std::vector<std::wstring> sendBuffer;
 
 		buffer += L"[";
 		for (auto &buf : m_buffer) {
 			buffer += buf + L",";
+			sendBuffer.push_back(buffer);
 		}
 		buffer += L"]";
+
+		m_buffer.clear();
+		LeaveCriticalSection(&cs);
 
 #ifdef CPP_LIB_DEBUG
 		std::wstring req = L"REQUEST :\r\n" + buffer;
@@ -184,9 +200,15 @@ void TelemetryChannel::Send()
 #endif
 #endif
 #endif
-		}) == 0) {
-			// Sent successfully
-			m_buffer.clear();
+		}) != 0) {
+			EnterCriticalSection(&cs);
+			
+			for (auto &buf : sendBuffer) {
+				m_buffer.push_back(buffer);
+			}
+
+			LeaveCriticalSection(&cs);
 		}
+		
 	}
 }
