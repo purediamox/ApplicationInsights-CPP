@@ -150,7 +150,9 @@ namespace core { namespace tests
 
             Session session2 = context.GetSession();
             wstr uuid2 = session2.GetId().GetValue();
-            Assert::IsTrue(re_match(str(uuid2.begin(), uuid2.end()), uuidMatcher), L"Invalid regex for uuid");
+			wchar_t errMsg[256];
+			swprintf_s(errMsg, 256, L"Invalid regex for uuid: %s", uuid2);
+            Assert::IsTrue(re_match(str(uuid2.begin(), uuid2.end()), uuidMatcher), errMsg);
 			
             Assert::AreNotEqual(uuid1, uuid2);
 

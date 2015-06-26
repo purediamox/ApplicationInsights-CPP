@@ -47,18 +47,6 @@ namespace ApplicationInsights
 			void Send();
 
 		protected:
-			/// <summary>
-			/// Initializes a new instance of the <see cref="TelemetryChannel"/> class.
-			/// </summary>
-			/// <param name="config">The configuration.</param>
-			TelemetryChannel(TelemetryClientConfig &config);
-
-			/// <summary>
-			/// removing the copy constructor and assignment operator
-			/// </summary>
-			TelemetryChannel(TelemetryChannel const&) = delete;
-			void operator =(TelemetryChannel const&) = delete;
-
 			int m_channelId;
 			int m_seqNum;
 			int m_maxBufferSize;
@@ -74,6 +62,19 @@ namespace ApplicationInsights
 #endif
 			bool TelemetryChannel::IsUTCAvailable();
 			std::wstring TraceLoggingSanitizer(std::wstring data);
+
+		private:
+			/// <summary>
+			/// Initializes a new instance of the <see cref="TelemetryChannel"/> class.
+			/// </summary>
+			/// <param name="config">The configuration.</param>
+			TelemetryChannel(TelemetryClientConfig &config);
+
+			/// <summary>
+			/// removing the copy constructor and assignment operator
+			/// </summary>
+			TelemetryChannel(TelemetryChannel const&) = delete;
+			void operator =(TelemetryChannel const&) = delete;
 		};
 	}
 }

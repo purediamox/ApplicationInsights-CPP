@@ -46,7 +46,8 @@ namespace core {
 			public:
 				static MockTelemetryChannel* GetInstance(TelemetryClientConfig config)
 				{
-					return (MockTelemetryChannel*)&TelemetryChannel::GetInstance(config);
+					channel = &TelemetryChannel::GetInstance(config);
+					return (MockTelemetryChannel*)channel;
 				}
 
 #ifdef WINAPI_FAMILY_PARTITION
@@ -78,7 +79,7 @@ namespace core {
 				}
 
 			private:
-				TelemetryChannel* channel;
+				static TelemetryChannel* channel;
 			};
 
 			class MockTelemetryClient : public TelemetryClient

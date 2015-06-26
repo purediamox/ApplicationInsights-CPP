@@ -48,7 +48,7 @@ TelemetryChannel::TelemetryChannel(TelemetryClientConfig &config)
 : m_config(&config)
 {
 	InitializeCriticalSectionEx(&cs, 0, 0);
-
+	EnterCriticalSection(&cs);
 	srand((int)time(0));
 	m_channelId = rand();
 	m_seqNum = 0;
@@ -61,6 +61,7 @@ TelemetryChannel::TelemetryChannel(TelemetryClientConfig &config)
 	HRESULT hResult = TraceLoggingRegister(g_hAppInsightsProvider);
 #endif
 #endif
+	LeaveCriticalSection(&cs);
 }
 
 /// <summary>
