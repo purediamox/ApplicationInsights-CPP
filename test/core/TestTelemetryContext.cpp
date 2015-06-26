@@ -3,11 +3,20 @@
 #include "CppUnitTest.h"
 #include "TelemetryContext.h"
 #include "Contracts/Contracts.h"
-
+#include "common/utils.h"
 #include <regex>
 
 using namespace ApplicationInsights::core;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+
+#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
+#include <Windows.h>
+#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
+using namespace Platform;
+using namespace Windows::Foundation;
+using namespace Windows::Storage;
+#endif
+#endif
 
 typedef std::wstring wstr;
 typedef std::string str;
@@ -30,6 +39,12 @@ namespace core { namespace tests
 
         TEST_METHOD(UserWorksAsExpected)
         {
+#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
+#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
+			ApplicationData::Current->ClearAsync();
+#endif
+#endif
+
 			std::wstring iKey = L"MY_KEY";
 			TelemetryContext context(iKey);
 			context.InitContext();
@@ -129,6 +144,11 @@ namespace core { namespace tests
 
         TEST_METHOD(RenewSessionWorkAsExpected)
         {
+#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
+#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
+			ApplicationData::Current->ClearAsync();
+#endif
+#endif
 			std::wstring iKey = L"MY_KEY";
 			TelemetryContext context(iKey);
 			context.InitContext();
@@ -168,6 +188,11 @@ namespace core { namespace tests
 
         TEST_METHOD(GetContextTagsWorksAsExpected)
         {
+#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
+#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
+			ApplicationData::Current->ClearAsync();
+#endif
+#endif
 			std::wstring iKey = L"MY_KEY";
 			TelemetryContext context(iKey);
 			context.InitContext();
