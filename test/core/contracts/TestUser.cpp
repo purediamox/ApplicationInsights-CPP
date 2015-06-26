@@ -3,6 +3,15 @@
 #include "CppUnitTest.h"
 #include "Contracts/User.h"
 
+#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
+#include <Windows.h>
+#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
+using namespace Platform;
+using namespace Windows::Foundation;
+using namespace Windows::Storage;
+#endif
+#endif
+
 using namespace ApplicationInsights::core;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -11,7 +20,15 @@ namespace core { namespace tests { namespace contracts
     TEST_CLASS(TestUser)
     {
     public:
-        
+		TEST_CLASS_INITIALIZE(initialize)
+		{
+#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
+#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
+			ApplicationData::Current->ClearAsync();
+#endif
+#endif
+		}
+
         TEST_METHOD(AccountAcquisitionDateWorksAsExpected)
         {
             User item;

@@ -21,6 +21,14 @@ namespace core {
 			TEST_CLASS(TestPageTracking)
 			{
 			public:
+				TEST_CLASS_INITIALIZE(initialize)
+				{
+#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
+#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
+					ApplicationData::Current->ClearAsync();
+#endif
+#endif
+				}
 
 				TEST_METHOD(CtorWorksAsExpected)
 				{

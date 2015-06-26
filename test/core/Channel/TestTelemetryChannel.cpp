@@ -13,7 +13,10 @@
 #include <memory>
 #include <ppl.h>
 #include <ppltasks.h>
+#include <Windows.h>
+
 using namespace concurrency;
+using namespace Windows::Storage;
 #endif
 #endif
 
@@ -78,6 +81,11 @@ namespace core {
 		public:
 			TEST_CLASS_INITIALIZE(initialize)
 			{
+#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
+#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
+				ApplicationData::Current->ClearAsync();
+#endif
+#endif
 				Sleep(5000);
 			}
 
@@ -220,7 +228,7 @@ namespace core {
 				DWORD ret = channel->WaitForResponse();
 				return true;
 				});
-				Sleep(5000);
+				Sleep(10000);
 #endif
 #endif
 				Assert::AreEqual((int)channel->GetBuffer().size(), 0, L"Failed to clear queue");
