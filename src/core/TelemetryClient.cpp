@@ -23,10 +23,14 @@ using namespace ApplicationInsights::core;
 TelemetryClient::TelemetryClient(std::wstring& iKey)
 {
 	m_instrumentationKey = iKey;
-	m_config = new TelemetryClientConfig(iKey);
 	m_context = new TelemetryContext(iKey);
 	m_context->InitContext();
-	m_channel = &TelemetryChannel::GetInstance(*m_config);
+	
+	m_channel = TelemetryChannel::GetInstance();
+	if (m_channel == nullptr)
+	{
+		m_channel = TelemetryChannel::Initialize();
+	}
 }
 
 /// <summary>

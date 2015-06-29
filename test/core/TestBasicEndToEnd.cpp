@@ -44,9 +44,9 @@ namespace core {
 			class MockTelemetryChannel : public TelemetryChannel
 			{
 			public:
-				static MockTelemetryChannel* GetInstance(TelemetryClientConfig config)
+				static MockTelemetryChannel* GetInstance()
 				{
-					channel = &TelemetryChannel::GetInstance(config);
+					channel = TelemetryChannel::GetInstance();
 					return (MockTelemetryChannel*)channel;
 				}
 

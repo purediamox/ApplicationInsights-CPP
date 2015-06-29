@@ -37,31 +37,29 @@ TRACELOGGING_DEFINE_PROVIDER(
 
 #endif
 #endif
+
+TelemetryChannel* ApplicationInsights::core::TelemetryChannel::instance = 0;
 const int MAX_BUFFER_SIZE = 50;
-CRITICAL_SECTION cs;
 
 /// <summary>
 /// Initializes a new instance of the <see cref="TelemetryChannel"/> class.
 /// </summary>
 /// <param name="config">The configuration.</param>
-TelemetryChannel::TelemetryChannel(TelemetryClientConfig &config) 
-: m_config(&config)
+TelemetryChannel::TelemetryChannel()
 {
-	InitializeCriticalSectionEx(&cs, 0, 0);
-	EnterCriticalSection(&cs);
 	srand((int)time(0));
 	m_channelId = rand();
 	m_seqNum = 0;
 	m_maxBufferSize = MAX_BUFFER_SIZE;
 
 #ifdef WINAPI_FAMILY_PARTITION
+	InitializeCriticalSectionEx(&cs, 0, 0);
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 	hRespRecv = CreateEventEx(nullptr, L"RecvResp", 0, EVENT_MODIFY_STATE | SYNCHRONIZE);
 
 	HRESULT hResult = TraceLoggingRegister(g_hAppInsightsProvider);
 #endif
 #endif
-	LeaveCriticalSection(&cs);
 }
 
 /// <summary>

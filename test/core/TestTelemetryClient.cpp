@@ -20,7 +20,7 @@ namespace core {
 			public:
 				static MockTelemetryChannel* GetInstance(TelemetryClientConfig config)
 				{
-					MockTelemetryChannel* instance = (MockTelemetryChannel*)&TelemetryChannel::GetInstance(config);
+					MockTelemetryChannel* instance = (MockTelemetryChannel*)TelemetryChannel::GetInstance();
 					instance->recvTelemetry = nullptr;
 					return instance;
 				}

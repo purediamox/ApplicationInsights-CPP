@@ -35,14 +35,14 @@ namespace core {
 		class MockTelemetryChannel : public TelemetryChannel
 		{
 		public:
-			static MockTelemetryChannel* GetInstance(TelemetryClientConfig config)
+			static MockTelemetryChannel* GetInstance()
 			{
-				return (MockTelemetryChannel*)&TelemetryChannel::GetInstance(config);
+				return (MockTelemetryChannel*)TelemetryChannel::GetInstance();
 			}
 
 			int GetChannelId() { return m_channelId; }
 			int GetSeqNum() { return m_seqNum; }
-			const TelemetryClientConfig *GetConfig() { return m_config; }
+			//const TelemetryClientConfig *GetConfig() { return m_config; }
 			const std::vector<std::wstring> GetBuffer() { return m_buffer; }
 
 			void SetBufferSize(int maxSize) { m_maxBufferSize = maxSize; }
@@ -94,12 +94,17 @@ namespace core {
 				Sleep(5000);
 			}
 
+			TEST_METHOD(InitializeWorksAsExpected)
+			{
+				TelemetryChannel *channel = TelemetryChannel::Initialize();
+
+				Assert::IsNotNull(channel);
+			};
+
 			TEST_METHOD(GetInstanceWorksAsExpected)
 			{
-				wstr iKey = L"foo";
-				TelemetryClientConfig config(iKey);
-
-				TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
+				TelemetryChannel *channel = TelemetryChannel::Initialize();
+				channel = TelemetryChannel::GetInstance();
 
 				Assert::IsNotNull(channel);
 			};
@@ -111,7 +116,7 @@ namespace core {
 				TelemetryContext context(iKey);
 				context.InitContext();
 
-				MockTelemetryChannel *channel = MockTelemetryChannel::GetInstance(config);
+				MockTelemetryChannel *channel = (MockTelemetryChannel*)TelemetryChannel::Initialize();
 				std::vector<std::wstring> buffer;
 				int channelId = channel->GetChannelId();
 				for (int i = 0; i < 5; i++)
@@ -162,7 +167,7 @@ namespace core {
 				TelemetryContext context(iKey);
 				context.InitContext();
 
-				MockTelemetryChannel *channel = MockTelemetryChannel::GetInstance(config);
+				MockTelemetryChannel *channel = (MockTelemetryChannel*)TelemetryChannel::Initialize();
 				channel->SetBufferSize(2);
 				channel->Send();
 				std::list<std::wstring> buffer;
@@ -176,7 +181,7 @@ namespace core {
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 
 					auto testTask = create_task([&iKey, &config, &context, &i, &seqOffset]() -> bool {
-						MockTelemetryChannel *channel = MockTelemetryChannel::GetInstance(config);
+						MockTelemetryChannel *channel = MockTelemetryChannel::GetInstance();
 #endif	
 #endif
 						MessageData telemetry;
@@ -204,14 +209,14 @@ namespace core {
 				TelemetryContext context(iKey);
 				context.InitContext();
 
-				MockTelemetryChannel *channel = MockTelemetryChannel::GetInstance(config);
+				MockTelemetryChannel *channel = (MockTelemetryChannel*)TelemetryChannel::Initialize();
 				channel->SetBufferSize(5);
 				channel->Send();
 				int channelId = channel->GetChannelId();
 #ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 				auto testTask = create_task([&iKey, &context, &config]() -> bool {
-				MockTelemetryChannel *channel = MockTelemetryChannel::GetInstance(config);
+				MockTelemetryChannel *channel = MockTelemetryChannel::GetInstance();
 #endif	
 #endif
 				std::list<std::wstring> buffer;
@@ -237,30 +242,28 @@ namespace core {
 
 			TEST_METHOD(GetInstanceWorksIsThreadSafe)
 			{
-				wstr iKey = L"foo";
-				TelemetryClientConfig config(iKey);
-
+				TelemetryChannel *channel = TelemetryChannel::Initialize();
+				
 				// A task_group object that can be used from multiple threads.
 				task_group tasks;
 
 				// Concurrently add several tasks to the task_group object.
 				parallel_invoke(
-					[&config] { TelemetryChannel *channel = &TelemetryChannel::GetInstance(config); },
-					[&config] { TelemetryChannel *channel = &TelemetryChannel::GetInstance(config); },
-					[&config] { TelemetryChannel *channel = &TelemetryChannel::GetInstance(config); },
-					[&config] { TelemetryChannel *channel = &TelemetryChannel::GetInstance(config); },
-					[&config] { TelemetryChannel *channel = &TelemetryChannel::GetInstance(config); }
+					[] { TelemetryChannel *channel = TelemetryChannel::GetInstance(); },
+					[] { TelemetryChannel *channel = TelemetryChannel::GetInstance(); },
+					[] { TelemetryChannel *channel = TelemetryChannel::GetInstance(); },
+					[] { TelemetryChannel *channel = TelemetryChannel::GetInstance(); },
+					[] { TelemetryChannel *channel = TelemetryChannel::GetInstance(); }
 				);
 			};
 
 			TEST_METHOD(EnqueueIsThreadSafe)
 			{
 				wstr iKey = L"foo";
-				TelemetryClientConfig config(iKey);
 				TelemetryContext context(iKey);
 				context.InitContext();
 
-				MockTelemetryChannel *channel = MockTelemetryChannel::GetInstance(config);
+				MockTelemetryChannel *channel = (MockTelemetryChannel*)TelemetryChannel::Initialize();
 				channel->SetBufferSize(3);
 				channel->Send();
 				int seqOffset = channel->GetSeqNum();
@@ -270,32 +273,32 @@ namespace core {
 
 				// Concurrently add several tasks to the task_group object.
 				parallel_invoke(
-					[&config, &iKey, &context] {
-					TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
+					[&iKey, &context] {
+					TelemetryChannel *channel = TelemetryChannel::GetInstance();
 					MessageData telemetry;
 					telemetry.SetMessage(L"Hello 1");
 					channel->Enqueue(iKey, context, (Domain)telemetry);
 				},
-					[&config, &iKey, &context] {
-					TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
+					[&iKey, &context] {
+					TelemetryChannel *channel = TelemetryChannel::GetInstance();
 					MessageData telemetry;
 					telemetry.SetMessage(L"Hello 2");
 					channel->Enqueue(iKey, context, (Domain)telemetry);
 				},
-					[&config, &iKey, &context] {
-					TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
+					[&iKey, &context] {
+					TelemetryChannel *channel = TelemetryChannel::GetInstance();
 					MessageData telemetry;
 					telemetry.SetMessage(L"Hello 3");
 					channel->Enqueue(iKey, context, (Domain)telemetry);
 				},
-					[&config, &iKey, &context] {
-					TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
+					[&iKey, &context] {
+					TelemetryChannel *channel = TelemetryChannel::GetInstance();
 					MessageData telemetry;
 					telemetry.SetMessage(L"Hello 4");
 					channel->Enqueue(iKey, context, (Domain)telemetry);
 				},
-					[&config, &iKey, &context] {
-					TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
+					[&iKey, &context] {
+					TelemetryChannel *channel = TelemetryChannel::GetInstance();
 					MessageData telemetry;
 					telemetry.SetMessage(L"Hello 5");
 					channel->Enqueue(iKey, context, (Domain)telemetry);
@@ -310,11 +313,10 @@ namespace core {
 			TEST_METHOD(SendIsThreadSafe)
 			{
 				wstr iKey = L"foo";
-				TelemetryClientConfig config(iKey);
 				TelemetryContext context(iKey);
 				context.InitContext();
 
-				MockTelemetryChannel *channel = MockTelemetryChannel::GetInstance(config);
+				MockTelemetryChannel *channel = MockTelemetryChannel::GetInstance();
 				channel->SetBufferSize(1);
 				channel->Send();
 				int seqOffset = channel->GetSeqNum();
@@ -324,32 +326,32 @@ namespace core {
 
 				// Concurrently add several tasks to the task_group object.
 				parallel_invoke(
-					[&config, &iKey, &context] {
-					TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
+					[&iKey, &context] {
+					TelemetryChannel *channel = TelemetryChannel::GetInstance();
 					MessageData telemetry;
 					telemetry.SetMessage(L"Hello 1");
 					channel->Enqueue(iKey, context, (Domain)telemetry);
 				},
-					[&config, &iKey, &context] {
-					TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
+					[&iKey, &context] {
+					TelemetryChannel *channel = TelemetryChannel::GetInstance();
 					MessageData telemetry;
 					telemetry.SetMessage(L"Hello 2");
 					channel->Enqueue(iKey, context, (Domain)telemetry);
 				},
-					[&config, &iKey, &context] {
-					TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
+					[&iKey, &context] {
+					TelemetryChannel *channel = TelemetryChannel::GetInstance();
 					MessageData telemetry;
 					telemetry.SetMessage(L"Hello 3");
 					channel->Enqueue(iKey, context, (Domain)telemetry);
 				},
-					[&config, &iKey, &context] {
-					TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
+					[&iKey, &context] {
+					TelemetryChannel *channel = TelemetryChannel::GetInstance();
 					MessageData telemetry;
 					telemetry.SetMessage(L"Hello 4");
 					channel->Enqueue(iKey, context, (Domain)telemetry);
 				},
-					[&config, &iKey, &context] {
-					TelemetryChannel *channel = &TelemetryChannel::GetInstance(config);
+					[&iKey, &context] {
+					TelemetryChannel *channel = TelemetryChannel::GetInstance();
 					MessageData telemetry;
 					telemetry.SetMessage(L"Hello 5");
 					channel->Enqueue(iKey, context, (Domain)telemetry);

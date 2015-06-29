@@ -29,7 +29,7 @@ namespace ApplicationInsights
 			/// <summary>
 			/// Tracks the event.
 			/// </summary>
-			/// <param name="eventName">Name of the event.</param>
+			/// <param nae="eventName">Name of the event.</param>
 			/// <param name="properties">The properties.</param>
 			/// <param name="measurements">The measurements.</param>
 			void TrackEvent(Platform::String^ eventName,

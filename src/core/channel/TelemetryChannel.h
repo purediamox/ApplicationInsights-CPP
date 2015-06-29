@@ -22,9 +22,17 @@ namespace ApplicationInsights
 		class TELEMETRYCLIENT_API TelemetryChannel
 		{
 		public:
-			static TelemetryChannel& GetInstance(TelemetryClientConfig &config)
+			static TelemetryChannel* Initialize()
 			{
-				static TelemetryChannel instance(config);
+				if (instance == nullptr)
+				{
+					instance = new TelemetryChannel();
+				}
+				return instance;
+			}
+
+			static TelemetryChannel* GetInstance()
+			{
 				return instance;
 			}
 
@@ -50,7 +58,6 @@ namespace ApplicationInsights
 			int m_channelId;
 			int m_seqNum;
 			int m_maxBufferSize;
-			TelemetryClientConfig *m_config;
 			std::vector<std::wstring> m_buffer;
 
 			HttpResponse resp;
@@ -68,13 +75,16 @@ namespace ApplicationInsights
 			/// Initializes a new instance of the <see cref="TelemetryChannel"/> class.
 			/// </summary>
 			/// <param name="config">The configuration.</param>
-			TelemetryChannel(TelemetryClientConfig &config);
+			TelemetryChannel();
 
 			/// <summary>
 			/// removing the copy constructor and assignment operator
 			/// </summary>
 			TelemetryChannel(TelemetryChannel const&) = delete;
 			void operator =(TelemetryChannel const&) = delete;
+
+			static TelemetryChannel* instance;
+			CRITICAL_SECTION cs;
 		};
 	}
 }
