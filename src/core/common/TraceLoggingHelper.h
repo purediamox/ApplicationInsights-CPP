@@ -31,7 +31,7 @@ namespace ApplicationInsights
 
 			~TraceLoggingHelper();
 
-			void LogPartBData(Domain &data);
+			void LogPartBData(std::wstring iKey, wstring_wstring_map tags, Domain &data);
 
 			bool IsLoggingEnabled();
 
@@ -68,12 +68,12 @@ namespace ApplicationInsights
 			void Add(std::vector<BYTE>& buffer, double value); // double			
 			void Add(std::vector<BYTE>& buffer, std::wstring str); // wchar_t string
 
-			void LogMetric(MetricData* metric);
-			void LogEvent(EventData* eventData);
-			void LogPageView(PageViewData* pageViewData);
-			void LogPageViewPerf(PageViewPerfData* pageViewPerfData);
-			void LogMessage(MessageData* messageData);
-			void LogException(ExceptionData* exceptionData);
+			void LogMetric(std::wstring iKey, wstring_wstring_map tags, MetricData* metric);
+			void LogEvent(std::wstring iKey, wstring_wstring_map tags, EventData* eventData);
+			void LogPageView(std::wstring iKey, wstring_wstring_map tags, PageViewData* pageViewData);
+			void LogPageViewPerf(std::wstring iKey, wstring_wstring_map tags, PageViewPerfData* pageViewPerfData);
+			void LogMessage(std::wstring iKey, wstring_wstring_map tags, MessageData* messageData);
+			void LogException(std::wstring iKey, wstring_wstring_map tags, ExceptionData* exceptionData);
 		};
 	}
 }

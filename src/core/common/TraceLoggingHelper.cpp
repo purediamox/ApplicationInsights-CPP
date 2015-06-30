@@ -40,36 +40,37 @@ bool TraceLoggingHelper::IsLoggingEnabled()
 	return TraceLoggingProviderEnabled(g_hAppInsightsProvider, 0, 0);
 }
 
-void TraceLoggingHelper::LogPartBData(Domain &data)
+void TraceLoggingHelper::LogPartBData(std::wstring iKey, wstring_wstring_map tags, Domain &data)
 {
 
 	TraceLoggingWrite(
 		g_hAppInsightsProvider,
 		"TEST",
 		TraceLoggingKeyword(MICROSOFT_KEYWORD_TELEMETRY),
-		TraceLoggingWideString(L"TESTING", "Test Message")
+		TraceLoggingWideString(L"TESTING_IKEY", "PartA_iKey"),
+		TraceLoggingWideString(L"TESTING_Tag1", "PartA_Tags_tag1")
 		);
 
 	std::wstring baseType = data.GetBaseType();
 	if (baseType == L"MetricData")
 	{
-		LogMetric((MetricData*)&data);
+		LogMetric(iKey, tags, (MetricData*)&data);
 	}
 	else if (baseType == L"EventData")
 	{
-		LogEvent((EventData*)&data);
+		LogEvent(iKey, tags, (EventData*)&data);
 	}
 	else if (baseType == L"PageViewData")
 	{
-		LogPageView((PageViewData*)&data);
+		LogPageView(iKey, tags, (PageViewData*)&data);
 	}
 	else if (baseType == L"PageViewPerfData")
 	{
-		LogPageViewPerf((PageViewPerfData*)&data);
+		LogPageViewPerf(iKey, tags, (PageViewPerfData*)&data);
 	}
 	else if (baseType == L"MessageData")
 	{
-		LogMessage((MessageData*)&data);
+		LogMessage(iKey, tags, (MessageData*)&data);
 	}
 	/*else if (baseType == L"ExceptionData")
 	{
@@ -166,7 +167,7 @@ void TraceLoggingHelper::Add(std::vector<BYTE>& buffer, std::wstring str) // wch
 	buffer.push_back(0);
 }
 
-void TraceLoggingHelper::LogMetric(MetricData* metric)
+void TraceLoggingHelper::LogMetric(std::wstring iKey, wstring_wstring_map tags, MetricData* metric)
 {
 	if (metric == nullptr)
 	{
@@ -183,6 +184,7 @@ void TraceLoggingHelper::LogMetric(MetricData* metric)
 		g_hAppInsightsProvider,
 		"MetricData",
 		TraceLoggingKeyword(MICROSOFT_KEYWORD_TELEMETRY),
+		TraceLoggingWideString(iKey.c_str(), "PartA_iKey"),
 		TraceLoggingStruct(2, "Data"),
 		TraceLoggingWideString(metric->GetBaseType().c_str(), "baseType"),
 		TraceLoggingStruct(3, "baseData"),
@@ -203,7 +205,7 @@ void TraceLoggingHelper::LogMetric(MetricData* metric)
 		);
 }
 
-void TraceLoggingHelper::LogEvent(EventData* eventData)
+void TraceLoggingHelper::LogEvent(std::wstring iKey, wstring_wstring_map tags, EventData* eventData)
 {
 	if (eventData == nullptr)
 	{
@@ -220,6 +222,7 @@ void TraceLoggingHelper::LogEvent(EventData* eventData)
 		g_hAppInsightsProvider,
 		"EventData",
 		TraceLoggingKeyword(MICROSOFT_KEYWORD_TELEMETRY),
+		TraceLoggingWideString(iKey.c_str(), "PartA_iKey"),
 		TraceLoggingStruct(2, "Data"),
 		TraceLoggingWideString(eventData->GetBaseType().c_str(), "baseType"),
 		TraceLoggingStruct(4, "baseData"),
@@ -236,7 +239,7 @@ void TraceLoggingHelper::LogEvent(EventData* eventData)
 		);
 }
 
-void TraceLoggingHelper::LogPageView(PageViewData* pageViewData)
+void TraceLoggingHelper::LogPageView(std::wstring iKey, wstring_wstring_map tags, PageViewData* pageViewData)
 {
 	if (pageViewData == nullptr)
 	{
@@ -253,6 +256,7 @@ void TraceLoggingHelper::LogPageView(PageViewData* pageViewData)
 		g_hAppInsightsProvider,
 		"PageViewData",
 		TraceLoggingKeyword(MICROSOFT_KEYWORD_TELEMETRY),
+		TraceLoggingWideString(iKey.c_str(), "PartA_iKey"),
 		TraceLoggingStruct(2, "Data"),
 		TraceLoggingWideString(pageViewData->GetBaseType().c_str(), "baseType"),
 		TraceLoggingStruct(6, "baseData"),
@@ -271,7 +275,7 @@ void TraceLoggingHelper::LogPageView(PageViewData* pageViewData)
 		);
 }
 
-void TraceLoggingHelper::LogPageViewPerf(PageViewPerfData* pageViewPerfData)
+void TraceLoggingHelper::LogPageViewPerf(std::wstring iKey, wstring_wstring_map tags, PageViewPerfData* pageViewPerfData)
 {
 	if (pageViewPerfData == nullptr)
 	{
@@ -288,6 +292,7 @@ void TraceLoggingHelper::LogPageViewPerf(PageViewPerfData* pageViewPerfData)
 		g_hAppInsightsProvider,
 		"PageViewPerfData",
 		TraceLoggingKeyword(MICROSOFT_KEYWORD_TELEMETRY),
+		TraceLoggingWideString(iKey.c_str(), "PartA_iKey"),
 		TraceLoggingStruct(2, "Data"),
 		TraceLoggingWideString(pageViewPerfData->GetBaseType().c_str(), "baseType"),
 		TraceLoggingStruct(11, "baseData"),
@@ -311,7 +316,7 @@ void TraceLoggingHelper::LogPageViewPerf(PageViewPerfData* pageViewPerfData)
 		);
 }
 
-void TraceLoggingHelper::LogMessage(MessageData* messageData)
+void TraceLoggingHelper::LogMessage(std::wstring iKey, wstring_wstring_map tags, MessageData* messageData)
 {
 	if (messageData == nullptr)
 	{
@@ -331,6 +336,7 @@ void TraceLoggingHelper::LogMessage(MessageData* messageData)
 		g_hAppInsightsProvider,
 		"MessageData",
 		TraceLoggingKeyword(MICROSOFT_KEYWORD_TELEMETRY),
+		TraceLoggingWideString(iKey.c_str(), "PartA_iKey"),
 		TraceLoggingStruct(2, "Data"),
 		TraceLoggingWideString(messageData->GetBaseType().c_str(), "baseType"),
 		TraceLoggingStruct(4, "baseData"),
@@ -344,7 +350,7 @@ void TraceLoggingHelper::LogMessage(MessageData* messageData)
 		);
 }
 
-void TraceLoggingHelper::LogException(ExceptionData* exceptionData)
+void TraceLoggingHelper::LogException(std::wstring iKey, wstring_wstring_map tags, ExceptionData* exceptionData)
 {
 	if (exceptionData == nullptr)
 	{

@@ -55,11 +55,14 @@ void TelemetryChannel::Enqueue(TelemetryContext &context, Domain &telemetry)
 	StringWriter content(&buffer);
 	JsonWriter json(content);
 
+	wstring_wstring_map tags;
+	context.GetContextTags(tags);
+
 #ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 	if (etwLogger.IsLoggingEnabled())
 	{
-		etwLogger.LogPartBData(telemetry);
+		etwLogger.LogPartBData(m_config->GetIKey(), tags, telemetry);
 	}
 	else
 	{
@@ -72,8 +75,6 @@ void TelemetryChannel::Enqueue(TelemetryContext &context, Domain &telemetry)
 		envelope.SetName(telemetry.GetEnvelopeName());
 		envelope.SetSeq(std::to_wstring(m_channelId) + L":" + std::to_wstring(m_seqNum++));
 
-		wstring_wstring_map tags;
-		context.GetContextTags(tags);
 		envelope.SetTags(tags);
 
 		json.WriteObjectValue(&envelope);
