@@ -43,14 +43,24 @@ bool TraceLoggingHelper::IsLoggingEnabled()
 void TraceLoggingHelper::LogPartBData(std::wstring iKey, wstring_wstring_map tags, Domain &data)
 {
 
+	std::vector<BYTE> TagData;
+
+	AddArray(TagData, (int)tags.size(), tags);
+
 	TraceLoggingWrite(
 		g_hAppInsightsProvider,
 		"TEST",
 		TraceLoggingKeyword(MICROSOFT_KEYWORD_TELEMETRY),
 		TraceLoggingWideString(L"TESTING_IKEY", "PartA_iKey"),
-		TraceLoggingWideString(L"TESTING_Tag1", "PartA_Tags_tag1")
+		TraceLoggingStruct(2, "PartA_Tags"),
+			TraceLoggingWideString(L"TESTING_Tag2", "tag2"),
+			TraceLoggingWideString(L"TESTING_Tag1", "tag1")
 		);
 
+	//TraceLoggingPackedData(&TagData[0], TagData.size()),		//content
+	//	TraceLoggingPackedStructArray(2, "PartA_Tags"),
+	//	TraceLoggingPackedMetadata(TlgInUNICODESTRING, "name"),
+	//	TraceLoggingPackedMetadata(TlgInUNICODESTRING, "value"),
 	std::wstring baseType = data.GetBaseType();
 	if (baseType == L"MetricData")
 	{
