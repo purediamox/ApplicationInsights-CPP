@@ -51,15 +51,6 @@ namespace core {
 			{
 			public:
 
-				TEST_METHOD(GetConfigWorksAsExpected)
-				{
-					std::wstring iKey = L"MY IKEY";
-					TelemetryClient tc(iKey);
-					TelemetryClientConfig *config = tc.GetConfig();
-
-					Assert::AreEqual(iKey, config->GetIKey());
-				};
-
 				TEST_METHOD(TrackEventWorksAsExpected)
 				{
 					std::wstring eventName = L"MY TRACK EVENT";

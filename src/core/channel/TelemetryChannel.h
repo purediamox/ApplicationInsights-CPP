@@ -22,15 +22,17 @@ namespace ApplicationInsights
 		class TELEMETRYCLIENT_API TelemetryChannel
 		{
 		public:
-			static TelemetryChannel* Initialize()
-			{
-				if (instance == nullptr)
-				{
-					instance = new TelemetryChannel();
-				}
-				return instance;
-			}
+			/// <summary>
+			/// Initializes this instance.
+			/// </summary>
+			/// <returns></returns>
+			static TelemetryChannel* Initialize();
+			
 
+			/// <summary>
+			/// Gets the instance.
+			/// </summary>
+			/// <returns></returns>
 			static TelemetryChannel* GetInstance()
 			{
 				return instance;
@@ -88,4 +90,6 @@ namespace ApplicationInsights
 		};
 	}
 }
+
+
 #endif

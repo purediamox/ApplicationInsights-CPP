@@ -38,8 +38,21 @@ TRACELOGGING_DEFINE_PROVIDER(
 #endif
 #endif
 
-TelemetryChannel* ApplicationInsights::core::TelemetryChannel::instance = 0;
+TelemetryChannel* TelemetryChannel::instance = nullptr;
 const int MAX_BUFFER_SIZE = 50;
+
+/// <summary>
+/// Initializes this instance.
+/// </summary>
+/// <returns></returns>
+TelemetryChannel* TelemetryChannel::Initialize()
+{
+	if (instance == nullptr)
+	{
+		instance = new TelemetryChannel();
+	}
+	return instance;
+}
 
 /// <summary>
 /// Initializes a new instance of the <see cref="TelemetryChannel"/> class.

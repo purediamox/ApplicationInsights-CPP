@@ -38,8 +38,8 @@ TelemetryClient::TelemetryClient(std::wstring& iKey)
 /// </summary>
 /// <param name="config">The configuration.</param>
 /// <param name="context">The context.</param>
-TelemetryClient::TelemetryClient(TelemetryClientConfig &config,	TelemetryContext &context) 
-	: m_config(&config), m_context(&context)
+TelemetryClient::TelemetryClient(TelemetryContext &context) 
+	: m_context(&context)
 {
 }
 
@@ -53,7 +53,6 @@ TelemetryClient::~TelemetryClient()
 
 	// Free allocated memory
 	Utils::SafeDelete(m_context);
-	Utils::SafeDelete(m_config);
 }
 
 /// <summary>

@@ -3,6 +3,7 @@
 #include "Common/Utils.h"
 #include "CppUnitTest.h"
 #include "Channel/TelemetryChannel.h"
+#include "Channel/TelemetryChannel.cpp"
 #include "TelemetryClientConfig.h"
 #include "TelemetryContext.h"
 #include <stdio.h>
@@ -29,9 +30,12 @@ typedef std::map<std::wstring, std::wstring> map_wstr_wstr;
 typedef std::regex re;
 #define re_match(input, regex) std::regex_match(input, regex)
 
+
+
 namespace core {
 	namespace tests
 	{
+
 		class MockTelemetryChannel : public TelemetryChannel
 		{
 		public:

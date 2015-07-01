@@ -35,12 +35,6 @@ namespace ApplicationInsights
 			TelemetryContext *GetContext() const { return m_context; }
 
 			/// <summary>
-			/// Gets the configuration.
-			/// </summary>
-			/// <returns>the config</returns>
-			TelemetryClientConfig *GetConfig() const { return m_config; }
-
-			/// <summary>
 			/// Tracks the event.
 			/// </summary>
 			/// <param name="eventName">Name of the event.</param>
@@ -156,9 +150,8 @@ namespace ApplicationInsights
 			/// <summary>
 			/// Initializes a new instance of the <see cref="TelemetryClient"/> class.
 			/// </summary>
-			/// <param name="config">The configuration.</param>
 			/// <param name="context">The context.</param>
-			TelemetryClient(TelemetryClientConfig &config, TelemetryContext &context);
+			TelemetryClient(TelemetryContext &context);
 
 #if defined(WINAPI_FAMILY_PARTITION) // it's SOME kind of Windows
 			/// <summary>
@@ -167,11 +160,6 @@ namespace ApplicationInsights
 			/// <returns>True if the tracking is enabled, otherwise false</returns>
 			bool IsTrackingEnabled();
 #endif
-
-			// The config for the instance
-			//std::unique_ptr<TelemetryClientConfig> m_config;
-			TelemetryClientConfig *m_config;
-
 			// The telemetry telemetryContext object.
 			TelemetryContext *m_context;
 
