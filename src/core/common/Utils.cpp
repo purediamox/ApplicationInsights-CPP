@@ -142,6 +142,7 @@ Windows::Foundation::Collections::IPropertySet^ Utils::GetLocalSettingsContainer
 {
 	ApplicationDataContainer^ localSettings = ApplicationData::Current->LocalSettings;
 	ApplicationDataContainer^ container = localSettings->CreateContainer("AppInsights", ApplicationDataCreateDisposition::Always);
+
 	return localSettings->Containers->Lookup("AppInsights")->Values;
 }
 #endif

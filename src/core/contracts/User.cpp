@@ -27,9 +27,16 @@ const Nullable<std::wstring>& User::GetAccountAcquisitionDate()
 
 	if (values->HasKey("UserAcqDate"))
 	{
-		String^ sessionId = (String^)(values->Lookup("UserAcqDate"));
-		std::wstring sessionIdwstr(sessionId->Data());
-		m_accountAcquisitionDate.SetValue(sessionIdwstr);
+		String^ sessionId = safe_cast<String^>(values->Lookup("UserAcqDate"));
+		if (!sessionId)
+		{
+			m_accountAcquisitionDate.ClearValue();
+		}
+		else
+		{
+			std::wstring sessionIdwstr(sessionId->Data());
+			m_accountAcquisitionDate.SetValue(sessionIdwstr);
+		}
 	}
 	else
 	{
@@ -45,9 +52,11 @@ void User::SetAccountAcquisitionDate(const Nullable<std::wstring>& value)
 #ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
-
-	Platform::String^ acqDate = ref new String(value.GetValue().c_str());
-	values->Insert("UserAcqDate", acqDate);
+	if (value.HasValue())
+	{
+		Platform::String^ acqDate = ref new String(value.GetValue().c_str());
+		values->Insert("UserAcqDate", acqDate);
+	}
 #endif
 #endif
 	m_accountAcquisitionDate = value; 
@@ -61,9 +70,16 @@ const Nullable<std::wstring>& User::GetAccountId()
 
 	if (values->HasKey("UserAcctId"))
 	{
-		String^ sessionId = (String^)(values->Lookup("UserAcctId"));
-		std::wstring sessionIdwstr(sessionId->Data());
-		m_accountId.SetValue(sessionIdwstr);
+		String^ acctId = safe_cast<String^>(values->Lookup("UserAcctId"));
+		if (!acctId)
+		{
+			m_accountId.ClearValue();
+		}
+		else
+		{
+			std::wstring sessionIdwstr(acctId->Data());
+			m_accountId.SetValue(sessionIdwstr);
+		}
 	}
 	else
 	{
@@ -79,9 +95,11 @@ void User::SetAccountId(const Nullable<std::wstring>& value)
 #ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
-
-	Platform::String^ acctId= ref new String(value.GetValue().c_str());
-	values->Insert("UserAcctId", acctId);
+	if (value.HasValue())
+	{
+		Platform::String^ acctId = ref new String(value.GetValue().c_str());
+		values->Insert("UserAcctId", acctId);
+	}
 #endif
 #endif
 	m_accountId = value; 
@@ -95,9 +113,16 @@ const Nullable<std::wstring>& User::GetUserAgent()
 
 	if (values->HasKey("UserAgent"))
 	{
-		String^ sessionId = (String^)(values->Lookup("UserAgent"));
-		std::wstring sessionIdwstr(sessionId->Data());
-		m_userAgent.SetValue(sessionIdwstr);
+		String^ agent = safe_cast<String^>(values->Lookup("UserAgent"));
+		if (!agent)
+		{
+			m_userAgent.ClearValue();
+		}
+		else
+		{
+			std::wstring sessionIdwstr(agent->Data());
+			m_userAgent.SetValue(sessionIdwstr);
+		}
 	}
 	else
 	{
@@ -113,9 +138,11 @@ void User::SetUserAgent(const Nullable<std::wstring>& value)
 #ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
-
-	Platform::String^ agent = ref new String(value.GetValue().c_str());
-	values->Insert("UserAgent", agent);
+	if (value.HasValue())
+	{
+		Platform::String^ agent = ref new String(value.GetValue().c_str());
+		values->Insert("UserAgent", agent);
+	}
 #endif
 #endif
 	m_userAgent = value; 
@@ -129,9 +156,16 @@ const Nullable<std::wstring>& User::GetId()
 
 	if (values->HasKey("UserId"))
 	{
-		String^ sessionId = (String^)(values->Lookup("UserId"));
-		std::wstring sessionIdwstr(sessionId->Data());
-		m_id.SetValue(sessionIdwstr);
+		String^ id = safe_cast<String^>(values->Lookup("UserId"));
+		if (!id)
+		{
+			m_id.ClearValue();
+		}
+		else
+		{
+			std::wstring sessionIdwstr(id->Data());
+			m_id.SetValue(sessionIdwstr);
+		}		
 	}
 	else
 	{
@@ -147,9 +181,11 @@ void User::SetId(const Nullable<std::wstring>& value)
 #ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
-
-	Platform::String^ id = ref new String(value.GetValue().c_str());
-	values->Insert("UserId", id);
+	if (value.HasValue())
+	{
+		Platform::String^ id = ref new String(value.GetValue().c_str());
+		values->Insert("UserId", id);
+	}
 #endif
 #endif
 	m_id = value; 
@@ -163,9 +199,16 @@ const Nullable<std::wstring>& User::GetStoreRegion()
 
 	if (values->HasKey("UserStoreRegion"))
 	{
-		String^ sessionId = (String^)(values->Lookup("UserStoreRegion"));
-		std::wstring sessionIdwstr(sessionId->Data());
-		m_storeRegion.SetValue(sessionIdwstr);
+		String^ storeRegion = safe_cast<String^>(values->Lookup("UserStoreRegion"));
+		if (!storeRegion)
+		{
+			m_storeRegion.ClearValue();
+		}
+		else
+		{
+			std::wstring sessionIdwstr(storeRegion->Data());
+			m_storeRegion.SetValue(sessionIdwstr);
+		}
 	}
 	else
 	{
@@ -181,9 +224,11 @@ void User::SetStoreRegion(const Nullable<std::wstring>& value)
 #ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
-
-	Platform::String^ storeRegion = ref new String(value.GetValue().c_str());
-	values->Insert("UserStoreRegion", storeRegion);
+	if (value.HasValue())
+	{
+		Platform::String^ storeRegion = ref new String(value.GetValue().c_str());
+		values->Insert("UserStoreRegion", storeRegion);
+	}
 #endif
 #endif
 	m_storeRegion = value; 

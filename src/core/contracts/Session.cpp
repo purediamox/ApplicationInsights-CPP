@@ -28,8 +28,15 @@ const Nullable<std::wstring>& Session::GetId()
 	if (values->HasKey("SessionId"))
 	{
 		String^ sessionId = (String^)(values->Lookup("SessionId"));
-		std::wstring sessionIdwstr(sessionId->Data());
-		m_id.SetValue(sessionIdwstr);
+		if (!sessionId)
+		{
+			m_id.ClearValue();
+		}
+		else
+		{
+			std::wstring sessionIdwstr(sessionId->Data());
+			m_id.SetValue(sessionIdwstr);
+		}
 	}
 	else
 	{
@@ -45,9 +52,11 @@ void Session::SetId(const Nullable<std::wstring>& value)
 #ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
-
-	Platform::String^ id = ref new String(value.GetValue().c_str());
-	values->Insert("SessionId", id);
+	if (value.HasValue())
+	{
+		Platform::String^ id = ref new String(value.GetValue().c_str());
+		values->Insert("SessionId", id);
+	}
 #endif
 #endif
 	m_id = value; 
@@ -62,8 +71,15 @@ const Nullable<std::wstring>& Session::GetIsFirst()
 	if (values->HasKey("SessionIsFirst"))
 	{
 		String^ isFirst = (String^)(values->Lookup("SessionIsFirst"));
-		std::wstring isFirstWstr(isFirst->Data());
-		m_isFirst.SetValue(isFirstWstr);
+		if (!isFirst)
+		{
+			m_isFirst.ClearValue();
+		}
+		else
+		{
+			std::wstring isFirstWstr(isFirst->Data());
+			m_isFirst.SetValue(isFirstWstr);
+		}
 	}
 	else
 	{
@@ -79,9 +95,11 @@ void Session::SetIsFirst(const Nullable<std::wstring>& value)
 #ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
-
-	Platform::String^ isFirst = ref new String(value.GetValue().c_str());
-	values->Insert("SessionIsFirst", isFirst);
+	if (value.HasValue())
+	{
+		Platform::String^ isFirst = ref new String(value.GetValue().c_str());
+		values->Insert("SessionIsFirst", isFirst);
+	}
 #endif
 #endif
 	m_isFirst = value; 
@@ -96,8 +114,15 @@ const Nullable<std::wstring>& Session::GetIsNew()
 	if (values->HasKey("SessionIsNew"))
 	{
 		String^ isNew = (String^)(values->Lookup("SessionIsNew"));
-		std::wstring isNewWstr(isNew->Data());
-		m_isNew.SetValue(isNewWstr);
+		if (!isNew)
+		{
+			m_isNew.ClearValue();
+		}
+		else
+		{
+			std::wstring isNewWstr(isNew->Data());
+			m_isNew.SetValue(isNewWstr);
+		}
 	}
 	else
 	{
@@ -113,9 +138,11 @@ void Session::SetIsNew(const Nullable<std::wstring>& value)
 #ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
-
-	Platform::String^ isNew = ref new String(value.GetValue().c_str());
-	values->Insert("SessionIsNew", isNew);
+	if (value.HasValue())
+	{
+		Platform::String^ isNew = ref new String(value.GetValue().c_str());
+		values->Insert("SessionIsNew", isNew);
+	}
 #endif
 #endif
 	m_isNew = value; 

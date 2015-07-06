@@ -25,6 +25,7 @@ namespace core { namespace tests { namespace contracts
 #ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 			ApplicationData::Current->ClearAsync();
+			Sleep(1000);
 #endif
 #endif
 		}

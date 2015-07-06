@@ -44,37 +44,29 @@ TelemetryContext::~TelemetryContext()
 /// </summary>
 void TelemetryContext::InitUser()
 {
-	ApplicationDataContainer^ localSettings = ApplicationData::Current->LocalSettings;
+	auto values = Utils::GetLocalSettingsContainer();
 
-	ApplicationDataContainer^ container =
-		localSettings->CreateContainer("AppInsight", ApplicationDataCreateDisposition::Always);
-
-	if (localSettings->Containers->HasKey("AppInsight"))
+	//Get/Set the userID
+	if (values->HasKey("userId") == false)
 	{
-		auto values = localSettings->Containers->Lookup("AppInsight")->Values;
-	
-		//Get/Set the userID
-		if (values->HasKey("userId") == false)
-		{
-			Platform::String^ id = ref new Platform::String(Utils::GenerateRandomUUID().c_str());
-			values->Insert("userId", dynamic_cast<PropertyValue^>(PropertyValue::CreateString(id)));
-		}
-		
-		String^ userId = safe_cast<String^>(localSettings->Containers->Lookup("AppInsight")->Values->Lookup("userId"));
-		Nullable<std::wstring> uuid(userId->Data());
-		user.SetId(uuid);
-
-		//Get/Set the acquisition date
-		if (values->HasKey("acquisitionDate") == false)
-		{
-			Platform::String^ acqDate = ref new Platform::String(Utils::GetCurrentDateTime().c_str());
-			values->Insert("acquisitionDate", dynamic_cast<PropertyValue^>(PropertyValue::CreateString(acqDate)));
-		}
-		
-		String^ acquisitionDate = safe_cast<String^>(localSettings->Containers->Lookup("AppInsight")->Values->Lookup("acquisitionDate"));
-		Nullable<std::wstring> date(acquisitionDate->Data());
-		user.SetAccountAcquisitionDate(date);
+		Platform::String^ id = ref new Platform::String(Utils::GenerateRandomUUID().c_str());
+		values->Insert("userId", dynamic_cast<PropertyValue^>(PropertyValue::CreateString(id)));
 	}
+		
+	String^ userId = safe_cast<String^>(values->Lookup("userId"));
+	Nullable<std::wstring> uuid(userId->Data());
+	user.SetId(uuid);
+
+	//Get/Set the acquisition date
+	if (values->HasKey("UserAcqDate") == false)
+	{
+		Platform::String^ acqDate = ref new Platform::String(Utils::GetCurrentDateTime().c_str());
+		values->Insert("UserAcqDate", dynamic_cast<PropertyValue^>(PropertyValue::CreateString(acqDate)));
+	}
+		
+	String^ acquisitionDate = safe_cast<String^>(values->Lookup("UserAcqDate"));
+	Nullable<std::wstring> date(acquisitionDate->Data());
+	user.SetAccountAcquisitionDate(date);
 }
 
 /// <summary>

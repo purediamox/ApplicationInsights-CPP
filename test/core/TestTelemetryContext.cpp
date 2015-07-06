@@ -35,6 +35,7 @@ namespace core { namespace tests
 #ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 			ApplicationData::Current->ClearAsync();
+			Sleep(1000);
 #endif
 #endif
 		}
@@ -211,7 +212,7 @@ namespace core { namespace tests
 
                 if (key == L"ai.user.id")
                 {
-                    Assert::IsTrue(re_match(str(value.begin(), value.end()), uuidMatcher), L"Invalid regex for uuid");
+                    Assert::IsTrue(re_match(str(value.begin(), value.end()), uuidMatcher), L"Invalid regex for uuid for user");
                     found |= 1;
                 }
                 else if (key == L"ai.user.accountAcquisitionDate")
@@ -221,7 +222,7 @@ namespace core { namespace tests
                 }
                 else if (key == L"ai.session.id")
                 {
-                    Assert::IsTrue(re_match(str(value.begin(), value.end()), uuidMatcher), L"Invalid regex for uuid");
+                    Assert::IsTrue(re_match(str(value.begin(), value.end()), uuidMatcher), L"Invalid regex for uuid fr session");
                     found |= 4;
                 }
                 else if (key == L"ai.session.isFirst")
