@@ -3,7 +3,7 @@
 #include "../Contracts/Contracts.h"
 #include "../Common/Utils.h"
 #include "../Common/StringWriter.h"
-#include "../Common/TraceLoggingHelper.h"
+#include "Utils/TraceLoggingHelper.h"
 #include <stdlib.h> 
 #include <time.h>
 #include <locale>
@@ -60,7 +60,8 @@ void TelemetryChannel::Enqueue(TelemetryContext &context, Domain &telemetry)
 
 #ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
-	if (etwLogger.IsLoggingEnabled())
+	//if (etwLogger.IsLoggingEnabled())
+	if (false)
 	{
 		etwLogger.LogPartBData(m_config->GetIKey(), tags, telemetry);
 	}

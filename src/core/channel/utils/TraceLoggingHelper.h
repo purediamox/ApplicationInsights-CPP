@@ -1,11 +1,15 @@
 #ifndef TRACELOGGINGHELPER_H
 #define TRACELOGGINGHELPER_H
+
+#include "../../Common/Common.h"
+#include "../../Contracts/Contracts.h"
+
+#ifdef WINAPI_FAMILY_PARTITION
 #include <windows.h>
-#include "../Common/Common.h"
-#include "../Common/TraceLoggingProvider.h"
+#include "TraceLoggingProvider.h"
 //#include <TraceLoggingProvider.h>
 #include <TraceLoggingActivity.h>  
-#include "../Contracts/Contracts.h"
+
 
 namespace ApplicationInsights
 {
@@ -77,4 +81,6 @@ namespace ApplicationInsights
 		};
 	}
 }
+#endif
+
 #endif

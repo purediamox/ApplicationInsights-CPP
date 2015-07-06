@@ -1,7 +1,7 @@
 #include "TraceLoggingHelper.h"
-#include "../Contracts/Contracts.h"
-
+#include "../../Contracts/Contracts.h"
 using namespace ApplicationInsights::core;
+#ifdef WINAPI_FAMILY_PARTITION
 
 //#include <TraceLoggingProvider.h>  
 //#include <TraceLoggingActivity.h>  
@@ -421,3 +421,5 @@ void TraceLoggingHelper::LogException(std::wstring iKey, wstring_wstring_map tag
 	//		TraceLoggingPackedMetadata(TlgInDOUBLE, "value")
 	//	);
 }
+
+#endif

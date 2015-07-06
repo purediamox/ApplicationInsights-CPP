@@ -12,7 +12,7 @@
 #ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 
-#include "../Common/TraceLoggingHelper.h"
+#include "Utils/TraceLoggingHelper.h"
 #endif 
 #endif
 

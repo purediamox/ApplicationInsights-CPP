@@ -209,7 +209,6 @@
     <ClInclude Include="..\..\..\src\core\common\Serializer.h" />
     <ClInclude Include="..\..\..\src\core\common\StreamWriter.h" />
     <ClInclude Include="..\..\..\src\core\common\StringWriter.h" />
-    <ClInclude Include="..\..\..\src\core\common\TraceLoggingHelper.h" />
     <ClInclude Include="..\..\..\src\core\common\Utils.h" />
     <ClInclude Include="..\..\..\src\core\contracts\Application.h" />
     <ClInclude Include="..\..\..\src\core\contracts\Base.h" />
@@ -262,7 +261,6 @@
     <ClCompile Include="..\..\..\src\core\common\Serializer.cpp" />
     <ClCompile Include="..\..\..\src\core\common\StreamWriter.cpp" />
     <ClCompile Include="..\..\..\src\core\common\StringWriter.cpp" />
-    <ClCompile Include="..\..\..\src\core\common\TraceLoggingHelper.cpp" />
     <ClCompile Include="..\..\..\src\core\common\Utils.cpp" />
     <ClCompile Include="..\..\..\src\core\contracts\Application.cpp" />
     <ClCompile Include="..\..\..\src\core\contracts\Base.cpp" />
