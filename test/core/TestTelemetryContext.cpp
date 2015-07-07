@@ -222,7 +222,9 @@ namespace core { namespace tests
                 }
                 else if (key == L"ai.session.id")
                 {
-                    Assert::IsTrue(re_match(str(value.begin(), value.end()), uuidMatcher), L"Invalid regex for uuid fr session");
+					wchar_t errMsg[256];
+					swprintf_s(errMsg, 256, L"Invalid regex for uuid for session: %s", value);
+                    Assert::IsTrue(re_match(str(value.begin(), value.end()), uuidMatcher), errMsg);
                     found |= 4;
                 }
                 else if (key == L"ai.session.isFirst")
