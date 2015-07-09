@@ -1,6 +1,6 @@
 #include "../targetver.h"
 #include "../specializations.h"
-#include "Common/Utils.h"
+#include "Common/Utils.hpp"
 #include "CppUnitTest.h"
 #include "Channel/TelemetryChannel.h"
 #include "Channel/TelemetryChannel.cpp"
@@ -9,7 +9,6 @@
 #include <stdio.h>
 #include <regex>
 
-#ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 #include <memory>
 #include <ppl.h>
@@ -18,7 +17,6 @@
 
 using namespace concurrency;
 using namespace Windows::Storage;
-#endif
 #endif
 
 using namespace ApplicationInsights::core;
@@ -51,7 +49,6 @@ namespace core {
 
 			void SetBufferSize(int maxSize) { m_maxBufferSize = maxSize; }
 
-#ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 			DWORD WaitForResponse()
 			{
@@ -74,7 +71,6 @@ namespace core {
 				return dwRet;
 			}
 #endif
-#endif
 			const HttpResponse& GetResponse() const {
 				return resp;
 			}
@@ -85,16 +81,16 @@ namespace core {
 		public:
 			TEST_CLASS_INITIALIZE(initialize)
 			{
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 				ApplicationData::Current->ClearAsync();
-#endif
 #endif
 				Sleep(5000);
 			}
 
 			TEST_METHOD_CLEANUP(cleanup)
 			{
+				MockTelemetryChannel *channel = (MockTelemetryChannel*)TelemetryChannel::Initialize();
+				channel->SetBufferSize(50);
 				Sleep(5000);
 			}
 
@@ -166,7 +162,7 @@ namespace core {
 			TEST_METHOD(EnqueueAutoSendsWhenMaxBufferSizeIsReached)
 			{
 				wstr iKey = L"foo";
-				auto ui = task_continuation_context::use_current();
+				
 				TelemetryClientConfig config(iKey);
 				TelemetryContext context(iKey);
 				context.InitContext();
@@ -181,23 +177,19 @@ namespace core {
 
 				for (int i = 0; i < 3; i++)
 				{
-#ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
-
+					auto ui = task_continuation_context::use_current();
 					auto testTask = create_task([&iKey, &config, &context, &i, &seqOffset]() -> bool {
 						MockTelemetryChannel *channel = MockTelemetryChannel::GetInstance();
-#endif	
 #endif
 						MessageData telemetry;
 						telemetry.SetMessage(L"Hello");
 
 						channel->Enqueue(iKey, context, (Domain)telemetry);
 						
-#ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 						return true;
 					});
-#endif
 #endif					
 				}
 				Sleep(10000);
@@ -217,11 +209,10 @@ namespace core {
 				channel->SetBufferSize(5);
 				channel->Send();
 				int channelId = channel->GetChannelId();
-#ifdef WINAPI_FAMILY_PARTITION
+
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 				auto testTask = create_task([&iKey, &context, &config]() -> bool {
 				MockTelemetryChannel *channel = MockTelemetryChannel::GetInstance();
-#endif	
 #endif
 				std::list<std::wstring> buffer;
 				
@@ -232,18 +223,17 @@ namespace core {
 				Assert::IsTrue((channel->GetBuffer().size() > 0), L"Failed to queue data");
 				channel->Send();
 
-#ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 				DWORD ret = channel->WaitForResponse();
 				return true;
 				});
 				Sleep(10000);
 #endif
-#endif
 				Assert::AreEqual((int)channel->GetBuffer().size(), 0, L"Failed to clear queue");
 				Assert::AreEqual(channel->GetChannelId(), channelId, L"Failed: channel ID changed");
 			};
 
+#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 			TEST_METHOD(GetInstanceWorksIsThreadSafe)
 			{
 				TelemetryChannel *channel = TelemetryChannel::Initialize();
@@ -366,6 +356,7 @@ namespace core {
 				Assert::AreEqual((int)channel->GetBuffer().size(), 0, L"Failed to clear queue");
 				Assert::AreEqual((int)channel->GetSeqNum(), 5 + seqOffset, L"Failed to update sequence number");
 			};
+#endif
 		};
 	}
 }

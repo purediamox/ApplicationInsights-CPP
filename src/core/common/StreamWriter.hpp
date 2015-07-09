@@ -1,7 +1,7 @@
 #ifndef STREAMWRITER_H
 #define STREAMWRITER_H
 
-#include "Common.h"
+#include "Common.hpp"
 
 namespace ApplicationInsights
 {

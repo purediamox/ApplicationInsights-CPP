@@ -1,7 +1,7 @@
 #ifndef STRINGWRITER_H
 #define STRINGWRITER_H
 
-#include "StreamWriter.h"
+#include "StreamWriter.hpp"
 #include <string>
 
 namespace ApplicationInsights

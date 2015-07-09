@@ -2,9 +2,8 @@
 #define BASETELEMETRYCONTEXT_H
 
 #include <string>
-#include "TelemetryClientConfig.h"
 #include "Contracts/Contracts.h"
-#include "Common/Common.h"
+#include "Common/Common.hpp"
 
 namespace ApplicationInsights
 {

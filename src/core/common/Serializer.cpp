@@ -1,5 +1,5 @@
-#include "StreamWriter.h"
-#include "Serializer.h"
+#include "StreamWriter.hpp"
+#include "Serializer.hpp"
 
 using namespace ApplicationInsights::core;
 

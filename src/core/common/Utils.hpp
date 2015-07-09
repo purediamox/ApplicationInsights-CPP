@@ -1,7 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include "../Common/Common.h"
+#include "../Common/Common.hpp"
 #include <string>
 
 #define _ARRAY_SIZE(_array)  (sizeof(_array) / sizeof(_array[0]))
@@ -59,9 +59,6 @@ namespace ApplicationInsights
 			/// <param name="output">The output.</param>
 			static void WriteDebugLine(const std::wstring &output);
 
-
-
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Desktop
 			/// <summary>
 			/// Opens the reg key for application Insights.
@@ -77,7 +74,6 @@ namespace ApplicationInsights
 			/// </summary>
 			/// <returns>the local settings container for AppInsights</returns>
 			static Windows::Foundation::Collections::IPropertySet^ GetLocalSettingsContainer();
-#endif
 #endif
 		};
 	}

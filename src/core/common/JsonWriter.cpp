@@ -1,5 +1,5 @@
-#include "StreamWriter.h"
-#include "JsonWriter.h"
+#include "StreamWriter.hpp"
+#include "JsonWriter.hpp"
 
 using namespace ApplicationInsights::core;
 

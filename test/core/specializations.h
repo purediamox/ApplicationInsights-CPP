@@ -2,21 +2,10 @@
 #define SPECIALIZATIONS_H
 
 #include "CppUnitTest.h"
-#include "common/StringWriter.h"
-#include "Contracts/Base.h"
-#include "Contracts/CrashDataHeaders.h"
-#include "Contracts/DependencySourceType.h"
-#include "Contracts/DataPointType.h"
-#include "Contracts/DependencyKind.h"
-#include "Contracts/StackFrame.h"
-#include "Contracts/ExceptionDetails.h"
-#include "Contracts/DataPoint.h"
-#include "Contracts/CrashDataThreadFrame.h"
-#include "Contracts/CrashDataThread.h"
-#include "Contracts/CrashDataBinary.h"
-#include "Contracts/SeverityLevel.h"
-#include "Contracts/SessionState.h"
+#include "common/StringWriter.hpp"
+#include "Contracts/Contracts.h"
 #include "TelemetryClient.h"
+#include "common/JsonWriter.hpp"
 
 using namespace ApplicationInsights::core;
 namespace Microsoft{ namespace VisualStudio { namespace CppUnitTestFramework {

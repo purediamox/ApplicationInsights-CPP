@@ -6,8 +6,8 @@
 #include <memory>
 #include <functional>
 
-#include "HttpResponse.h"
-#include "HttpHeaderFields.h"
+#include "HttpResponse.hpp"
+#include "HttpHeaderFields.hpp"
 
 namespace ApplicationInsights
 {

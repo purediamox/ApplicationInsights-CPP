@@ -1,7 +1,7 @@
 #ifndef TELEMETRYCLIENTCONFIG_H
 #define TELEMETRYCLIENTCONFIG_H
 
-#include "Common/Common.h"
+#include "Common/Common.hpp"
 #include <string>
 
 namespace ApplicationInsights

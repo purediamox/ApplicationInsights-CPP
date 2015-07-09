@@ -1,22 +1,19 @@
-#include "Utils.h"
+#include "Utils.hpp"
 #include <time.h>
 #include <sys/timeb.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <random>
 #include <functional>
-
-using namespace ApplicationInsights::core;
-
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #include <Windows.h>
+
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 using namespace Platform;
 using namespace Windows::Foundation;
 using namespace Windows::Storage;
 #endif
-#endif
 
+using namespace ApplicationInsights::core;
 /// <summary>
 /// Gets the current date time.
 /// </summary>
@@ -106,13 +103,10 @@ std::wstring Utils::GenerateRandomUUID(){
 void Utils::WriteDebugLine(const std::wstring &output)
 {
 #ifdef _DEBUG
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 	OutputDebugString((L"\r\nAPPLICATION INSIGHTS : \r\n" + output).c_str());
-#endif
 #endif
 }
 
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) 
 /// <summary>
 /// Opens the reg key for application Insights.
@@ -145,5 +139,4 @@ Windows::Foundation::Collections::IPropertySet^ Utils::GetLocalSettingsContainer
 
 	return localSettings->Containers->Lookup("AppInsights")->Values;
 }
-#endif
 #endif

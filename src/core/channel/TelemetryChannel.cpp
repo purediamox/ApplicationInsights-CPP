@@ -1,17 +1,15 @@
 #include "TelemetryChannel.h"
 #include "../TelemetryContext.h"
 #include "../Contracts/Contracts.h"
-#include "../Common/Utils.h"
-#include "../Common/StringWriter.h"
+#include "../Common/Utils.hpp"
+#include "../Common/StringWriter.hpp"
+#include "../Common/JsonWriter.hpp"
 #include <stdlib.h> 
 #include <time.h>
 #include <locale>
 #include <codecvt>
-
 using namespace ApplicationInsights::core;
 
-#ifdef WINAPI_FAMILY_PARTITION	//If it is Windows
-#include <Windows.h> 
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 #include <TraceLoggingProvider.h>  
 #include <TraceLoggingActivity.h>  
@@ -36,7 +34,6 @@ TRACELOGGING_DEFINE_PROVIDER(
 	TraceLoggingOptionMicrosoftTelemetry());
 
 #endif
-#endif
 
 TelemetryChannel* TelemetryChannel::instance = nullptr;
 const int MAX_BUFFER_SIZE = 50;
@@ -55,6 +52,15 @@ TelemetryChannel* TelemetryChannel::Initialize()
 }
 
 /// <summary>
+/// Gets the instance.
+/// </summary>
+/// <returns></returns>
+TelemetryChannel* TelemetryChannel::GetInstance()
+{
+	return instance;
+}
+
+/// <summary>
 /// Initializes a new instance of the <see cref="TelemetryChannel"/> class.
 /// </summary>
 /// <param name="config">The configuration.</param>
@@ -65,13 +71,11 @@ TelemetryChannel::TelemetryChannel()
 	m_seqNum = 0;
 	m_maxBufferSize = MAX_BUFFER_SIZE;
 
-#ifdef WINAPI_FAMILY_PARTITION
 	InitializeCriticalSectionEx(&cs, 0, 0);
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 	hRespRecv = CreateEventEx(nullptr, L"RecvResp", 0, EVENT_MODIFY_STATE | SYNCHRONIZE);
 
 	HRESULT hResult = TraceLoggingRegister(g_hAppInsightsProvider);
-#endif
 #endif
 }
 
@@ -80,13 +84,10 @@ TelemetryChannel::TelemetryChannel()
 /// </summary>
 TelemetryChannel::~TelemetryChannel()
 {
-#ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 	TraceLoggingUnregister(g_hAppInsightsProvider);
 #endif
 	DeleteCriticalSection(&cs);
-#endif
-
 }
 
 /// <summary>
@@ -104,7 +105,6 @@ void TelemetryChannel::Enqueue(std::wstring &iKey, TelemetryContext &context, Do
 	StringWriter content(&buffer);
 	JsonWriter json(content);
 
-#ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 	//if (TraceLoggingProviderEnabled(g_hAppInsightsProvider, 0, 0))
 	if(false)
@@ -120,7 +120,6 @@ void TelemetryChannel::Enqueue(std::wstring &iKey, TelemetryContext &context, Do
 	}
 	else
 	{
-#endif
 #endif
 		EnterCriticalSection(&cs);
 
@@ -152,11 +151,9 @@ void TelemetryChannel::Enqueue(std::wstring &iKey, TelemetryContext &context, Do
 		{
 			Send();
 		}
-#ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 	}
 #endif
-#endif	
 }
 
 /// <summary>
@@ -206,17 +203,15 @@ void TelemetryChannel::Send()
 
 #ifdef _DEBUG
 			resp = response;
-#ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 			SetEvent(hRespRecv);
-#endif
 #endif
 #endif
 		}) != 0) {
 			EnterCriticalSection(&cs);
 			
 			for (auto &buf : sendBuffer) {
-				m_buffer.push_back(buffer);
+				m_buffer.push_back(buf);
 			}
 
 			LeaveCriticalSection(&cs);

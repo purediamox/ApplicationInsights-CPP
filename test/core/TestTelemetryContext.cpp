@@ -3,19 +3,17 @@
 #include "CppUnitTest.h"
 #include "TelemetryContext.h"
 #include "Contracts/Contracts.h"
-#include "common/utils.h"
+#include "common/utils.hpp"
 #include <regex>
+#include <Windows.h>
 
 using namespace ApplicationInsights::core;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
-#include <Windows.h>
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 using namespace Platform;
 using namespace Windows::Foundation;
 using namespace Windows::Storage;
-#endif
 #endif
 
 typedef std::wstring wstr;
@@ -32,11 +30,9 @@ namespace core { namespace tests
         
 		TEST_CLASS_INITIALIZE(initialize)
 		{
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 			ApplicationData::Current->ClearAsync();
 			Sleep(1000);
-#endif
 #endif
 		}
 

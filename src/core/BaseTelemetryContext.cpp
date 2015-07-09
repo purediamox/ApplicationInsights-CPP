@@ -1,5 +1,5 @@
 #include "BaseTelemetryContext.h"
-#include "Common/Utils.h"
+#include "Common/Utils.hpp"
 
 using namespace ApplicationInsights::core;
 

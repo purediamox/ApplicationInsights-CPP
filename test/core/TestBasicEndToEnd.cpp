@@ -1,25 +1,17 @@
+#include "Channel/Utils/HttpResponse.hpp"
 #include "targetver.h"
 #include "specializations.h"
-#include "CppUnitTest.h"
 #include "TelemetryContext.h"
 #include "TelemetryClient.h"
 #include "Contracts/Contracts.h"
-#include "Channel/Utils/HttpResponse.h"
 #include <regex>
 #include <stdio.h>
-
-
-#ifdef _WIN32
 #include <Windows.h>
-#else
-#include <unistd.h>
-#endif
 
-#ifdef WINAPI_FAMILY_PARTITION
+
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // phone or store
 #include <ppltasks.h>
 using namespace concurrency;
-#endif
 #endif
 
 #include <thread>
@@ -95,14 +87,12 @@ namespace core {
 					m_channel->Send();
 				}
 
-#ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // phone or store
 				DWORD WaitForResponse() {
 					DWORD ret = ((MockTelemetryChannel *)m_channel)->WaitForResponse();
 					return ret;
 				}
 #endif 
-#endif
 				HttpResponse GetResponse() {
 					return ((MockTelemetryChannel *)m_channel)->GetResponse();
 				}
@@ -114,7 +104,6 @@ namespace core {
 			public:
 				TEST_CLASS_INITIALIZE(Initialize)
 				{
-#ifdef WINAPI_FAMILY_PARTITION
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)  // Win32, not phone or store
 					WORD wVersionRequested;
 
@@ -125,17 +114,14 @@ namespace core {
 					wVersionRequested = MAKEWORD(2, 2);
 
 					err = WSAStartup(wVersionRequested, &wsaData);
-#endif 
 #endif
 				}
 
 				TEST_CLASS_CLEANUP(Cleanup)
 				{
-#ifdef WINAPI_FAMILY_PARTITION
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)  // Win32, not phone or store
 					WSACleanup();
 #endif 
-#endif
 				}
 
 				TEST_METHOD(BasicEndToEnd)
@@ -143,10 +129,8 @@ namespace core {
 					std::wstring iKey = L"ba0f19ca-aa77-4838-ac05-dbba85d6b677";
 					MockTelemetryClient tc(iKey);
 
-#ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // phone or store					
 					auto testTask = create_task([&tc]() -> bool {
-#endif	
 #endif	
 						wchar_t message[100];
 						for (int i = 0; i < ITERATIONS; i++)
@@ -165,14 +149,12 @@ namespace core {
 						}
 						tc.Flush();
 
-#ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // phone or store
 						DWORD ret = tc.WaitForResponse();
 						return true;
 					});
 
 					Sleep(5000);
-#endif
 #endif
 					HttpResponse resp = tc.GetResponse();
 
@@ -185,13 +167,13 @@ namespace core {
 					int recvBegin = recv + 15;
 					int recvEnd = payload.find(",", recvBegin);
 					std::string numReceived = str(&payload[recvBegin], &payload[recvEnd]);
-					Assert::AreEqual(numReceived, str(strSent));
+					Assert::AreEqual(numReceived, str(strSent), L"Did not receive correct number of responses");
 
 					int accepted = payload.find("itemsAccepted");
 					int acceptedBegin = accepted + 15;
 					int acceptedEnd = payload.find(",", acceptedBegin);
 					std::string numAccepted = str(&payload[acceptedBegin], &payload[acceptedEnd]);
-					Assert::AreEqual(numAccepted, str(strSent));
+					Assert::AreEqual(numAccepted, str(strSent), L"Did not receive correct number of items accepted");
 				};
 			};
 		}

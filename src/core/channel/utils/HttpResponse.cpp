@@ -1,4 +1,4 @@
-#include "HttpResponse.h"
+#include "HttpResponse.hpp"
 
 using namespace ApplicationInsights::core;
 

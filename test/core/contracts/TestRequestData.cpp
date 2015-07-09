@@ -1,6 +1,5 @@
 #include "../targetver.h"
 #include "../specializations.h"
-#include "CppUnitTest.h"
 #include "Contracts/RequestData.h"
 
 using namespace ApplicationInsights::core;

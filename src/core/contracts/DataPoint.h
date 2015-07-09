@@ -1,10 +1,9 @@
 #ifndef DATAPOINT_H
 #define DATAPOINT_H
 
-#include "../common/Common.h"
-#include "../common/JsonWriter.h"
+#include "../common/Common.hpp"
+#include "../common/Serializer.hpp"
 #include "../common/Nullable.h"
-#include "../common/Serializer.h"
 #include "DataPointType.h"
 #include <map>
 #include <string>

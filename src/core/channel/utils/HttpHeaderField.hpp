@@ -1,7 +1,7 @@
 #ifndef HTTPHEADERFIELD_H
 #define HTTPHEADERFIELD_H
 
-#include "../../Common/Common.h"
+#include "../../Common/Common.hpp"
 #include <string>
 namespace ApplicationInsights
 {
@@ -24,43 +24,27 @@ namespace ApplicationInsights
 			/// Gets the field name.
 			/// </summary>
 			/// <returns>the field name</returns>
-			const std::wstring& GetName() const {
-				return m_strName;
-			}
+			const std::wstring& GetName() const;
 
 			/// <summary>
 			/// Gets the field value.
 			/// </summary>
 			/// <returns>the value of the field</returns>
-			const std::wstring& GetValue() const {
-				return m_strValue;
-			}
+			const std::wstring& GetValue() const;
 
 			/// <summary>
 			/// Determine if two header fields have the same name (value may differ)
 			/// </summary>
 			/// <param name="field">The field.</param>
 			/// <returns>true if the fields match, otherwise false</returns>
-			bool operator ==(const HttpHeaderField& field) const {
-#if WINAPI_FAMILY || _WIN32
-				return _wcsicmp(m_strName.c_str(), field.m_strName.c_str()) == 0;
-#else
-				return wcscasecmp(m_strName.c_str(), field.m_strName.c_str()) == 0;
-#endif
-			}
+			bool operator ==(const HttpHeaderField& field) const;
 
 			/// <summary>
 			/// Determine if two header fields different names (value might be the same)
 			/// </summary>
 			/// <param name="field">The field.</param>
 			/// <returns>true if the fields DO NOT match, otherwise false</returns>
-			bool operator !=(const HttpHeaderField& field) const {
-#if WINAPI_FAMILY || _WIN32
-				return _wcsicmp(m_strName.c_str(), field.m_strName.c_str()) != 0;
-#else
-				return wcscasecmp(m_strName.c_str(), field.m_strName.c_str()) != 0;
-#endif
-			}
+			bool operator !=(const HttpHeaderField& field) const;
 
 			/// <summary>
 			/// Convert header fields to the string.

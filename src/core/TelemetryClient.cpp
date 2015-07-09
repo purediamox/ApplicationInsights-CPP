@@ -2,15 +2,13 @@
 #include <vector>
 #include <map>
 #include "TelemetryClient.h"
-#include "common/Utils.h"
+#include "common/Utils.hpp"
 
-#if defined(WINAPI_FAMILY_PARTITION) // it's SOME kind of Windows
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Win32, no store, no phone
 #include "Windows.h"
 #else
 using namespace Windows::Storage;
 using namespace Windows::Foundation;
-#endif
 #endif
 
 using namespace ApplicationInsights::core;
@@ -285,11 +283,10 @@ void TelemetryClient::Flush()
 /// </summary>
 void TelemetryClient::DisableTracking()
 {
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Win32, no store, no phone
 	//Use registry settings 
 	HKEY hKey;
-	if (Utils::OpenRegKey(hKey, m_config->GetIKey()))
+	if (Utils::OpenRegKey(hKey, m_instrumentationKey))
 	{
 		DWORD disable = 1;
 		if (RegSetValueEx(hKey, TEXT("DisableTracking"), 0, REG_DWORD, (const BYTE *)&disable, sizeof(disable)) != ERROR_SUCCESS)
@@ -307,7 +304,6 @@ void TelemetryClient::DisableTracking()
 	values->Insert("Tracking", dynamic_cast<PropertyValue^>(PropertyValue::CreateString("Disable")));
 	
 #endif
-#endif
 }
 
 /// <summary>
@@ -315,11 +311,10 @@ void TelemetryClient::DisableTracking()
 /// </summary>
 void TelemetryClient::EnableTracking()
 {
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Win32, no store, no phone
 	//Use registry settings 
 	HKEY hKey;
-	if (Utils::OpenRegKey(hKey, m_config->GetIKey()))
+	if (Utils::OpenRegKey(hKey, m_instrumentationKey))
 	{
 		if (RegDeleteValue(hKey, TEXT("DisableTracking")) != ERROR_SUCCESS)
 		{
@@ -334,7 +329,6 @@ void TelemetryClient::EnableTracking()
 	values->Remove("Tracking");
 	
 #endif
-#endif
 }
 
 /// <summary>
@@ -343,7 +337,6 @@ void TelemetryClient::EnableTracking()
 /// <returns>True if the tracking is enabled, otherwise false</returns>
 bool TelemetryClient::IsTrackingEnabled()
 {
-#if defined(WINAPI_FAMILY_PARTITION) // it's SOME kind of Windows
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Win32, no store, no phone
 	//Use registry settings 
 	HKEY hKey;
@@ -352,7 +345,7 @@ bool TelemetryClient::IsTrackingEnabled()
 	DWORD dwBufferSize = sizeof(szBuffer);
 	bool trackingEnabled = true;
 
-	if (Utils::OpenRegKey(hKey, m_config->GetIKey()))
+	if (Utils::OpenRegKey(hKey, m_instrumentationKey))
 	{
 		if (RegQueryValueEx(hKey, TEXT("DisableTracking"), nullptr, nullptr, (LPBYTE)szBuffer, &dwBufferSize) == ERROR_SUCCESS)
 		{
@@ -369,6 +362,5 @@ bool TelemetryClient::IsTrackingEnabled()
 	enabled = !(values->HasKey("Tracking"));
 	
 	return enabled;
-#endif
 #endif
 }

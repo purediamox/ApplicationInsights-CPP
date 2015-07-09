@@ -2,7 +2,7 @@
 #define HTTPRESPONSE_H
 
 #include <string>
-#include "../../Common/Common.h"
+#include "../../Common/Common.hpp"
 
 namespace ApplicationInsights
 {

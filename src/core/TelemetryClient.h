@@ -2,7 +2,6 @@
 #define TELEMETRYCLIENT_H
 
 #include "Contracts/Contracts.h"
-#include "TelemetryClientConfig.h"
 #include "TelemetryContext.h"
 #include "Channel/TelemetryChannel.h"
 #include <string>
@@ -134,7 +133,6 @@ namespace ApplicationInsights
 			/// </summary>
 			void Flush();
 
-#if defined(WINAPI_FAMILY_PARTITION) // it's SOME kind of Windows
 			/// <summary>
 			/// Disables all tracking.
 			/// </summary>
@@ -144,7 +142,6 @@ namespace ApplicationInsights
 			/// Enables all tracking.
 			/// </summary>
 			void EnableTracking();
-#endif
 
 		protected:
 			/// <summary>
@@ -153,13 +150,12 @@ namespace ApplicationInsights
 			/// <param name="context">The context.</param>
 			TelemetryClient(TelemetryContext &context);
 
-#if defined(WINAPI_FAMILY_PARTITION) // it's SOME kind of Windows
 			/// <summary>
 			/// Determines whether [is tracking enabled].
 			/// </summary>
 			/// <returns>True if the tracking is enabled, otherwise false</returns>
 			bool IsTrackingEnabled();
-#endif
+
 			// The telemetry telemetryContext object.
 			TelemetryContext *m_context;
 

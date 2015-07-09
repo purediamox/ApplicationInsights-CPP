@@ -1,10 +1,9 @@
 #ifndef BASE_H
 #define BASE_H
 
-#include "../common/Common.h"
-#include "../common/JsonWriter.h"
+#include "../common/Common.hpp"
+#include "../common/Serializer.hpp"
 #include "../common/Nullable.h"
-#include "../common/Serializer.h"
 #include <map>
 #include <string>
 #include <vector>

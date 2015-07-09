@@ -1,7 +1,6 @@
-#include <wchar.h>
-#include "StreamWriter.h"
+#include "StreamWriter.hpp"
 #include "string.h"
-
+#include <wchar.h>
 using namespace ApplicationInsights::core;
 
 /// <summary>

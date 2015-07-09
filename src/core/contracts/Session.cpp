@@ -1,14 +1,12 @@
 #include "Session.h"
-#include "../common/Utils.h"
+#include "../common/Utils.hpp"
 
 using namespace ApplicationInsights::core;
 
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 using namespace Platform;
 using namespace Windows::Foundation;
 using namespace Windows::Storage;
-#endif
 #endif
 
 Session::Session()
@@ -21,7 +19,6 @@ Session::~Session()
 
 const Nullable<std::wstring>& Session::GetId()
 { 
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
 
@@ -43,13 +40,11 @@ const Nullable<std::wstring>& Session::GetId()
 		m_id.ClearValue();
 	}
 #endif
-#endif
 	return m_id;
 }
 
 void Session::SetId(const Nullable<std::wstring>& value)
 { 
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
 	if (value.HasValue())
@@ -58,13 +53,11 @@ void Session::SetId(const Nullable<std::wstring>& value)
 		values->Insert("SessionId", id);
 	}
 #endif
-#endif
 	m_id = value; 
 }
 
 const Nullable<std::wstring>& Session::GetIsFirst()
 { 
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
 
@@ -86,13 +79,11 @@ const Nullable<std::wstring>& Session::GetIsFirst()
 		m_isFirst.ClearValue();
 	}
 #endif
-#endif
 	return m_isFirst; 
 }
 
 void Session::SetIsFirst(const Nullable<std::wstring>& value)
 { 
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
 	if (value.HasValue())
@@ -101,13 +92,11 @@ void Session::SetIsFirst(const Nullable<std::wstring>& value)
 		values->Insert("SessionIsFirst", isFirst);
 	}
 #endif
-#endif
 	m_isFirst = value; 
 }
 
 const Nullable<std::wstring>& Session::GetIsNew()
 { 
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
 
@@ -129,13 +118,11 @@ const Nullable<std::wstring>& Session::GetIsNew()
 		m_isNew.ClearValue();
 	}
 #endif
-#endif
 	return m_isNew; 
 }
 
 void Session::SetIsNew(const Nullable<std::wstring>& value)
 { 
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
 	if (value.HasValue())
@@ -143,7 +130,6 @@ void Session::SetIsNew(const Nullable<std::wstring>& value)
 		Platform::String^ isNew = ref new String(value.GetValue().c_str());
 		values->Insert("SessionIsNew", isNew);
 	}
-#endif
 #endif
 	m_isNew = value; 
 }

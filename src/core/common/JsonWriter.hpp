@@ -1,8 +1,8 @@
 #ifndef JSONWRITER_H
 #define JSONWRITER_H
 
-#include "../Common/Common.h"
-#include "../Common/Serializer.h"
+#include "../Common/Common.hpp"
+#include "../Common/Serializer.hpp"
 #include <type_traits>
 
 namespace ApplicationInsights

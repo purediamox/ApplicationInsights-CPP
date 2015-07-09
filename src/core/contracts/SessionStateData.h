@@ -1,10 +1,9 @@
 #ifndef SESSIONSTATEDATA_H
 #define SESSIONSTATEDATA_H
 
-#include "../common/Common.h"
-#include "../common/JsonWriter.h"
+#include "../common/Common.hpp"
+#include "../common/Serializer.hpp"
 #include "../common/Nullable.h"
-#include "../common/Serializer.h"
 #include "Domain.h"
 #include "SessionState.h"
 #include <map>

@@ -1,5 +1,5 @@
-#include "StringWriter.h"
-#include "Utils.h"
+#include "StringWriter.hpp"
+#include "Utils.hpp"
 #include <stdio.h>
 
 using namespace ApplicationInsights::core;

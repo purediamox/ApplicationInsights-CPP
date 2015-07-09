@@ -1,4 +1,4 @@
-#include "HttpHeaderField.h"
+#include "HttpHeaderField.hpp"
 #include <codecvt>
 #include <locale>
 
@@ -13,6 +13,46 @@ HttpHeaderField::HttpHeaderField(const std::wstring& name, const std::wstring& v
 	: m_strName(name),
 	m_strValue(value)
 {
+}
+
+/// <summary>
+/// Gets the field name.
+/// </summary>
+/// <returns>the field name</returns>
+const std::wstring& HttpHeaderField::GetName() const 
+{
+	return m_strName;
+}
+
+/// <summary>
+/// Gets the field value.
+/// </summary>
+/// <returns>the value of the field</returns>
+const std::wstring& HttpHeaderField::GetValue() const 
+{
+	return m_strValue;
+}
+
+/// <summary>
+/// Determine if two header fields have the same name (value may differ)
+/// </summary>
+/// <param name="field">The field.</param>
+/// <returns>true if the fields match, otherwise false</returns>
+bool HttpHeaderField::operator == (const HttpHeaderField& field) const {
+	return _wcsicmp(m_strName.c_str(), field.m_strName.c_str()) == 0;
+}
+
+/// <summary>
+/// Determine if two header fields different names (value might be the same)
+/// </summary>
+/// <param name="field">The field.</param>
+/// <returns>true if the fields DO NOT match, otherwise false</returns>
+bool HttpHeaderField::operator != (const HttpHeaderField& field) const {
+#if WINAPI_FAMILY || _WIN32
+	return _wcsicmp(m_strName.c_str(), field.m_strName.c_str()) != 0;
+#else
+	return wcscasecmp(m_strName.c_str(), field.m_strName.c_str()) != 0;
+#endif
 }
 
 /// <summary>

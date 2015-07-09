@@ -1,10 +1,10 @@
-#include "HttpRequest.h"
-#include "../../common/Utils.h"
+#include "HttpRequest.hpp"
+#include "../../common/Utils.hpp"
 #include <algorithm>
 #include <locale>
 #include <codecvt>
 #include <vector>
-
+#include <windows.h>
 using namespace ApplicationInsights::core;
 
 class HttpRequestImplBase { 
@@ -15,11 +15,8 @@ class HttpRequestImplBase {
         virtual int Send(const HttpRequest &req, const std::function<void(const HttpResponse &resp)> &completionCallback) = 0;
 };
 
-#ifdef WIN32
-#include <windows.h>
-#endif
 
-#if defined(WINAPI_FAMILY_PARTITION) // it's SOME kind of Windows
+
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Win32, no store, no phone
 #include <winhttp.h>
 class HttpRequestImpl : public HttpRequestImplBase
@@ -194,95 +191,6 @@ class HttpRequestImpl : public HttpRequestImplBase
             return 0;
         }
 };
-#endif
-#else // Everything else - OS X, Linux, Droid; use Curl
-#include <curl/curl.h>
-
-static size_t curl_write_data(void *ptr, size_t size, size_t nmemb, void *stream)
-{
-    reinterpret_cast<std::string *>(stream)->append(reinterpret_cast<char *>(ptr), size * nmemb);
-    return size * nmemb;
-}
-
-class HttpRequestImpl : public HttpRequestImplBase
-{
-    private:
-        CURL *curl;
-        static bool didGlobalInit;
-    public:
-        static void GlobalDestroy() { curl_global_cleanup(); }
-    
-        virtual void Init()
-        {
-            if (!HttpRequestImpl::didGlobalInit) {
-                curl_global_init(CURL_GLOBAL_DEFAULT);
-                HttpRequestImpl::didGlobalInit = true;
-            }
-            curl = curl_easy_init();
-
-            // Enable "does the SSL cert have a valid root?" check.
-            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1);
-            // Enable "does the SSL cert's CN match the hostname?" check.
-            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2);
-
-#ifdef CPP_LIB_DEBUG
-            curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-#else
-            curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
-#endif
-        }
-        virtual void Destroy()
-        {
-            curl_easy_cleanup(curl);
-        }
-        virtual int Send(const HttpRequest &req, const std::function<void(const HttpResponse &resp)> &completionCallback)
-        {
-            CURLcode res = CURLE_FAILED_INIT;
-            
-			if (curl == nullptr) {
-                return res;
-            }
-            
-            std::string url = std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(L"https://" + req.GetHostname() + req.GetRequestUri());
-            
-            curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-            if (req.GetMethod() == HTTP_REQUEST_METHOD::POST || req.GetMethod() == HTTP_REQUEST_METHOD::PUT) {
-                curl_easy_setopt(curl, CURLOPT_POST, 1L);
-                if (req.GetMethod() == HTTP_REQUEST_METHOD::PUT) {
-                    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
-                }
-            }
-            
-            struct curl_slist *headerlist = nullptr;
-            
-            std::for_each(req.GetHeaderFields().GetFields().begin(), req.GetHeaderFields().GetFields().end(), [&headerlist] (const HttpHeaderField &field) {
-                headerlist = curl_slist_append(headerlist, field.ToString().c_str());
-            });
-            
-            std::string payload = std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(req.GetPayload());
-            std::string responseBuffer;
-            
-            curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
-            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, payload.c_str());
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_write_data);
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &responseBuffer);
-            
-            if ((res = curl_easy_perform(curl)) != CURLE_OK) {
-                return res;
-            }
-            
-            int http_code = 0;
-            HttpResponse resp;
-            
-            curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-            resp.SetErrorCode(http_code);
-            resp.SetPayload(responseBuffer);
-            
-            completionCallback(resp);
-            return CURLE_OK;
-        }
-};
-bool HttpRequestImpl::didGlobalInit = false;
 #endif
 
 /// <summary>

@@ -1,24 +1,18 @@
 #ifndef TELEMETRYCHANNEL_H
 #define TELEMETRYCHANNEL_H
-
-#include <string>
-#include <list>
-#include "../TelemetryClientConfig.h"
-#include "../TelemetryContext.h"
-#include "../Contracts/Contracts.h"
-#include "../Common/Common.h"
-#include "Utils/HttpRequest.h"
-
-#ifdef WINAPI_FAMILY_PARTITION
-#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
+#include "Utils/HttpRequest.hpp"
+#include "../common/Common.hpp"
 #include <Windows.h>
-#endif 
-#endif
+#include <string>
+#include <vector>
 
 namespace ApplicationInsights
 {
 	namespace core
 	{
+		class TelemetryContext;
+		class Domain;
+
 		class TELEMETRYCLIENT_API TelemetryChannel
 		{
 		public:
@@ -33,10 +27,7 @@ namespace ApplicationInsights
 			/// Gets the instance.
 			/// </summary>
 			/// <returns></returns>
-			static TelemetryChannel* GetInstance()
-			{
-				return instance;
-			}
+			static TelemetryChannel* GetInstance();
 
 			/// <summary>
 			/// Finalizes an instance of the <see cref="TelemetryChannel"/> class.
@@ -64,10 +55,8 @@ namespace ApplicationInsights
 
 			HttpResponse resp;
 
-#ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 			HANDLE hRespRecv;
-#endif
 #endif
 			bool TelemetryChannel::IsUTCAvailable();
 			std::wstring TraceLoggingSanitizer(std::wstring data);

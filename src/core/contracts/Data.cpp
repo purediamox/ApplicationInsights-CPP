@@ -1,5 +1,7 @@
 #include "Data.h"
-
+#include "../common/Common.hpp"
+#include "../common/JsonWriter.hpp"
+#include "../common/Serializer.hpp"
 using namespace ApplicationInsights::core;
 
 Data::Data()

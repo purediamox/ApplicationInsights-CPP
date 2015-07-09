@@ -1,9 +1,8 @@
 #include "TelemetryContext.h"
-#include "common/Utils.h"
+#include "common/Utils.hpp"
 #include <codecvt>
 #include <locale>
 
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // desktop, no store or phone
 
 using namespace ApplicationInsights::core;
@@ -63,5 +62,4 @@ void TelemetryContext::InitSession()
 {
 	BaseTelemetryContext::InitSession();
 }
-#endif
 #endif

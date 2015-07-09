@@ -115,44 +115,12 @@
     <ClCompile Include="..\..\..\src\core\BaseTelemetryContext.cpp" />
     <ClCompile Include="..\..\..\src\core\TelemetryClient.cpp" />
     <ClCompile Include="..\..\..\src\core\TelemetryContextWin32.cpp" />
-    <ClCompile Include="..\..\..\src\core\TelemetryContextWinPhone.cpp" />
-    <ClCompile Include="..\..\..\src\core\TelemetryContextWinStore.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\src\core\channel\utils\HttpHeaderField.h">
-      <Filter>channel\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\core\channel\utils\HttpHeaderFields.h">
-      <Filter>channel\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\core\channel\utils\HttpRequest.h">
-      <Filter>channel\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\core\channel\utils\HttpResponse.h">
-      <Filter>channel\utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\core\channel\TelemetryChannel.h">
       <Filter>channel</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\core\common\Common.h">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\core\common\JsonWriter.h">
-      <Filter>common</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\core\common\Nullable.h">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\core\common\Serializer.h">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\core\common\StreamWriter.h">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\core\common\StringWriter.h">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\core\common\Utils.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\core\contracts\Application.h">
@@ -261,6 +229,36 @@
     <ClInclude Include="..\..\..\src\core\TelemetryClient.h" />
     <ClInclude Include="..\..\..\src\core\TelemetryClientConfig.h" />
     <ClInclude Include="..\..\..\src\core\TelemetryContext.h" />
+    <ClInclude Include="..\..\..\src\core\channel\utils\HttpHeaderField.hpp">
+      <Filter>channel\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\core\channel\utils\HttpHeaderFields.hpp">
+      <Filter>channel\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\core\channel\utils\HttpRequest.hpp">
+      <Filter>channel\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\core\channel\utils\HttpResponse.hpp">
+      <Filter>channel\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\core\common\JsonWriter.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\core\common\Serializer.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\core\common\StreamWriter.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\core\common\StringWriter.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\core\common\Utils.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\core\common\Common.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="contracts">

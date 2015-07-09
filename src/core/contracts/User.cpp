@@ -1,14 +1,12 @@
 #include "User.h"
-#include "../common/Utils.h"
+#include "../common/Utils.hpp"
 
 using namespace ApplicationInsights::core;
 
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 using namespace Platform;
 using namespace Windows::Foundation;
 using namespace Windows::Storage;
-#endif
 #endif
 
 User::User()
@@ -21,7 +19,6 @@ User::~User()
 
 const Nullable<std::wstring>& User::GetAccountAcquisitionDate()
 {
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
 
@@ -43,13 +40,11 @@ const Nullable<std::wstring>& User::GetAccountAcquisitionDate()
 		m_accountAcquisitionDate.ClearValue();
 	}
 #endif
-#endif
 	return m_accountAcquisitionDate; 
 }
 
 void User::SetAccountAcquisitionDate(const Nullable<std::wstring>& value)
 { 
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
 	if (value.HasValue())
@@ -58,13 +53,11 @@ void User::SetAccountAcquisitionDate(const Nullable<std::wstring>& value)
 		values->Insert("UserAcqDate", acqDate);
 	}
 #endif
-#endif
 	m_accountAcquisitionDate = value; 
 }
 
 const Nullable<std::wstring>& User::GetAccountId()
 { 
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
 
@@ -86,13 +79,11 @@ const Nullable<std::wstring>& User::GetAccountId()
 		m_accountId.ClearValue();
 	}
 #endif
-#endif
 	return m_accountId; 
 }
 
 void User::SetAccountId(const Nullable<std::wstring>& value)
 { 
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
 	if (value.HasValue())
@@ -101,13 +92,11 @@ void User::SetAccountId(const Nullable<std::wstring>& value)
 		values->Insert("UserAcctId", acctId);
 	}
 #endif
-#endif
 	m_accountId = value; 
 }
 
 const Nullable<std::wstring>& User::GetUserAgent()
 { 
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
 
@@ -129,13 +118,11 @@ const Nullable<std::wstring>& User::GetUserAgent()
 		m_userAgent.ClearValue();
 	}
 #endif
-#endif
 	return m_userAgent; 
 }
 
 void User::SetUserAgent(const Nullable<std::wstring>& value)
 { 
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
 	if (value.HasValue())
@@ -144,13 +131,11 @@ void User::SetUserAgent(const Nullable<std::wstring>& value)
 		values->Insert("UserAgent", agent);
 	}
 #endif
-#endif
 	m_userAgent = value; 
 }
 
 const Nullable<std::wstring>& User::GetId()
 { 
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
 
@@ -172,13 +157,11 @@ const Nullable<std::wstring>& User::GetId()
 		m_id.ClearValue();
 	}
 #endif
-#endif
 	return m_id;
 }
 
 void User::SetId(const Nullable<std::wstring>& value)
 { 
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
 	if (value.HasValue())
@@ -187,13 +170,11 @@ void User::SetId(const Nullable<std::wstring>& value)
 		values->Insert("UserId", id);
 	}
 #endif
-#endif
 	m_id = value; 
 }
 
 const Nullable<std::wstring>& User::GetStoreRegion()
 { 
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
 
@@ -215,13 +196,11 @@ const Nullable<std::wstring>& User::GetStoreRegion()
 		m_storeRegion.ClearValue();
 	}
 #endif
-#endif
 	return m_storeRegion; 
 }
 
 void User::SetStoreRegion(const Nullable<std::wstring>& value)
 { 
-#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 	auto values = Utils::GetLocalSettingsContainer();
 	if (value.HasValue())
@@ -229,7 +208,6 @@ void User::SetStoreRegion(const Nullable<std::wstring>& value)
 		Platform::String^ storeRegion = ref new String(value.GetValue().c_str());
 		values->Insert("UserStoreRegion", storeRegion);
 	}
-#endif
 #endif
 	m_storeRegion = value; 
 }

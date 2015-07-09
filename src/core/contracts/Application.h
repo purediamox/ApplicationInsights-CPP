@@ -1,14 +1,13 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include "../common/Common.h"
-#include "../common/JsonWriter.h"
+#include "../common/Common.hpp"
+#include "../common/Serializer.hpp"
 #include "../common/Nullable.h"
-#include "../common/Serializer.h"
 #include <map>
 #include <string>
-
 #include <vector>
+
 namespace ApplicationInsights
 {
 	namespace core
