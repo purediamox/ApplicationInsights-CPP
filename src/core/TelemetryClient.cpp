@@ -42,6 +42,15 @@ TelemetryClient::TelemetryClient(TelemetryContext &context)
 }
 
 /// <summary>
+/// Initializes a new instance of the <see cref="TelemetryClient"/> class.
+/// </summary>
+/// <param name="context">The context.</param>
+TelemetryClient::TelemetryClient()
+{
+}
+
+
+/// <summary>
 /// Finalizes an instance of the <see cref="TelemetryClient"/> class.
 /// </summary>
 TelemetryClient::~TelemetryClient()

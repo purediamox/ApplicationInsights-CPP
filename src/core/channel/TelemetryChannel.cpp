@@ -70,7 +70,7 @@ TelemetryChannel::TelemetryChannel()
 	m_channelId = rand();
 	m_seqNum = 0;
 	m_maxBufferSize = MAX_BUFFER_SIZE;
-
+	
 	InitializeCriticalSectionEx(&cs, 0, 0);
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 	hRespRecv = CreateEventEx(nullptr, L"RecvResp", 0, EVENT_MODIFY_STATE | SYNCHRONIZE);
@@ -161,6 +161,7 @@ void TelemetryChannel::Enqueue(std::wstring &iKey, TelemetryContext &context, Do
 /// </summary>
 void TelemetryChannel::Send()
 {
+	
 	if (m_buffer.size() > 0)
 	{
 		EnterCriticalSection(&cs);
@@ -176,46 +177,16 @@ void TelemetryChannel::Send()
 
 		m_buffer.clear();
 		LeaveCriticalSection(&cs);
-
-#ifdef CPP_LIB_DEBUG
-		std::wstring req = L"REQUEST :\r\n" + buffer;
-		Utils::WriteDebugLine(req);
-#endif
-
-		std::vector<std::wstring> in_progress_buffer(m_buffer);
-
-		HttpRequest request(HTTP_REQUEST_METHOD::POST, L"dc.services.visualstudio.com", L"/v2/track", buffer);
-		request.GetHeaderFields().SetField(L"Content-Type", L"application/json");
-		if (request.Send([this, in_progress_buffer](const HttpResponse &response) {
-#ifdef CPP_LIB_DEBUG
-			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-			std::wstring wstrResp = converter.from_bytes(response.GetPayload());
-			
-			std::wstring wstrOutput = L"RESPONSE :\r\n" + wstrResp;
-			Utils::WriteDebugLine(wstrOutput);
-#endif
-
-			if (response.GetErrorCode() >= static_cast<int>(HTTP_RESPONSE_CODE::HTTP_SVR_ERROR))
-			{
-				// reload the buffer if there was some sort of server-side issue
-				m_buffer.insert(m_buffer.begin(), in_progress_buffer.begin(), in_progress_buffer.end());
-			}
-
-#ifdef _DEBUG
-			resp = response;
-#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
-			SetEvent(hRespRecv);
-#endif
-#endif
-		}) != 0) {
-			EnterCriticalSection(&cs);
-			
-			for (auto &buf : sendBuffer) {
-				m_buffer.push_back(buf);
-			}
-
-			LeaveCriticalSection(&cs);
-		}
-		
+		m_persist.save(buffer);
 	}
+}
+
+void TelemetryChannel::InitializePersistance(PERSISTCONFIG &config)
+{
+	m_persist.Initialize(&config);
+}
+
+Persistence* TelemetryChannel::GetPersistance()
+{
+	return &m_persist;
 }

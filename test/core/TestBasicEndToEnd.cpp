@@ -1,8 +1,10 @@
-#include "Channel/Utils/HttpResponse.hpp"
 #include "targetver.h"
 #include "specializations.h"
 #include "TelemetryContext.h"
 #include "TelemetryClient.h"
+#include "Channel/TelemetryChannel.h"
+#include "Channel/Utils/Persistence.hpp"
+#include "Channel/Utils/HttpResponse.hpp"
 #include "Contracts/Contracts.h"
 #include <regex>
 #include <stdio.h>
@@ -77,9 +79,19 @@ namespace core {
 			class MockTelemetryClient : public TelemetryClient
 			{
 			public:
-				MockTelemetryClient(std::wstring& iKey) :
-					TelemetryClient(iKey)
+				MockTelemetryClient(std::wstring& iKey) 
 				{
+					m_instrumentationKey = iKey;
+					m_context = new TelemetryContext(iKey);
+					m_context->InitContext();
+					m_channel = TelemetryChannel::Initialize();
+					PERSISTCONFIG config = Persistence::GetDefaultConfig();
+					config.uploadIntervalMins = 0;
+					if (m_channel == nullptr)
+					{
+						m_channel = TelemetryChannel::Initialize();
+					}
+					m_channel->InitializePersistance(config);
 				}
 
 				void Flush()
@@ -128,7 +140,7 @@ namespace core {
 				{
 					std::wstring iKey = L"ba0f19ca-aa77-4838-ac05-dbba85d6b677";
 					MockTelemetryClient tc(iKey);
-
+					
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // phone or store					
 					auto testTask = create_task([&tc]() -> bool {
 #endif	
@@ -149,20 +161,30 @@ namespace core {
 						}
 						tc.Flush();
 
+						Sleep(5000);
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // phone or store
 						DWORD ret = tc.WaitForResponse();
 						return true;
 					});
 
-					Sleep(5000);
+					
 #endif
-					HttpResponse resp = tc.GetResponse();
-
-					Assert::AreEqual(200, resp.GetErrorCode());
+					TelemetryChannel *channel = TelemetryChannel::GetInstance();
+					std::queue<HttpResponse> responses;
+					channel->GetPersistance()->GetAllResponses(responses);
+					
+					if (responses.size() > 0)
+					{
+						Assert::AreEqual(200, responses.front().GetErrorCode());
+					}
+					else
+					{
+						Assert::IsTrue(false, L"Failed to get a response");
+					}
 
 					char strSent[256];
 					sprintf_s(strSent, 256, "%d", ITERATIONS * 4);
-					std::string payload = resp.GetPayload();
+					std::string payload = responses.front().GetPayload();
 					int recv = payload.find("itemsRecieved");
 					int recvBegin = recv + 15;
 					int recvEnd = payload.find(",", recvBegin);

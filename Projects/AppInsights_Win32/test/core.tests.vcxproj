@@ -102,6 +102,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\test\core\Channel\TestPersistence.cpp" />
     <ClCompile Include="..\..\..\test\core\Channel\TestTelemetryChannel.cpp" />
     <ClCompile Include="..\..\..\test\core\contracts\TestApplication.cpp" />
     <ClCompile Include="..\..\..\test\core\contracts\TestBase.cpp" />

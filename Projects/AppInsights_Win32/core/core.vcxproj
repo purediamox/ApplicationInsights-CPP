@@ -54,7 +54,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>CURL_STATICLIB;CPP_LIB_DEBUG=1;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CURL_STATICLIB;CPP_LIB_DEBUG;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalIncludeDirectories>$(ProjectDir)\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -100,6 +100,7 @@
     <ClInclude Include="..\..\..\src\core\channel\utils\HttpHeaderFields.hpp" />
     <ClInclude Include="..\..\..\src\core\channel\utils\HttpRequest.hpp" />
     <ClInclude Include="..\..\..\src\core\channel\utils\HttpResponse.hpp" />
+    <ClInclude Include="..\..\..\src\core\channel\utils\Persistence.hpp" />
     <ClInclude Include="..\..\..\src\core\common\Common.hpp" />
     <ClInclude Include="..\..\..\src\core\common\JsonWriter.hpp" />
     <ClInclude Include="..\..\..\src\core\common\Nullable.h" />
@@ -151,6 +152,7 @@
     <ClCompile Include="..\..\..\src\core\channel\utils\HttpHeaderField.cpp" />
     <ClCompile Include="..\..\..\src\core\channel\utils\HttpRequest.cpp" />
     <ClCompile Include="..\..\..\src\core\channel\utils\HttpResponse.cpp" />
+    <ClCompile Include="..\..\..\src\core\channel\utils\Persistence.cpp" />
     <ClCompile Include="..\..\..\src\core\common\JsonWriter.cpp" />
     <ClCompile Include="..\..\..\src\core\common\Serializer.cpp" />
     <ClCompile Include="..\..\..\src\core\common\StreamWriter.cpp" />

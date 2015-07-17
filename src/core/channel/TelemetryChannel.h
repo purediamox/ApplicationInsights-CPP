@@ -2,6 +2,7 @@
 #define TELEMETRYCHANNEL_H
 #include "Utils/HttpRequest.hpp"
 #include "../common/Common.hpp"
+#include "Utils/Persistence.hpp"
 #include <Windows.h>
 #include <string>
 #include <vector>
@@ -47,11 +48,15 @@ namespace ApplicationInsights
 			/// </summary>
 			void Send();
 
+			void InitializePersistance(PERSISTCONFIG &config);
+
+			Persistence* GetPersistance();
 		protected:
 			int m_channelId;
 			int m_seqNum;
 			int m_maxBufferSize;
 			std::vector<std::wstring> m_buffer;
+			Persistence m_persist;
 
 			HttpResponse resp;
 

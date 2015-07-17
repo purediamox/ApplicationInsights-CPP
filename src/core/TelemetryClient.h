@@ -151,6 +151,12 @@ namespace ApplicationInsights
 			TelemetryClient(TelemetryContext &context);
 
 			/// <summary>
+			/// Initializes a new instance of the <see cref="TelemetryClient"/> class.
+			/// </summary>
+			/// <param name="context">The context.</param>
+			TelemetryClient();
+
+			/// <summary>
 			/// Determines whether [is tracking enabled].
 			/// </summary>
 			/// <returns>True if the tracking is enabled, otherwise false</returns>

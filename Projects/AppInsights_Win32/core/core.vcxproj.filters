@@ -115,6 +115,9 @@
     <ClCompile Include="..\..\..\src\core\BaseTelemetryContext.cpp" />
     <ClCompile Include="..\..\..\src\core\TelemetryClient.cpp" />
     <ClCompile Include="..\..\..\src\core\TelemetryContextWin32.cpp" />
+    <ClCompile Include="..\..\..\src\core\channel\utils\Persistence.cpp">
+      <Filter>channel\utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\core\channel\TelemetryChannel.h">
@@ -258,6 +261,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\core\common\Common.hpp">
       <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\core\channel\utils\Persistence.hpp">
+      <Filter>channel\utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
