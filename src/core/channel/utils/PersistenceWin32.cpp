@@ -1,9 +1,12 @@
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Win32, no store, no phone
+
 #include "Persistence.hpp"
 #include "../../Common/Utils.hpp"
 #include "HttpRequest.hpp"
 #include <sstream>
 #include <fstream>
 #include <codecvt>
+
 using namespace ApplicationInsights::core;
 
 const PERSISTCONFIG defaultConfig = { L"ApplicationInsights", 5, L"dc.services.visualstudio.com" };
@@ -281,3 +284,4 @@ void Persistence::GetAllResponses(std::queue<HttpResponse> &resp)
 		}
 	}
 }
+#endif

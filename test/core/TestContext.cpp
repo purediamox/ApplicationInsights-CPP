@@ -5,7 +5,7 @@
 #include "Contracts/Session.h"
 
 
-using namespace ApplicationInsights::CX;
+using namespace ApplicationInsights::core;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace Platform;
 using namespace Windows::ApplicationModel;

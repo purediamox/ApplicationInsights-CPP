@@ -23,6 +23,13 @@ namespace ApplicationInsights
 			TelemetryClient(std::wstring& iKey);
 
 			/// <summary>
+			/// Initializes a new instance of the <see cref="TelemetryClient"/> class.
+			/// </summary>
+			/// <param name="context">The context.</param>
+			/// <param name="iKey">The ikey.</param>
+			TelemetryClient(TelemetryContext &context, std::wstring& iKey);
+
+			/// <summary>
 			/// Finalizes an instance of the <see cref="TelemetryClient"/> class.
 			/// </summary>
 			virtual ~TelemetryClient();
@@ -144,12 +151,6 @@ namespace ApplicationInsights
 			void EnableTracking();
 
 		protected:
-			/// <summary>
-			/// Initializes a new instance of the <see cref="TelemetryClient"/> class.
-			/// </summary>
-			/// <param name="context">The context.</param>
-			TelemetryClient(TelemetryContext &context);
-
 			/// <summary>
 			/// Initializes a new instance of the <see cref="TelemetryClient"/> class.
 			/// </summary>

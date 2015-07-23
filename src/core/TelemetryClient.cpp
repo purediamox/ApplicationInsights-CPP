@@ -36,9 +36,18 @@ TelemetryClient::TelemetryClient(std::wstring& iKey)
 /// </summary>
 /// <param name="config">The configuration.</param>
 /// <param name="context">The context.</param>
-TelemetryClient::TelemetryClient(TelemetryContext &context) 
+/// <param name="iKey">The ikey.</param>
+TelemetryClient::TelemetryClient(TelemetryContext &context, std::wstring& iKey)
 	: m_context(&context)
 {
+	m_instrumentationKey = iKey;
+	m_context->InitContext();
+
+	m_channel = TelemetryChannel::GetInstance();
+	if (m_channel == nullptr)
+	{
+		m_channel = TelemetryChannel::Initialize();
+	}
 }
 
 /// <summary>

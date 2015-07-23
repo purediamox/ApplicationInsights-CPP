@@ -26,15 +26,11 @@
     <Filter Include="Channel">
       <UniqueIdentifier>{e3e5b584-5760-4a68-bd98-607b330cf601}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ApplicationInsights">
-      <UniqueIdentifier>{54abe46f-3bc9-4d8e-98b7-25674ffa3d4f}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="UnitTest.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="..\..\..\test\core\TestTelemetryClientConfig.cpp" />
-    <ClCompile Include="..\..\..\test\core\TestTelemetryContext.cpp" />
     <ClCompile Include="..\..\..\test\core\contracts\TestApplication.cpp">
       <Filter>contracts</Filter>
     </ClCompile>
@@ -120,16 +116,8 @@
       <Filter>contracts</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\test\core\TestBasicEndToEnd.cpp" />
-    <ClCompile Include="..\..\..\test\core\ApplicationInsights\TestSessionTracking.cpp">
-      <Filter>ApplicationInsights</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\test\core\TestTelemetryClient.cpp" />
-    <ClCompile Include="..\..\..\test\core\ApplicationInsights\TestPageTracking.cpp">
-      <Filter>ApplicationInsights</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\test\core\ApplicationInsights\TestContext.cpp">
-      <Filter>ApplicationInsights</Filter>
-    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\TestTelemetryContext.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />

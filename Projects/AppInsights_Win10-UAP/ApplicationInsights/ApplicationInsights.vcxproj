@@ -223,14 +223,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Contracts\Application.h" />
+    <ClInclude Include="Contracts\Device.h" />
+    <ClInclude Include="Contracts\Session.h" />
+    <ClInclude Include="Contracts\User.h" />
     <ClInclude Include="PageTracking.h" />
     <ClInclude Include="SessionTracking.h" />
     <ClInclude Include="TelemetryClient.h" />
+    <ClInclude Include="TelemetryContext.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Contracts\Session.cpp" />
+    <ClCompile Include="Contracts\User.cpp" />
     <ClCompile Include="SessionTracking.cpp" />
     <ClCompile Include="PageTracking.cpp" />
     <ClCompile Include="TelemetryClient.cpp" />
+    <ClCompile Include="TelemetryContext.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AppInsights_Win10-UAP\AppInsights_Win10-UAP.vcxproj">

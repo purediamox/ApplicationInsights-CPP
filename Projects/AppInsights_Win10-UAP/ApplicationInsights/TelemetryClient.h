@@ -1,10 +1,12 @@
 #pragma once
-#include "../../../src/core/TelemetryClient.h"
+#include "Channel/TelemetryChannel.h"
+#include "TelemetryContext.h"
+#include "../../../src/core/channel/utils/TraceLoggingHelper.h"
+
 namespace ApplicationInsights
 {
 	namespace CX
 	{
-		[Windows::Foundation::Metadata::WebHostHiddenAttribute]
 		public ref class TelemetryClient sealed
 		{
 		public:
@@ -13,6 +15,12 @@ namespace ApplicationInsights
 			/// </summary>
 			/// <param name="iKey">The iKey.</param>
 			TelemetryClient(Platform::String^ iKey);
+
+			/// <summary>
+			/// Initializes a new instance of the <see cref="TelemetryClient"/> class.
+			/// </summary>
+			/// <param name="context">The context.</param>
+			TelemetryClient(TelemetryContext^ context, Platform::String^ iKey);
 
 			/// <summary>
 			/// Finalizes an instance of the <see cref="" /> class.
@@ -116,11 +124,6 @@ namespace ApplicationInsights
 			void RenewSession();
 
 			/// <summary>
-			/// Flushes this queue.
-			/// </summary>
-			void Flush();
-
-			/// <summary>
 			/// Disables all tracking.
 			/// </summary>
 			void DisableTracking();
@@ -137,6 +140,18 @@ namespace ApplicationInsights
 
 		private:
 			/// <summary>
+			/// Tracks the specified telemetry.
+			/// </summary>
+			/// <param name="telemetry">The telemetry.</param>
+			void TelemetryClient::Track(ApplicationInsights::core::Domain& telemetry);
+
+			/// <summary>
+			/// Determines whether [is tracking enabled].
+			/// </summary>
+			/// <returns>True if the tracking is enabled, otherwise false</returns>
+			bool TelemetryClient::IsTrackingEnabled();
+
+			/// <summary>
 			/// Converts the properties to standard map.
 			/// </summary>
 			/// <param name="properties">The properties.</param>
@@ -150,7 +165,16 @@ namespace ApplicationInsights
 			/// <param name="measures">The measures.</param>
 			void ConvertMeasurementsToStdMap(Windows::Foundation::Collections::IMap<Platform::String^, double>^ measurements, std::map<std::wstring, double> &measures);
 
-			ApplicationInsights::core::TelemetryClient *m_tc;
+			/// <summary>
+			/// Converts the tags to standard map.
+			/// </summary>
+			/// <param name="tags">The std::map to build.</tags>
+			void ConvertTagsToStdMap(std::map<std::wstring, std::wstring> &tags);
+
+			Platform::String^ m_iKey;
+			TelemetryContext^ m_context;
+			ApplicationInsights::core::TraceLoggingHelper m_etwLogger;
+
 
 			Windows::Foundation::Collections::IMap<Platform::String^, Platform::String^>^ m_globalProperties;
 

@@ -24,29 +24,8 @@
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="..\..\..\src\core\channel\utils\HttpHeaderField.cpp">
-      <Filter>Channel\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\core\channel\utils\HttpRequest.cpp">
-      <Filter>Channel\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\core\channel\utils\HttpResponse.cpp">
-      <Filter>Channel\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\core\channel\TelemetryChannel.cpp">
       <Filter>Channel</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\core\common\JsonWriter.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\core\common\StreamWriter.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\core\common\StringWriter.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\core\common\Utils.cpp">
-      <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\core\contracts\Application.cpp">
       <Filter>Contracts</Filter>
@@ -134,45 +113,46 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\core\BaseTelemetryContext.cpp" />
     <ClCompile Include="..\..\..\src\core\TelemetryClient.cpp" />
-    <ClCompile Include="..\..\..\src\core\TelemetryContextWin32.cpp" />
     <ClCompile Include="..\..\..\src\core\TelemetryContextWinStore.cpp" />
+    <ClCompile Include="..\..\..\src\core\common\JsonWriter.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\core\common\Serializer.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\core\TelemetryContextOther.cpp" />
+    <ClCompile Include="..\..\..\src\core\common\StreamWriter.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\core\common\StringWriter.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\core\common\Utils.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\core\channel\utils\HttpHeaderField.cpp">
+      <Filter>Channel\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\core\channel\utils\HttpRequest.cpp">
+      <Filter>Channel\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\core\channel\utils\HttpResponse.cpp">
+      <Filter>Channel\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\core\channel\utils\PersistenceWin32.cpp">
+      <Filter>Channel\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\core\channel\utils\PersistenceWinStore.cpp">
+      <Filter>Channel\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\core\channel\utils\TraceLoggingHelper.cpp">
+      <Filter>Channel\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="..\..\..\src\core\channel\utils\HttpHeaderField.h">
-      <Filter>Channel\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\core\channel\utils\HttpHeaderFields.h">
-      <Filter>Channel\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\core\channel\utils\HttpRequest.h">
-      <Filter>Channel\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\core\channel\utils\HttpResponse.h">
-      <Filter>Channel\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\core\channel\TelemetryChannel.h">
       <Filter>Channel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\core\common\Common.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\core\common\JsonWriter.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\core\common\StreamWriter.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\core\common\StringWriter.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\core\common\Utils.h">
-      <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\core\contracts\shared\Nullable.h">
       <Filter>Contracts\Shared</Filter>
@@ -283,11 +263,47 @@
     <ClInclude Include="..\..\..\src\core\TelemetryClient.h" />
     <ClInclude Include="..\..\..\src\core\TelemetryClientConfig.h" />
     <ClInclude Include="..\..\..\src\core\TelemetryContext.h" />
+    <ClInclude Include="..\..\..\src\core\common\Common.hpp">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\core\common\JsonWriter.hpp">
+      <Filter>Common</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\core\common\Nullable.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\core\common\Serializer.h">
+    <ClInclude Include="..\..\..\src\core\common\Serializer.hpp">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\core\common\StreamWriter.hpp">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\core\common\StringWriter.hpp">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\core\common\Utils.hpp">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\core\channel\utils\HttpHeaderField.hpp">
+      <Filter>Channel\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\core\channel\utils\HttpHeaderFields.hpp">
+      <Filter>Channel\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\core\channel\utils\HttpRequest.hpp">
+      <Filter>Channel\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\core\channel\utils\HttpResponse.hpp">
+      <Filter>Channel\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\core\channel\utils\Persistence.hpp">
+      <Filter>Channel\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\core\channel\utils\TraceLoggingHelper.h">
+      <Filter>Channel\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\core\channel\utils\TraceLoggingProvider.h">
+      <Filter>Channel\Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

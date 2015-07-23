@@ -28,7 +28,7 @@ namespace core { namespace tests
     {
     public:
         
-		TEST_CLASS_INITIALIZE(initialize)
+		TEST_METHOD_INITIALIZE(initialize)
 		{
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // store or phone
 			ApplicationData::Current->ClearAsync();
@@ -219,7 +219,7 @@ namespace core { namespace tests
                 else if (key == L"ai.session.id")
                 {
 					wchar_t errMsg[256];
-					swprintf_s(errMsg, 256, L"Invalid regex for uuid for session: %s", value);
+					swprintf_s(errMsg, 256, L"Invalid regex for uuid for session: %s", value.c_str());
                     Assert::IsTrue(re_match(str(value.begin(), value.end()), uuidMatcher), errMsg);
                     found |= 4;
                 }

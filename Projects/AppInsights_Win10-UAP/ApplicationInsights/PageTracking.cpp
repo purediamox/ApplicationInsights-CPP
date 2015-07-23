@@ -20,10 +20,6 @@ PageTracking::PageTracking()
 /// </summary>
 PageTracking::~PageTracking()
 {
-	if (m_tc != nullptr)
-	{
-		m_tc->Flush();
-	}
 }
 
 /// <summary>
@@ -134,6 +130,5 @@ void PageTracking::OnNavigated(Platform::Object ^sender, Windows::UI::Xaml::Navi
 			m_tc->TrackPageView(pageName);
 		}
 	}
-	m_tc->Flush();
 }
 

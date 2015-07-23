@@ -1,7 +1,12 @@
 #include "TelemetryClient.h"
-#include "../../../src/core/contracts/SessionStateData.h"
-#include <collection.h>
+#include "../../../src/core/contracts/Contracts.h"
+#include "../../../src/core/common/utils.hpp"
 
+#include <collection.h>
+#include "Windows.h"
+
+using namespace Windows::Storage;
+using namespace Windows::Foundation;
 using namespace ApplicationInsights::CX;
 using namespace Platform;
 using namespace Platform::Collections;
@@ -12,9 +17,29 @@ using namespace Platform::Collections;
 /// <param name="iKey">The iKey.</param>
 TelemetryClient::TelemetryClient(String^ iKey)
 {
-	std::wstring iKeyString = iKey->Data();
-	m_tc = new ApplicationInsights::core::TelemetryClient(iKeyString);
+	m_iKey = iKey;
 	m_globalProperties = ref new Platform::Collections::Map<Platform::String^, Platform::String^>();
+	m_context = ref new TelemetryContext();
+	m_context->InitContext();
+}
+
+/// <summary>
+/// Initializes a new instance of the <see cref="TelemetryClient"/> class.
+/// </summary>
+/// <param name="context">The context.</param>
+/// <param name="iKey">The iKey.</param>
+TelemetryClient::TelemetryClient(TelemetryContext^ context, String^ iKey)
+{
+	m_iKey = iKey;
+	m_globalProperties = ref new Platform::Collections::Map<Platform::String^, Platform::String^>();
+	if (context == nullptr)
+	{
+		m_context = ref new TelemetryContext();
+	}
+	else
+	{
+		m_context = context;
+	}
 }
 
 /// <summary>
@@ -23,7 +48,6 @@ TelemetryClient::TelemetryClient(String^ iKey)
 /// <returns></returns>
 TelemetryClient::~TelemetryClient()
 {
-	delete m_tc;
 }
 
 /// <summary>
@@ -32,7 +56,7 @@ TelemetryClient::~TelemetryClient()
 /// <param name="eventName">Name of the event.</param>
 void TelemetryClient::TrackEvent(String^ eventName)
 {
-	m_tc->TrackEvent(eventName->Data());
+	TrackEvent(eventName, nullptr, nullptr);
 }
 
 /// <summary>
@@ -51,7 +75,18 @@ void TelemetryClient::TrackEvent(Platform::String^ eventName,
 	ConvertPropertiesToStdMap(properties, props);
 	ConvertMeasurementsToStdMap(measurements, measures);
 
-	m_tc->TrackEvent(eventName->Data(), props, measures);
+	ApplicationInsights::core::EventData telemetry;
+	telemetry.SetName(eventName->Data());
+	if (props.size() > 0)
+	{
+		telemetry.SetProperties(props);
+	}
+	if (measures.size() > 0)
+	{
+		telemetry.SetMeasurements(measures);
+	}
+
+	Track(telemetry);
 }
 
 /// <summary>
@@ -60,7 +95,7 @@ void TelemetryClient::TrackEvent(Platform::String^ eventName,
 /// <param name="message">The message.</param>
 void TelemetryClient::TrackTrace(String^ message)
 {
-	m_tc->TrackTrace(message->Data());
+	TrackTrace(message, nullptr);
 }
 
 /// <summary>
@@ -74,7 +109,14 @@ void TelemetryClient::TrackTrace(Platform::String^ message,
 	std::map<std::wstring, std::wstring> props;
 	ConvertPropertiesToStdMap(properties, props);
 
-	m_tc->TrackTrace(message->Data(), props);
+	ApplicationInsights::core::MessageData telemetry;
+	telemetry.SetMessage(message->Data());
+	if (props.size() > 0)
+	{
+		telemetry.SetProperties(props);
+	}
+
+	Track(telemetry);
 }
 
 /// <summary>
@@ -84,7 +126,7 @@ void TelemetryClient::TrackTrace(Platform::String^ message,
 /// <param name="value">The value.</param>
 void TelemetryClient::TrackMetric(String^ name, double value)
 {
-	m_tc->TrackMetric(name->Data(), value);
+	TrackMetric(name, value, nullptr);
 }
 
 /// <summary>
@@ -99,7 +141,25 @@ void TelemetryClient::TrackMetric(Platform::String^ name, double value,
 	std::map<std::wstring, std::wstring> props;
 	ConvertPropertiesToStdMap(properties, props);
 
-	m_tc->TrackMetric(name->Data(), value, props);
+	ApplicationInsights::core::MetricData telemetry;
+	ApplicationInsights::core::DataPoint data;
+	data.SetCount(1);
+	data.SetKind(ApplicationInsights::core::Measurement);
+	data.SetMax(value);
+	data.SetMax(value);
+	data.SetName(name->Data());
+	data.SetValue(value);
+	std::vector<ApplicationInsights::core::DataPoint*> metricsList;
+	metricsList.push_back(&data);
+
+	telemetry.SetMetrics(metricsList);
+
+	if (props.size() > 0)
+	{
+		telemetry.SetProperties(props);
+	}
+
+	Track(telemetry);
 }
 
 /// <summary>
@@ -108,7 +168,7 @@ void TelemetryClient::TrackMetric(Platform::String^ name, double value,
 /// <param name="pageName">Name of the page.</param>
 void TelemetryClient::TrackPageView(String^ pageName)
 {
-	m_tc->TrackPageView(pageName->Data());
+	TrackPageView(pageName, nullptr, nullptr);
 }
 
 /// <summary>
@@ -121,13 +181,7 @@ void TelemetryClient::TrackPageView(Platform::String^ pageName,
 	Windows::Foundation::Collections::IMap<Platform::String^, Platform::String^>^ properties,
 	Windows::Foundation::Collections::IMap<Platform::String^, double>^ measurements)
 {
-	std::map<std::wstring, std::wstring> props;
-	std::map<std::wstring, double> measures;
-
-	ConvertPropertiesToStdMap(properties, props);
-	ConvertMeasurementsToStdMap(measurements, measures);
-
-	m_tc->TrackPageView(pageName->Data(), L"", props, measures);
+	TrackPageView(pageName, L"", nullptr, nullptr);
 }
 
 /// <summary>
@@ -137,7 +191,7 @@ void TelemetryClient::TrackPageView(Platform::String^ pageName,
 /// <param name="duration">The duration.</param>
 void TelemetryClient::TrackPageView(String^ pageName, String^ duration)
 {
-	m_tc->TrackPageView(pageName->Data(), duration->Data());
+	TrackPageView(pageName, duration, nullptr, nullptr);
 }
 
 /// <summary>
@@ -158,7 +212,24 @@ void TelemetryClient::TrackPageView(Platform::String^ pageName, Platform::String
 	ConvertPropertiesToStdMap(properties, props);
 	ConvertMeasurementsToStdMap(measurements, measures);
 
-	m_tc->TrackPageView(pageName->Data(), duration->Data(), props, measures);
+	ApplicationInsights::core::PageViewData telemetry;
+	telemetry.SetName(pageName->Data());
+	telemetry.SetUrl(pageName->Data());
+	if (duration != nullptr)
+	{
+		telemetry.SetDuration(duration->Data());
+	}
+
+	if (props.size() > 0)
+	{
+		telemetry.SetProperties(props);
+	}
+	if (measures.size() > 0)
+	{
+		telemetry.SetMeasurements(measures);
+	}
+
+	Track(telemetry);
 }
 
 
@@ -168,8 +239,10 @@ void TelemetryClient::TrackPageView(Platform::String^ pageName, Platform::String
 /// </summary>
 void TelemetryClient::TrackSessionStart()
 {
-	//Send start session
-	m_tc->TrackSessionStart();
+	ApplicationInsights::core::SessionStateData session;
+	session.SetState(ApplicationInsights::core::SessionState::Start);
+
+	Track(session);
 }
 
 /// <summary>
@@ -177,8 +250,10 @@ void TelemetryClient::TrackSessionStart()
 /// </summary>
 void TelemetryClient::TrackSessionEnd()
 {
-	//Send end session
-	m_tc->TrackSessionEnd();
+	ApplicationInsights::core::SessionStateData session;
+	session.SetState(ApplicationInsights::core::SessionState::End);
+
+	Track(session);
 }
 
 /// <summary>
@@ -187,17 +262,9 @@ void TelemetryClient::TrackSessionEnd()
 void TelemetryClient::RenewSession()
 {
 	//Send end session
-	m_tc->TrackSessionEnd();
+	TrackSessionEnd();
 
-	m_tc->GetContext()->RenewSession();
-}
-
-/// <summary>
-/// Flushes this queue.
-/// </summary>
-void TelemetryClient::Flush()
-{
-	m_tc->Flush();
+	m_context->RenewSession();
 }
 
 /// <summary>
@@ -205,7 +272,8 @@ void TelemetryClient::Flush()
 /// </summary>
 void TelemetryClient::DisableTracking()
 {
-	m_tc->DisableTracking();
+	auto values = ApplicationInsights::core::Utils::GetLocalSettingsContainer();
+	values->Insert("Tracking", dynamic_cast<PropertyValue^>(PropertyValue::CreateString("Disable")));
 }
 
 /// <summary>
@@ -213,7 +281,8 @@ void TelemetryClient::DisableTracking()
 /// </summary>
 void TelemetryClient::EnableTracking()
 {
-	m_tc->EnableTracking();
+	auto values = ApplicationInsights::core::Utils::GetLocalSettingsContainer();
+	values->Remove("Tracking");
 }
 
 /// <summary>
@@ -225,12 +294,60 @@ Windows::Foundation::Collections::IMap<Platform::String^, Platform::String^>^ Te
 }
 
 /// <summary>
+/// Tracks the specified telemetry.
+/// </summary>
+/// <param name="telemetry">The telemetry.</param>
+void TelemetryClient::Track(ApplicationInsights::core::Domain& telemetry)
+{
+	if (IsTrackingEnabled())
+	{
+		std::map<std::wstring, std::wstring> tags;
+		ConvertTagsToStdMap(tags);
+		m_etwLogger.LogData(m_iKey->Data(), tags, telemetry);
+	}
+}
+
+/// <summary>
+/// Determines whether [is tracking enabled].
+/// </summary>
+/// <returns>True if the tracking is enabled, otherwise false</returns>
+bool TelemetryClient::IsTrackingEnabled()
+{
+	bool enabled = true;
+
+	auto values = ApplicationInsights::core::Utils::GetLocalSettingsContainer();
+
+	enabled = !(values->HasKey("Tracking"));
+
+	return enabled;
+}
+
+/// <summary>
+/// Converts the tags to standard map.
+/// </summary>
+/// <param name="tags">The std::map to build.</tags>
+void TelemetryClient::ConvertTagsToStdMap(std::map<std::wstring, std::wstring> &tags)
+{
+	if (m_context != nullptr)
+	{
+		Windows::Foundation::Collections::IMap<String^, String^>^ tagMap = ref new Map<String^, String^>();
+		m_context->GetContextTags(tagMap);
+
+		for (auto tagPair : tagMap)
+		{
+			tags[tagPair->Key->Data()] = tagPair->Value->Data();
+		}
+	}
+}
+
+/// <summary>
 /// Converts the properties to standard map.
 /// </summary>
 /// <param name="properties">The properties.</param>
 /// <param name="props">The props.</param>
 void TelemetryClient::ConvertPropertiesToStdMap(Windows::Foundation::Collections::IMap<Platform::String^, Platform::String^>^ properties, std::map<std::wstring, std::wstring> &props)
 {
+	
 	if (m_globalProperties->Size > 0)
 	{
 		for (auto globalPropPair : m_globalProperties)
@@ -239,11 +356,14 @@ void TelemetryClient::ConvertPropertiesToStdMap(Windows::Foundation::Collections
 		}
 	}
 
-	if (properties->Size > 0)
+	if (properties != nullptr)
 	{
-		for (auto propPair : properties)
+		if (properties->Size > 0)
 		{
-			props[propPair->Key->Data()] = propPair->Value->Data();
+			for (auto propPair : properties)
+			{
+				props[propPair->Key->Data()] = propPair->Value->Data();
+			}
 		}
 	}
 }
@@ -255,11 +375,14 @@ void TelemetryClient::ConvertPropertiesToStdMap(Windows::Foundation::Collections
 /// <param name="measures">The measures.</param>
 void TelemetryClient::ConvertMeasurementsToStdMap(Windows::Foundation::Collections::IMap<Platform::String^, double>^ measurements, std::map<std::wstring, double> &measures)
 {
-	if (measurements->Size > 0)
+	if (measurements != nullptr)
 	{
-		for (auto measurePair : measurements)
+		if (measurements->Size > 0)
 		{
-			measures[measurePair->Key->Data()] = measurePair->Value;
+			for (auto measurePair : measurements)
+			{
+				measures[measurePair->Key->Data()] = measurePair->Value;
+			}
 		}
 	}
 }

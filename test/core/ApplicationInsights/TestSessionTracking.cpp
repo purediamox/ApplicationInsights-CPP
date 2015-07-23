@@ -10,12 +10,12 @@ using namespace Windows::ApplicationModel;
 using namespace Windows::Foundation;
 using namespace Windows::Storage;
 
-namespace core {
+namespace CX {
 	namespace tests
 	{
 		namespace ApplicationInsights
 		{
-			TEST_CLASS(TestSessionTracking)
+			TEST_CLASS(TestCXSessionTracking)
 			{
 			public:
 				TEST_CLASS_INITIALIZE(initialize)

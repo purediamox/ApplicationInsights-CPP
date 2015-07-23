@@ -5,15 +5,38 @@
       <UniqueIdentifier>997db092-9645-4c01-b131-2c35bc8e9047</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Contracts">
+      <UniqueIdentifier>{d21cdda6-dce6-4fe0-a13b-c8c6fdaa73dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SessionTracking.cpp" />
     <ClCompile Include="PageTracking.cpp" />
     <ClCompile Include="TelemetryClient.cpp" />
+    <ClCompile Include="TelemetryContext.cpp" />
+    <ClCompile Include="Contracts\Session.cpp">
+      <Filter>Contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="Contracts\User.cpp">
+      <Filter>Contracts</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SessionTracking.h" />
     <ClInclude Include="PageTracking.h" />
     <ClInclude Include="TelemetryClient.h" />
+    <ClInclude Include="TelemetryContext.h" />
+    <ClInclude Include="Contracts\Application.h">
+      <Filter>Contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="Contracts\Device.h">
+      <Filter>Contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="Contracts\Session.h">
+      <Filter>Contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="Contracts\User.h">
+      <Filter>Contracts</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

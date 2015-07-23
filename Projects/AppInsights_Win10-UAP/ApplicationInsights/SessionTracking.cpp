@@ -63,7 +63,6 @@ void SessionTracking::Initialize(Windows::UI::Xaml::Application^ application, Wi
 
 		//Send start session
 		m_tc->TrackSessionStart();
-		m_tc->Flush();
 	}
 }
 
@@ -83,8 +82,6 @@ void SessionTracking::OnSuspending(Object^ sender, SuspendingEventArgs^ e)
 		Windows::Foundation::DateTime dateToFormat = cal->GetDateTime();
 
 		values->Insert("lastBackground", PropertyValue::CreateDateTime(dateToFormat));
-
-		m_tc->Flush();
 	}
 }
 
@@ -115,7 +112,6 @@ void SessionTracking::OnResume(Object^ sender, Platform::Object^ e)
 
 				//Send start session
 				m_tc->TrackSessionStart();
-				m_tc->Flush();
 			}
 		}
 	}

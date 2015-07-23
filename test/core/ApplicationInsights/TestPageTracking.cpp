@@ -13,12 +13,12 @@ using namespace Windows::Storage;
 using namespace Windows::UI::Xaml;
 using namespace Windows::UI::Xaml::Controls;
 
-namespace core {
+namespace CX {
 	namespace tests
 	{
 		namespace ApplicationInsights
 		{
-			TEST_CLASS(TestPageTracking)
+			TEST_CLASS(TesCXtPageTracking)
 			{
 			public:
 				TEST_CLASS_INITIALIZE(initialize)

@@ -80,10 +80,10 @@
     <PackageCertificateKeyFile>UnitTestApp_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)..\..\..\src\core;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\..\Projects\AppInsights_Win10-UAP\ApplicationInsights;$(ProjectDir)..\..\..\src\core;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)..\..\..\src\core;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\..\Projects\AppInsights_Win10-UAP\ApplicationInsights;$(ProjectDir)..\..\..\src\core;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <IncludePath>$(ProjectDir)..\..\..\src\core;$(IncludePath)</IncludePath>
@@ -176,9 +176,6 @@
     <Image Include="Assets\WideLogo.scale-100.png" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\test\core\ApplicationInsights\TestContext.cpp" />
-    <ClCompile Include="..\..\..\test\core\ApplicationInsights\TestPageTracking.cpp" />
-    <ClCompile Include="..\..\..\test\core\ApplicationInsights\TestSessionTracking.cpp" />
     <ClCompile Include="..\..\..\test\core\Channel\TestTelemetryChannel.cpp" />
     <ClCompile Include="..\..\..\test\core\contracts\TestApplication.cpp" />
     <ClCompile Include="..\..\..\test\core\contracts\TestBase.cpp" />
@@ -223,14 +220,11 @@
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="CppUnitTestFramework, Version=$(UnitTestPlatformVersion)" />
-    <SDKReference Include="TestPlatform, Version=$(UnitTestPlatformVersion)" />
+    <SDKReference Include="TestPlatform.Universal, Version=14.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AppInsights_Win10-UAP\AppInsights_Win10-UAP.vcxproj">
       <Project>{64c33816-c431-4ca3-bff6-7d09334ac6fe}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\ApplicationInsights\ApplicationInsights.vcxproj">
-      <Project>{96db2b84-5a04-42ce-ad6b-421b199fd193}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

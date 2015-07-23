@@ -33,16 +33,20 @@ namespace ApplicationInsights
 			void GetAllResponses(std::queue<HttpResponse> &resp);
 
 		private:	
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Win32, no store, no phone
 			void StopThread();
 			DWORD WINAPI Upload();
 			static DWORD WINAPI UploadThreadProc(LPVOID lpParam);
 
-			PERSISTCONFIG m_currentConfig;
 			HANDLE m_hThread;
 			HANDLE m_hStopThread;
 			HANDLE m_hRecvdResp;
-			std::queue<HttpResponse> m_respQueue;
+			
 			CRITICAL_SECTION m_cs;
+#else
+#endif
+			std::queue<HttpResponse> m_respQueue;
+			PERSISTCONFIG m_currentConfig;
 		};
 	}
 }
