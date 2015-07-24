@@ -80,10 +80,10 @@
     <PackageCertificateKeyFile>UnitTestApp_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)..\..\..\Projects\AppInsights_Win10-UAP\ApplicationInsights;$(ProjectDir)..\..\..\src\core;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\..\src\core;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)..\..\..\Projects\AppInsights_Win10-UAP\ApplicationInsights;$(ProjectDir)..\..\..\src\core;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\..\src\core;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <IncludePath>$(ProjectDir)..\..\..\src\core;$(IncludePath)</IncludePath>
@@ -220,11 +220,14 @@
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="CppUnitTestFramework, Version=$(UnitTestPlatformVersion)" />
-    <SDKReference Include="TestPlatform.Universal, Version=14.0" />
+    <SDKReference Include="TestPlatform, Version=$(UnitTestPlatformVersion)" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AppInsights_Win10-UAP\AppInsights_Win10-UAP.vcxproj">
       <Project>{64c33816-c431-4ca3-bff6-7d09334ac6fe}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ApplicationInsights\ApplicationInsights.vcxproj">
+      <Project>{96db2b84-5a04-42ce-ad6b-421b199fd193}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

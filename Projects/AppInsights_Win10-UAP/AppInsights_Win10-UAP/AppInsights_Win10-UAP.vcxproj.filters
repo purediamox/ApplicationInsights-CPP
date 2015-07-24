@@ -113,7 +113,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\core\BaseTelemetryContext.cpp" />
     <ClCompile Include="..\..\..\src\core\TelemetryClient.cpp" />
-    <ClCompile Include="..\..\..\src\core\TelemetryContextWinStore.cpp" />
     <ClCompile Include="..\..\..\src\core\common\JsonWriter.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -147,6 +146,8 @@
     <ClCompile Include="..\..\..\src\core\channel\utils\TraceLoggingHelper.cpp">
       <Filter>Channel\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\core\TelemetryContextWin32.cpp" />
+    <ClCompile Include="..\..\..\src\core\TelemetryContextWinStore.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -262,7 +263,6 @@
     <ClInclude Include="..\..\..\src\core\BaseTelemetryContext.h" />
     <ClInclude Include="..\..\..\src\core\TelemetryClient.h" />
     <ClInclude Include="..\..\..\src\core\TelemetryClientConfig.h" />
-    <ClInclude Include="..\..\..\src\core\TelemetryContext.h" />
     <ClInclude Include="..\..\..\src\core\common\Common.hpp">
       <Filter>Common</Filter>
     </ClInclude>
@@ -305,5 +305,6 @@
     <ClInclude Include="..\..\..\src\core\channel\utils\TraceLoggingProvider.h">
       <Filter>Channel\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\core\TelemetryContext.h" />
   </ItemGroup>
 </Project>

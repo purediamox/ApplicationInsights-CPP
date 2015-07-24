@@ -8,7 +8,6 @@
 #include <map>
 #include <ctime>
 #include <memory>
-
 namespace ApplicationInsights
 {
 	namespace core
