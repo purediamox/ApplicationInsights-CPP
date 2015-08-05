@@ -41,7 +41,7 @@ namespace ApplicationInsights
 				buffer.push_back(count & 0xFF);
 				buffer.push_back(count >> 8);
 
-				for (unsigned i = 0; i != count; i++)
+				for (int i = 0; i != count; i++)
 				{
 					Add(buffer, items[i]);
 				}

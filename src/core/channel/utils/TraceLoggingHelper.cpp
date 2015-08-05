@@ -24,7 +24,7 @@ TRACELOGGING_DEFINE_PROVIDER(
 
 TraceLoggingHelper::TraceLoggingHelper()
 {
-	HRESULT hResult = TraceLoggingRegister(g_hAppInsightsProvider);
+	TraceLoggingRegister(g_hAppInsightsProvider);
 }
 
 TraceLoggingHelper::~TraceLoggingHelper()

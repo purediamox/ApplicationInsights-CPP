@@ -51,21 +51,7 @@ void TelemetryContext::InitUser()
 /// </summary>
 void TelemetryContext::InitDevice()
 {
-	HardwareToken^ packageSpecificToken = HardwareIdentification::GetPackageSpecificToken(nullptr);
-	IBuffer^ hardwareId = packageSpecificToken->Id;
-	HashAlgorithmProvider^ algProv = HashAlgorithmProvider::OpenAlgorithm(HashAlgorithmNames::Sha256);
-	IBuffer^ hardwareIdHashed = algProv->HashData(hardwareId);
-	Array<unsigned char>^ buffer = ref new Array<unsigned char>(hardwareIdHashed->Length);
-	CryptographicBuffer::CopyToByteArray(hardwareIdHashed, &buffer);
-	std::wstring strDevId = L"";
-
-	for (int i = 0; i < (int)hardwareIdHashed->Length; i++)
-	{
-		wchar_t hex[10];
-		swprintf_s(hex, 10, L"%02X", buffer[i]);
-		strDevId += hex;
-	}
-	m_device->Id = ref new String(strDevId.c_str());
+	m_device->Id = ref new String(ApplicationInsights::core::Utils::GenerateRandomUUID().c_str());
 
 	m_device->Language = Language::CurrentInputMethodLanguageTag;
 

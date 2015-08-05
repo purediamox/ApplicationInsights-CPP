@@ -12,6 +12,8 @@
     <AppxPackage>True</AppxPackage>
     <UnitTestPlatformVersion Condition="'$(UnitTestPlatformVersion)' == ''">14.0</UnitTestPlatformVersion>
     <CppWindowsStoreUnitTestLibraryType>true</CppWindowsStoreUnitTestLibraryType>
+    <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <ItemGroup Label="ProjectConfigurations">
@@ -219,7 +221,6 @@
     <ClCompile Include="TestCXTelemetryClient.cpp" />
     <ClCompile Include="TestCXTelemetryContext.cpp" />
     <ClCompile Include="TestCXUser.cpp" />
-    <ClCompile Include="UnitTest.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

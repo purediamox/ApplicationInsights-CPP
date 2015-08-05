@@ -31,7 +31,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="UnitTest.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="..\..\..\test\core\TestTelemetryClientConfig.cpp" />
     <ClCompile Include="..\..\..\test\core\contracts\TestApplication.cpp">

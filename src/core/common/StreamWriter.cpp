@@ -71,7 +71,7 @@ void StreamWriter::Write(double value)
 #if WIN32
 	swprintf_s(buffer, 128, L"%ld", value);
 #else
-    swprintf(buffer, 128, L"%ld", value);
+    swprintf(buffer, 128, L"%f", value);
 #endif
 	return this->Write(buffer);
 }
