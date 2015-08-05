@@ -27,9 +27,6 @@
     <ClCompile Include="..\..\..\src\core\channel\TelemetryChannel.cpp">
       <Filter>Channel</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\core\contracts\Application.cpp">
-      <Filter>Contracts</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\core\contracts\Base.cpp">
       <Filter>Contracts</Filter>
     </ClCompile>
@@ -137,17 +134,17 @@
     <ClCompile Include="..\..\..\src\core\channel\utils\HttpResponse.cpp">
       <Filter>Channel\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\core\channel\utils\PersistenceWin32.cpp">
-      <Filter>Channel\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\core\channel\utils\PersistenceWinStore.cpp">
-      <Filter>Channel\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\core\channel\utils\TraceLoggingHelper.cpp">
       <Filter>Channel\Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\core\TelemetryContextWin32.cpp" />
     <ClCompile Include="..\..\..\src\core\TelemetryContextWinStore.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\Application.cpp">
+      <Filter>Contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\core\channel\utils\Persistence.cpp">
+      <Filter>Channel\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -157,9 +154,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\core\contracts\shared\Nullable.h">
       <Filter>Contracts\Shared</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\core\contracts\Application.h">
-      <Filter>Contracts</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\core\contracts\Base.h">
       <Filter>Contracts</Filter>
@@ -306,5 +300,8 @@
       <Filter>Channel\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\core\TelemetryContext.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\Application.h">
+      <Filter>Contracts</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

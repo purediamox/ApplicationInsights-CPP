@@ -61,6 +61,13 @@ namespace ApplicationInsights
 				}
 			}
 
+			property Session^ SessionContext
+			{
+				Session^ get()
+				{
+					return m_session;
+				}
+			}
 			/// <summary>
 			/// Renews the session.
 			/// </summary>

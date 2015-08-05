@@ -108,7 +108,7 @@ void TelemetryContext::RenewSession()
 {
 	m_session->Id = ref new String(ApplicationInsights::core::Utils::GenerateRandomUUID().c_str());
 
-	m_session->IsFirst = L"True";
+	m_session->IsFirst = L"False";
 	m_session->IsNew = L"True";
 }
 

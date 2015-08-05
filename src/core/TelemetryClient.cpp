@@ -28,6 +28,9 @@ TelemetryClient::TelemetryClient(std::wstring& iKey)
 	if (m_channel == nullptr)
 	{
 		m_channel = TelemetryChannel::Initialize();
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Win32
+		m_channel->InitializePersistance(Persistence::GetDefaultConfig());
+#endif
 	}
 }
 
@@ -38,15 +41,24 @@ TelemetryClient::TelemetryClient(std::wstring& iKey)
 /// <param name="context">The context.</param>
 /// <param name="iKey">The ikey.</param>
 TelemetryClient::TelemetryClient(TelemetryContext &context, std::wstring& iKey)
-	: m_context(&context)
 {
 	m_instrumentationKey = iKey;
-	m_context->InitContext();
-
+	if (m_context == nullptr)
+	{
+		Utils::WriteDebugLine(L"ERROR: context is a nullptr");
+	}
+	else
+	{
+		m_context = &context;
+		m_context->InitContext();
+	}
 	m_channel = TelemetryChannel::GetInstance();
 	if (m_channel == nullptr)
 	{
 		m_channel = TelemetryChannel::Initialize();
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Win32
+		m_channel->InitializePersistance(Persistence::GetDefaultConfig());
+#endif
 	}
 }
 

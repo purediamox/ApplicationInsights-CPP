@@ -1,6 +1,8 @@
 #ifndef PERSISTENCE_H
 #define PERSISTENCE_H
 #include <Windows.h>
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Win32
+
 #include <list>
 #include <queue>
 #include <string>
@@ -50,4 +52,5 @@ namespace ApplicationInsights
 		};
 	}
 }
+#endif
 #endif

@@ -2,10 +2,10 @@
 #define SPECIALIZATIONS_H
 
 #include "CppUnitTest.h"
-#include "common/StringWriter.hpp"
 #include "Contracts/Contracts.h"
 #include "TelemetryClient.h"
 #include "common/JsonWriter.hpp"
+#include "common/StringWriter.hpp"
 
 using namespace ApplicationInsights::core;
 namespace Microsoft{ namespace VisualStudio { namespace CppUnitTestFramework {

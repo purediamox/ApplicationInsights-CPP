@@ -28,7 +28,7 @@ Platform::String^ User::AccountAcquisitionDate::get()
 {
 	auto values = ApplicationInsights::core::Utils::GetLocalSettingsContainer();
 	bool hasKey = values->HasKey("UserAcqDate");
-	if (!hasKey)
+	if (hasKey)
 	{
 		String^ acqDate = safe_cast<String^>(values->Lookup("UserAcqDate"));
 		return acqDate;

@@ -108,7 +108,7 @@ void SessionTracking::OnResume(Object^ sender, Platform::Object^ e)
 			if ((now.UniversalTime - lastBackground.UniversalTime) > RENEW_TIMESPAN_IN_SECONDS * CONVERSION_FOR_100_NANOSECOND_UNITS_IN_A_SECOND)
 			{
 				//Renew session
-				m_tc->RenewSession();
+				m_tc->Context->RenewSession();
 
 				//Send start session
 				m_tc->TrackSessionStart();

@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="UnitTestApp_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{d88bdd3c-6249-4a4f-a5d3-0f093256af2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contracts">
+      <UniqueIdentifier>{3675cdd3-30cd-47eb-a58f-704b30c5bc60}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Logo.scale-100.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SmallLogo.scale-100.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-100.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.scale-100.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\WideLogo.scale-100.png">
+      <Filter>Assets</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="TestCXApplication.cpp">
+      <Filter>Contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCXDevice.cpp">
+      <Filter>Contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCXSession.cpp">
+      <Filter>Contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCXUser.cpp">
+      <Filter>Contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCXPageTracking.cpp" />
+    <ClCompile Include="TestCXSessionTracking.cpp" />
+    <ClCompile Include="TestCXTelemetryClient.cpp" />
+    <ClCompile Include="TestCXTelemetryContext.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="specializations.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+</Project>

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef CX_APPLICATION_H
+#define CX_APPLICATION_H
+//#pragma once
 
 namespace ApplicationInsights
 {
@@ -14,3 +16,4 @@ namespace ApplicationInsights
 		};
 	}
 }
+#endif

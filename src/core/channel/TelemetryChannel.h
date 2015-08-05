@@ -48,23 +48,26 @@ namespace ApplicationInsights
 			/// </summary>
 			void Send();
 
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Win32
 			void InitializePersistance(PERSISTCONFIG &config);
-
 			Persistence* GetPersistance();
+#endif
+
 		protected:
 			int m_channelId;
 			int m_seqNum;
 			int m_maxBufferSize;
 			std::vector<std::wstring> m_buffer;
-			Persistence m_persist;
-
 			HttpResponse resp;
+			bool TelemetryChannel::IsUTCAvailable();
+			std::wstring TraceLoggingSanitizer(std::wstring data);
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Win32
+			Persistence m_persist;
+#endif	
 
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store
 			HANDLE hRespRecv;
-#endif
-			bool TelemetryChannel::IsUTCAvailable();
-			std::wstring TraceLoggingSanitizer(std::wstring data);
+#endif		
 
 		private:
 			/// <summary>

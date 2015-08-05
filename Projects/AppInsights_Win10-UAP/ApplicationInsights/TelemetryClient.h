@@ -1,5 +1,4 @@
 #pragma once
-#include "Channel/TelemetryChannel.h"
 #include "TelemetryContext.h"
 #include "../../../src/core/channel/utils/TraceLoggingHelper.h"
 
@@ -27,6 +26,24 @@ namespace ApplicationInsights
 			/// </summary>
 			/// <returns></returns>
 			virtual ~TelemetryClient();
+
+			property TelemetryContext^ Context {
+				TelemetryContext^ get() {
+					return m_context;
+				}
+			}
+			
+			 property Windows::Foundation::Collections::IMap<Platform::String^, Platform::String^>^ GlobalProperties {
+				 Windows::Foundation::Collections::IMap<Platform::String^, Platform::String^>^ get()
+				 {
+					 return m_globalProperties;
+				 }
+				  
+				 void set(Windows::Foundation::Collections::IMap<Platform::String^, Platform::String^>^ properties)
+				 {
+					 m_globalProperties = properties;
+				 }
+			 }
 
 			/// <summary>
 			/// Tracks the event.
@@ -119,11 +136,6 @@ namespace ApplicationInsights
 			void TrackSessionEnd();
 
 			/// <summary>
-			/// Renews the session.
-			/// </summary>
-			void RenewSession();
-
-			/// <summary>
 			/// Disables all tracking.
 			/// </summary>
 			void DisableTracking();
@@ -133,11 +145,7 @@ namespace ApplicationInsights
 			/// </summary>
 			void EnableTracking();
 
-			/// <summary>
-			/// Gets the global properties.
-			/// </summary>
-			Windows::Foundation::Collections::IMap<Platform::String^, Platform::String^>^ GetGlobalProperties();
-
+			
 		private:
 			/// <summary>
 			/// Tracks the specified telemetry.

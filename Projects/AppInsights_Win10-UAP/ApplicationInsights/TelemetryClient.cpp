@@ -257,17 +257,6 @@ void TelemetryClient::TrackSessionEnd()
 }
 
 /// <summary>
-/// Renews the session.
-/// </summary>
-void TelemetryClient::RenewSession()
-{
-	//Send end session
-	TrackSessionEnd();
-
-	m_context->RenewSession();
-}
-
-/// <summary>
 /// Disables all tracking.
 /// </summary>
 void TelemetryClient::DisableTracking()
@@ -283,14 +272,6 @@ void TelemetryClient::EnableTracking()
 {
 	auto values = ApplicationInsights::core::Utils::GetLocalSettingsContainer();
 	values->Remove("Tracking");
-}
-
-/// <summary>
-/// Gets the global properties.
-/// </summary>
-Windows::Foundation::Collections::IMap<Platform::String^, Platform::String^>^ TelemetryClient::GetGlobalProperties()
-{
-	return m_globalProperties;
 }
 
 /// <summary>
@@ -346,8 +327,7 @@ void TelemetryClient::ConvertTagsToStdMap(std::map<std::wstring, std::wstring> &
 /// <param name="properties">The properties.</param>
 /// <param name="props">The props.</param>
 void TelemetryClient::ConvertPropertiesToStdMap(Windows::Foundation::Collections::IMap<Platform::String^, Platform::String^>^ properties, std::map<std::wstring, std::wstring> &props)
-{
-	
+{	
 	if (m_globalProperties->Size > 0)
 	{
 		for (auto globalPropPair : m_globalProperties)

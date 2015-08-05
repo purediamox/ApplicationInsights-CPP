@@ -109,7 +109,7 @@ void TelemetryChannel::Enqueue(std::wstring &iKey, TelemetryContext &context, Do
 /// </summary>
 void TelemetryChannel::Send()
 {
-	
+
 	if (m_buffer.size() > 0)
 	{
 		EnterCriticalSection(&cs);
@@ -125,10 +125,14 @@ void TelemetryChannel::Send()
 
 		m_buffer.clear();
 		LeaveCriticalSection(&cs);
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Win32
 		m_persist.save(buffer);
+#endif
+
 	}
 }
 
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Win32
 void TelemetryChannel::InitializePersistance(PERSISTCONFIG &config)
 {
 	m_persist.Initialize(&config);
@@ -138,3 +142,4 @@ Persistence* TelemetryChannel::GetPersistance()
 {
 	return &m_persist;
 }
+#endif

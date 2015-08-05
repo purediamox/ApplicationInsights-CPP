@@ -1,6 +1,5 @@
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Win32, no store, no phone
-
 #include "Persistence.hpp"
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Win32
 #include "../../Common/Utils.hpp"
 #include "HttpRequest.hpp"
 #include <sstream>
@@ -229,7 +228,7 @@ DWORD WINAPI Persistence::Upload()
 		int waitTime = 0;
 		if (m_currentConfig.uploadIntervalMins == 0)
 		{
-			waitTime = 1000;
+			waitTime = 100;
 		}
 		else
 		{

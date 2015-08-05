@@ -26,9 +26,6 @@
     <Filter Include="Channel">
       <UniqueIdentifier>{e3e5b584-5760-4a68-bd98-607b330cf601}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CXtests">
-      <UniqueIdentifier>{aa785b15-87a2-4bfa-8506-4bd48305631f}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="UnitTest.cpp" />
@@ -121,44 +118,11 @@
     <ClCompile Include="..\..\..\test\core\TestBasicEndToEnd.cpp" />
     <ClCompile Include="..\..\..\test\core\TestTelemetryClient.cpp" />
     <ClCompile Include="..\..\..\test\core\TestTelemetryContext.cpp" />
-    <ClCompile Include="TestCXApplication.cpp">
-      <Filter>CXtests</Filter>
-    </ClCompile>
-    <ClCompile Include="TestCXDevice.cpp">
-      <Filter>CXtests</Filter>
-    </ClCompile>
-    <ClCompile Include="TestCXPageTracking.cpp">
-      <Filter>CXtests</Filter>
-    </ClCompile>
-    <ClCompile Include="TestCXSession.cpp">
-      <Filter>CXtests</Filter>
-    </ClCompile>
-    <ClCompile Include="TestCXSessionTracking.cpp">
-      <Filter>CXtests</Filter>
-    </ClCompile>
-    <ClCompile Include="TestCXTelemetryClient.cpp">
-      <Filter>CXtests</Filter>
-    </ClCompile>
-    <ClCompile Include="TestCXTelemetryContext.cpp">
-      <Filter>CXtests</Filter>
-    </ClCompile>
-    <ClCompile Include="TestCXUser.cpp">
-      <Filter>CXtests</Filter>
-    </ClCompile>
-    <ClCompile Include="TestCXBasicEndToEnd.cpp">
-      <Filter>CXtests</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="..\..\..\test\core\specializations.h" />
     <ClInclude Include="..\..\..\test\core\targetver.h" />
-    <ClInclude Include="targetver.h">
-      <Filter>CXtests</Filter>
-    </ClInclude>
-    <ClInclude Include="specializations.h">
-      <Filter>CXtests</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\WideLogo.scale-100.png">

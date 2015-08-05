@@ -124,7 +124,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <CompileAsWinRT>true</CompileAsWinRT>
-      <PreprocessorDefinitions>TELEMETRY_CLIENT_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UAP; TELEMETRY_CLIENT_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WarningLevel>Level4</WarningLevel>
       <DisableSpecificWarnings>4251</DisableSpecificWarnings>
     </ClCompile>
@@ -138,7 +138,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <CompileAsWinRT>true</CompileAsWinRT>
-      <PreprocessorDefinitions>TELEMETRY_CLIENT_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UAP; TELEMETRY_CLIENT_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4251</DisableSpecificWarnings>
       <WarningLevel>Level4</WarningLevel>
     </ClCompile>
@@ -260,8 +260,7 @@
     <ClCompile Include="..\..\..\src\core\channel\utils\HttpHeaderField.cpp" />
     <ClCompile Include="..\..\..\src\core\channel\utils\HttpRequest.cpp" />
     <ClCompile Include="..\..\..\src\core\channel\utils\HttpResponse.cpp" />
-    <ClCompile Include="..\..\..\src\core\channel\utils\PersistenceWin32.cpp" />
-    <ClCompile Include="..\..\..\src\core\channel\utils\PersistenceWinStore.cpp" />
+    <ClCompile Include="..\..\..\src\core\channel\utils\Persistence.cpp" />
     <ClCompile Include="..\..\..\src\core\channel\utils\TraceLoggingHelper.cpp" />
     <ClCompile Include="..\..\..\src\core\common\JsonWriter.cpp" />
     <ClCompile Include="..\..\..\src\core\common\Serializer.cpp" />
