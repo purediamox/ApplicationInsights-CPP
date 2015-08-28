@@ -1,7 +1,9 @@
 #include "TelemetryClient.h"
+
 #include "../../../src/core/contracts/Contracts.h"
 #include "../../../src/core/common/utils.hpp"
-
+#include "../../../src/core/common/StringWriter.hpp"
+#include "../../../src/core/common/JsonWriter.hpp"
 #include <collection.h>
 #include "Windows.h"
 
@@ -16,11 +18,10 @@ using namespace Platform::Collections;
 /// </summary>
 /// <param name="iKey">The iKey.</param>
 TelemetryClient::TelemetryClient(String^ iKey)
-{
-	m_iKey = iKey;
-	m_globalProperties = ref new Platform::Collections::Map<Platform::String^, Platform::String^>();
-	m_context = ref new TelemetryContext();
-	m_context->InitContext();
+{	
+	TelemetryContext^ context = ref new TelemetryContext();
+	context->InitContext();
+	TelemetryClient(context, iKey);
 }
 
 /// <summary>
@@ -40,6 +41,7 @@ TelemetryClient::TelemetryClient(TelemetryContext^ context, String^ iKey)
 	{
 		m_context = context;
 	}
+	m_channel = TelemetryChannel::GetInstance();
 }
 
 /// <summary>
@@ -48,6 +50,7 @@ TelemetryClient::TelemetryClient(TelemetryContext^ context, String^ iKey)
 /// <returns></returns>
 TelemetryClient::~TelemetryClient()
 {
+	Flush();
 }
 
 /// <summary>
@@ -232,8 +235,6 @@ void TelemetryClient::TrackPageView(Platform::String^ pageName, Platform::String
 	Track(telemetry);
 }
 
-
-
 /// <summary>
 /// Tracks the session start.
 /// </summary>
@@ -254,6 +255,14 @@ void TelemetryClient::TrackSessionEnd()
 	session.SetState(ApplicationInsights::core::SessionState::End);
 
 	Track(session);
+}
+
+/// <summary>
+/// Flushes this instance.
+/// </summary>
+void TelemetryClient::Flush()
+{
+	m_channel->Save();
 }
 
 /// <summary>
@@ -283,8 +292,30 @@ void TelemetryClient::Track(ApplicationInsights::core::Domain& telemetry)
 	if (IsTrackingEnabled())
 	{
 		std::map<std::wstring, std::wstring> tags;
+		
+
+		ApplicationInsights::core::Data data;
+		data.SetBaseData(telemetry);
+		data.SetBaseType(telemetry.GetBaseType());
+
+		std::wstring buffer;
+		ApplicationInsights::core::StringWriter content(&buffer);
+		ApplicationInsights::core::JsonWriter json(content);
+		
+		ApplicationInsights::core::Envelope envelope;
+		envelope.SetData(data);
+		envelope.SetIKey(m_iKey->Data());
+		envelope.SetTime(ApplicationInsights::core::Utils::GetCurrentDateTime());
+		envelope.SetName(telemetry.GetEnvelopeName());
+		envelope.SetSeq((m_channel->ChannelId.ToString()+ L":" + m_channel->incrementSeqenceNum().ToString())->Data());
+		
 		ConvertTagsToStdMap(tags);
-		m_etwLogger.LogData(m_iKey->Data(), tags, telemetry);
+		envelope.SetTags(tags);
+
+		json.WriteObjectValue(&envelope);
+		String^ jsonPayload = ref new String(content.ToString().c_str());
+		m_channel->Enqueue(jsonPayload);
+		//m_etwLogger.LogData(m_iKey->Data(), tags, telemetry);
 	}
 }
 

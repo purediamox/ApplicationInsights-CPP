@@ -60,7 +60,7 @@ namespace ApplicationInsights
 					Add(buffer, i->second);
 				}
 			}
-
+			
 			void Add(std::vector<BYTE>& buffer, DataPoint *metric); // dataPoint			
 			void Add(std::vector<BYTE>& buffer, INT32 value); // int			
 			void Add(std::vector<BYTE>& buffer, double value); // double			
@@ -71,6 +71,10 @@ namespace ApplicationInsights
 			void LogPageView(std::wstring iKey, wstring_wstring_map tags, PageViewData* pageViewData);
 			void LogPageViewPerf(std::wstring iKey, wstring_wstring_map tags, PageViewPerfData* pageViewPerfData);
 			void LogMessage(std::wstring iKey, wstring_wstring_map tags, MessageData* messageData);
+
+		private:
+			int m_channelId;
+			int m_seqNum;
 		};
 	}
 }

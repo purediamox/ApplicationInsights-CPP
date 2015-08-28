@@ -1,5 +1,6 @@
 #pragma once
 #include "TelemetryContext.h"
+#include "TelemetryChannel.h"
 #include "../../../src/core/channel/utils/TraceLoggingHelper.h"
 
 namespace ApplicationInsights
@@ -181,7 +182,8 @@ namespace ApplicationInsights
 
 			Platform::String^ m_iKey;
 			TelemetryContext^ m_context;
-			ApplicationInsights::core::TraceLoggingHelper m_etwLogger;
+			TelemetryChannel^ m_channel;
+			//ApplicationInsights::core::TraceLoggingHelper m_etwLogger;
 
 
 			Windows::Foundation::Collections::IMap<Platform::String^, Platform::String^>^ m_globalProperties;

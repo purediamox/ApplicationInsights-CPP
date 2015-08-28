@@ -1,5 +1,6 @@
 #include "TraceLoggingHelper.h"
 #include "../../Contracts/Contracts.h"
+#include <time.h>
 using namespace ApplicationInsights::core;
 #ifdef WINAPI_FAMILY_PARTITION
 
@@ -25,6 +26,9 @@ TRACELOGGING_DEFINE_PROVIDER(
 TraceLoggingHelper::TraceLoggingHelper()
 {
 	TraceLoggingRegister(g_hAppInsightsProvider);
+	srand((int)time(0));
+	m_channelId = rand();
+	m_seqNum = 0;
 }
 
 TraceLoggingHelper::~TraceLoggingHelper()
@@ -38,26 +42,7 @@ bool TraceLoggingHelper::IsLoggingEnabled()
 }
 
 void TraceLoggingHelper::LogData(std::wstring iKey, wstring_wstring_map tags, Domain &data)
-{
-
-	std::vector<BYTE> TagData;
-
-	AddArray(TagData, (int)tags.size(), tags);
-
-	TraceLoggingWrite(
-		g_hAppInsightsProvider,
-		"TEST",
-		TraceLoggingKeyword(MICROSOFT_KEYWORD_TELEMETRY),
-		TraceLoggingWideString(L"TESTING_IKEY", "PartA_iKey"),
-		TraceLoggingStruct(2, "PartA_Tags"),
-		TraceLoggingWideString(L"TESTING_Tag2", "tag2"),
-		TraceLoggingWideString(L"TESTING_Tag1", "tag1")
-		);
-
-	//TraceLoggingPackedData(&TagData[0], TagData.size()),		//content
-	//	TraceLoggingPackedStructArray(2, "PartA_Tags"),
-	//	TraceLoggingPackedMetadata(TlgInUNICODESTRING, "name"),
-	//	TraceLoggingPackedMetadata(TlgInUNICODESTRING, "value"),
+{	
 	std::wstring baseType = data.GetBaseType();
 	if (baseType == L"MetricData")
 	{
@@ -181,7 +166,18 @@ void TraceLoggingHelper::LogMetric(std::wstring iKey, wstring_wstring_map tags, 
 		"MetricData",
 		TraceLoggingKeyword(MICROSOFT_KEYWORD_TELEMETRY),
 		TraceLoggingWideString(iKey.c_str(), "PartA_iKey"),
-		TraceLoggingStruct(2, "Data"),
+		TraceLoggingStruct(11, "PartA_Tags"),
+			TraceLoggingWideString(tags[L"ai.application.ver"].c_str(), "ai.application.ver"),
+			TraceLoggingWideString(tags[L"ai.device.id"].c_str(), "ai.device.id"),
+			TraceLoggingWideString(tags[L"ai.device.language"].c_str(), "ai.device.language"),
+			TraceLoggingWideString(tags[L"ai.device.network"].c_str(), "ai.device.network"),
+			TraceLoggingWideString(tags[L"ai.device.os"].c_str(), "ai.device.os"),
+			TraceLoggingWideString(tags[L"ai.device.type"].c_str(), "ai.device.type"),
+			TraceLoggingWideString(tags[L"ai.session.id"].c_str(), "ai.session.id"),
+			TraceLoggingWideString(tags[L"ai.session.isFirst"].c_str(), "ai.session.isFirst"),
+			TraceLoggingWideString(tags[L"ai.session.isNew"].c_str(), "ai.session.isNew"),
+			TraceLoggingWideString(tags[L"ai.user.accountAcquisitionDate"].c_str(), "ai.user.accountAcquisitionDate"),
+			TraceLoggingWideString(tags[L"ai.user.id"].c_str(), "ai.user.id"),
 		TraceLoggingWideString(metric->GetBaseType().c_str(), "baseType"),
 		TraceLoggingStruct(3, "baseData"),
 		TraceLoggingInt32(metric->GetVer(), "ver"),
@@ -219,7 +215,18 @@ void TraceLoggingHelper::LogEvent(std::wstring iKey, wstring_wstring_map tags, E
 		"EventData",
 		TraceLoggingKeyword(MICROSOFT_KEYWORD_TELEMETRY),
 		TraceLoggingWideString(iKey.c_str(), "PartA_iKey"),
-		TraceLoggingStruct(2, "Data"),
+		TraceLoggingStruct(11, "PartA_Tags"),
+			TraceLoggingWideString(tags[L"ai.application.ver"].c_str(), "ai.application.ver"),
+			TraceLoggingWideString(tags[L"ai.device.id"].c_str(), "ai.device.id"),
+			TraceLoggingWideString(tags[L"ai.device.language"].c_str(), "ai.device.language"),
+			TraceLoggingWideString(tags[L"ai.device.network"].c_str(), "ai.device.network"),
+			TraceLoggingWideString(tags[L"ai.device.os"].c_str(), "ai.device.os"),
+			TraceLoggingWideString(tags[L"ai.device.type"].c_str(), "ai.device.type"),
+			TraceLoggingWideString(tags[L"ai.session.id"].c_str(), "ai.session.id"),
+			TraceLoggingWideString(tags[L"ai.session.isFirst"].c_str(), "ai.session.isFirst"),
+			TraceLoggingWideString(tags[L"ai.session.isNew"].c_str(), "ai.session.isNew"),
+			TraceLoggingWideString(tags[L"ai.user.accountAcquisitionDate"].c_str(), "ai.user.accountAcquisitionDate"),
+			TraceLoggingWideString(tags[L"ai.user.id"].c_str(), "ai.user.id"),
 		TraceLoggingWideString(eventData->GetBaseType().c_str(), "baseType"),
 		TraceLoggingStruct(4, "baseData"),
 		TraceLoggingInt32(eventData->GetVer(), "ver"),
@@ -253,7 +260,18 @@ void TraceLoggingHelper::LogPageView(std::wstring iKey, wstring_wstring_map tags
 		"PageViewData",
 		TraceLoggingKeyword(MICROSOFT_KEYWORD_TELEMETRY),
 		TraceLoggingWideString(iKey.c_str(), "PartA_iKey"),
-		TraceLoggingStruct(2, "Data"),
+		TraceLoggingStruct(11, "PartA_Tags"),
+			TraceLoggingWideString(tags[L"ai.application.ver"].c_str(), "ai.application.ver"),
+			TraceLoggingWideString(tags[L"ai.device.id"].c_str(), "ai.device.id"),
+			TraceLoggingWideString(tags[L"ai.device.language"].c_str(), "ai.device.language"),
+			TraceLoggingWideString(tags[L"ai.device.network"].c_str(), "ai.device.network"),
+			TraceLoggingWideString(tags[L"ai.device.os"].c_str(), "ai.device.os"),
+			TraceLoggingWideString(tags[L"ai.device.type"].c_str(), "ai.device.type"),
+			TraceLoggingWideString(tags[L"ai.session.id"].c_str(), "ai.session.id"),
+			TraceLoggingWideString(tags[L"ai.session.isFirst"].c_str(), "ai.session.isFirst"),
+			TraceLoggingWideString(tags[L"ai.session.isNew"].c_str(), "ai.session.isNew"),
+			TraceLoggingWideString(tags[L"ai.user.accountAcquisitionDate"].c_str(), "ai.user.accountAcquisitionDate"),
+			TraceLoggingWideString(tags[L"ai.user.id"].c_str(), "ai.user.id"),
 		TraceLoggingWideString(pageViewData->GetBaseType().c_str(), "baseType"),
 		TraceLoggingStruct(6, "baseData"),
 		TraceLoggingInt32(pageViewData->GetVer(), "ver"),
@@ -289,7 +307,18 @@ void TraceLoggingHelper::LogPageViewPerf(std::wstring iKey, wstring_wstring_map 
 		"PageViewPerfData",
 		TraceLoggingKeyword(MICROSOFT_KEYWORD_TELEMETRY),
 		TraceLoggingWideString(iKey.c_str(), "PartA_iKey"),
-		TraceLoggingStruct(2, "Data"),
+		TraceLoggingStruct(11, "PartA_Tags"),
+			TraceLoggingWideString(tags[L"ai.application.ver"].c_str(), "ai.application.ver"),
+			TraceLoggingWideString(tags[L"ai.device.id"].c_str(), "ai.device.id"),
+			TraceLoggingWideString(tags[L"ai.device.language"].c_str(), "ai.device.language"),
+			TraceLoggingWideString(tags[L"ai.device.network"].c_str(), "ai.device.network"),
+			TraceLoggingWideString(tags[L"ai.device.os"].c_str(), "ai.device.os"),
+			TraceLoggingWideString(tags[L"ai.device.type"].c_str(), "ai.device.type"),
+			TraceLoggingWideString(tags[L"ai.session.id"].c_str(), "ai.session.id"),
+			TraceLoggingWideString(tags[L"ai.session.isFirst"].c_str(), "ai.session.isFirst"),
+			TraceLoggingWideString(tags[L"ai.session.isNew"].c_str(), "ai.session.isNew"),
+			TraceLoggingWideString(tags[L"ai.user.accountAcquisitionDate"].c_str(), "ai.user.accountAcquisitionDate"),
+			TraceLoggingWideString(tags[L"ai.user.id"].c_str(), "ai.user.id"),
 		TraceLoggingWideString(pageViewPerfData->GetBaseType().c_str(), "baseType"),
 		TraceLoggingStruct(11, "baseData"),
 		TraceLoggingInt32(pageViewPerfData->GetVer(), "ver"),
@@ -333,7 +362,18 @@ void TraceLoggingHelper::LogMessage(std::wstring iKey, wstring_wstring_map tags,
 		"MessageData",
 		TraceLoggingKeyword(MICROSOFT_KEYWORD_TELEMETRY),
 		TraceLoggingWideString(iKey.c_str(), "PartA_iKey"),
-		TraceLoggingStruct(2, "Data"),
+		TraceLoggingStruct(11, "PartA_Tags"),
+			TraceLoggingWideString(tags[L"ai.application.ver"].c_str(), "ai.application.ver"),
+			TraceLoggingWideString(tags[L"ai.device.id"].c_str(), "ai.device.id"),
+			TraceLoggingWideString(tags[L"ai.device.language"].c_str(), "ai.device.language"),
+			TraceLoggingWideString(tags[L"ai.device.network"].c_str(), "ai.device.network"),
+			TraceLoggingWideString(tags[L"ai.device.os"].c_str(), "ai.device.os"),
+			TraceLoggingWideString(tags[L"ai.device.type"].c_str(), "ai.device.type"),
+			TraceLoggingWideString(tags[L"ai.session.id"].c_str(), "ai.session.id"),
+			TraceLoggingWideString(tags[L"ai.session.isFirst"].c_str(), "ai.session.isFirst"),
+			TraceLoggingWideString(tags[L"ai.session.isNew"].c_str(), "ai.session.isNew"),
+			TraceLoggingWideString(tags[L"ai.user.accountAcquisitionDate"].c_str(), "ai.user.accountAcquisitionDate"),
+			TraceLoggingWideString(tags[L"ai.user.id"].c_str(), "ai.user.id"),
 		TraceLoggingWideString(messageData->GetBaseType().c_str(), "baseType"),
 		TraceLoggingStruct(4, "baseData"),
 		TraceLoggingInt32(messageData->GetVer(), "ver"),
