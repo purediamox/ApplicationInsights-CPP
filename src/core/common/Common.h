@@ -7,6 +7,12 @@
 #include <stdlib.h>
 #include <map>
 
+
+// Define UNUSED Macro to avoid remove unused parameter compiler warnings
+#ifndef UNUSED
+#define UNUSED(x) (void)(x)
+#endif
+
 namespace ApplicationInsights
 {
 	namespace core

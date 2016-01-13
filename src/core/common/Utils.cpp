@@ -108,6 +108,8 @@ void Utils::WriteDebugLine(const std::wstring &output)
 #ifdef _DEBUG
 #ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 	OutputDebugString((L"\r\nAPPLICATION INSIGHTS : \r\n" + output).c_str());
+#else
+	UNUSED(output);
 #endif
 #endif
 }

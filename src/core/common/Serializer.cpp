@@ -102,7 +102,7 @@ void Serializer::BeginDictionaryValue()
 /// Writes the name of the property.
 /// </summary>
 /// <param name="name">The name.</param>
-void Serializer::WritePropertyName(const std::wstring &name)
+void Serializer::WritePropertyName(const std::wstring & /*name*/)  // TODO name is unreferenced - how can this work?
 {
 	PrepareValue(KeyEntry);
     ValidateStateFor(KeyEntry);
@@ -147,7 +147,8 @@ void Serializer::EndArrayValue()
 /// <param name="value">if set to <c>true</c> [value].</param>
 void Serializer::WriteBoolValue(bool value)
 {
-    PrepareValue(ValueEntry);
+	UNUSED(value);				
+	PrepareValue(ValueEntry);
     seenElement = true;
 }
 
@@ -157,7 +158,8 @@ void Serializer::WriteBoolValue(bool value)
 /// <param name="value">The value.</param>
 void Serializer::WriteIntegerValue(int value)
 {
-    PrepareValue(ValueEntry);
+	UNUSED(value);
+	PrepareValue(ValueEntry);
     seenElement = true;
 }
 
@@ -167,7 +169,8 @@ void Serializer::WriteIntegerValue(int value)
 /// <param name="value">The value.</param>
 void Serializer::WriteDoubleValue(double value)
 {
-    PrepareValue(ValueEntry);
+	UNUSED(value);
+	PrepareValue(ValueEntry);
     seenElement = true;
 
 }
@@ -178,7 +181,8 @@ void Serializer::WriteDoubleValue(double value)
 /// <param name="value">The value.</param>
 void Serializer::WriteStringValue(const std::wstring &value)
 {
-    PrepareValue(ValueEntry);
+	UNUSED(value);
+	PrepareValue(ValueEntry);
     seenElement = true;
 }
     

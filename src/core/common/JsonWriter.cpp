@@ -25,7 +25,8 @@ JsonWriter::~JsonWriter()
 /// <param name="kind">The kind.</param>
 void JsonWriter::PrepareValue(StackEntry kind)
 {
-    if (seenElement) {
+	UNUSED(kind);
+	if (seenElement) {
         writer.Write(L",");
     }
 }

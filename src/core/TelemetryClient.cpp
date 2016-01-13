@@ -337,5 +337,8 @@ bool TelemetryClient::IsTrackingEnabled()
 	
 	return enabled;
 #endif
+#else
+	bool enabled = true;
+	return enabled;			// TODO need to determine mechanism for enabling/disabling
 #endif
 }

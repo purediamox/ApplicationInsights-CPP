@@ -14,5 +14,6 @@ Domain::~Domain()
 
 void Domain::Serialize(Serializer& serializer) const
 {
+	UNUSED(serializer);
 }
 

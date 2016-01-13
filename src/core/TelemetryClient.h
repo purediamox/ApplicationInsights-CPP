@@ -127,7 +127,6 @@ namespace ApplicationInsights
 			/// </summary>
 			void Flush();
 
-#if defined(WINAPI_FAMILY_PARTITION) // it's SOME kind of Windows
 			/// <summary>
 			/// Disables all tracking.
 			/// </summary>
@@ -137,7 +136,6 @@ namespace ApplicationInsights
 			/// Enables all tracking.
 			/// </summary>
 			void EnableTracking();
-#endif
 
 		protected:
 			/// <summary>
@@ -147,13 +145,11 @@ namespace ApplicationInsights
 			/// <param name="context">The context.</param>
 			TelemetryClient(TelemetryClientConfig &config, TelemetryContext &context);
 
-#if defined(WINAPI_FAMILY_PARTITION) // it's SOME kind of Windows
 			/// <summary>
 			/// Determines whether [is tracking enabled].
 			/// </summary>
 			/// <returns>True if the tracking is enabled, otherwise false</returns>
 			bool IsTrackingEnabled();
-#endif
 
 			// The config for the instance
 			//std::unique_ptr<TelemetryClientConfig> m_config;
