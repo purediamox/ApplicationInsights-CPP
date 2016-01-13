@@ -81,3 +81,4 @@ include/
 lib/
 ssl/
 .deps/
+*.o

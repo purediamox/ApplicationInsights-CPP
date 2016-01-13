@@ -10,7 +10,7 @@
 			contracts/DataPoint.cpp contracts/Device.cpp contracts/Domain.cpp\
 			contracts/Envelope.cpp contracts/EventData.cpp contracts/ExceptionData.cpp
 			
-    OBJS=$(SRCS: .cpp=.o)
+    OBJS=$(SRCS:.cpp=.o)
         
 $(EXE): $(OBJS)
 	g++ $(CPPFLAGS) -o $@  $(OBJS) 

@@ -3,6 +3,7 @@
 
 #include <list>
 #include <string>
+#include <algorithm>
 #include "HttpHeaderField.h"
 
 namespace ApplicationInsights
