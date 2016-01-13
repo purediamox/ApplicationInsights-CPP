@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <random>
 #include <functional>
+#include <string.h>
 
 using namespace ApplicationInsights::core;
 

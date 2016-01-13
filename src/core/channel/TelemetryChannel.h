@@ -59,7 +59,7 @@ namespace ApplicationInsights
 			HANDLE hRespRecv;
 #endif
 #endif
-			bool TelemetryChannel::IsUTCAvailable();
+			bool IsUTCAvailable();
 			std::wstring TraceLoggingSanitizer(std::wstring data);
 		};
 	}

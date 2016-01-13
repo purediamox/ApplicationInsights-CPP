@@ -1,17 +1,19 @@
-    EXE = myexe
-    OBJS = TelemetryClient.o
-    CPPFLAGS = -Iinclude
+    EXE = appinsights.so
+
+    CPPFLAGS = -Iinclude -std=gnu++11 -shared
     SRCS=TelemetryClient.cpp BaseTelemetryContext.cpp TelemetryContextOther.cpp \
-			common/JsonWriter.cpp common/StreamWriter.cpp common/StringWriter.cpp common/Utils.h \
+			common/JsonWriter.cpp common/StreamWriter.cpp common/StringWriter.cpp common/Utils.cpp \
 			channel/TelemetryChannel.cpp  \
 			channel/utils/HttpHeaderField.cpp channel/utils/HttpRequest.cpp channel/utils/HttpResponse.cpp \
 			contracts/Application.cpp contracts/CrashData.cpp contracts/CrashDataBinary.cpp contracts/CrashDataHeaders.cpp \
 			contracts/CrashDataThread.cpp contracts/CrashDataThreadFrame.cpp contracts/Data.cpp \
 			contracts/DataPoint.cpp contracts/Device.cpp contracts/Domain.cpp\
 			contracts/Envelope.cpp contracts/EventData.cpp contracts/ExceptionData.cpp
+			
+    OBJS=$(SRCS: .cpp=.o)
         
 $(EXE): $(OBJS)
-	g++ -o $@  $(OBJS)
+	g++ $(CPPFLAGS) -o $@  $(OBJS) 
         
 depend: 
 	makedepend -- $(CPPFLAGS) -- $(SRCS)

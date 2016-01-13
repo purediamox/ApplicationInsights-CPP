@@ -1,5 +1,7 @@
 #include "HttpHeaderField.h"
-#include <codecvt>
+#if defined(WINAPI_FAMILY_PARTITION)
+#include <codecvt>    // codecvt not available on GCC yet
+#endif
 #include <locale>
 
 using namespace ApplicationInsights::core;

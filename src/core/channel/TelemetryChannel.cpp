@@ -6,7 +6,11 @@
 #include <stdlib.h> 
 #include <time.h>
 #include <locale>
-#include <codecvt>
+#include <algorithm>
+
+#ifdef WINAPI_FAMILY_PARTITION
+#include <codecvt>    // codecvt not available on GCC yet
+#endif
 
 using namespace ApplicationInsights::core;
 

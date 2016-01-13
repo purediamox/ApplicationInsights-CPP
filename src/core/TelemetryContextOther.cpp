@@ -8,7 +8,7 @@ using namespace ApplicationInsights::core;
 /// Stores the context.
 /// </summary>
 /// <returns></returns>
-TelemetryContext::TelemetryContext(std::wstring& iKey) :
+TelemetryContext::TelemetryContext(const std::wstring& iKey) :
 BaseTelemetryContext(iKey)
 {
 }

@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <algorithm>
 #include "TelemetryClient.h"
 #include "common/Utils.h"
 

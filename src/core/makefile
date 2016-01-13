@@ -1,8 +1,8 @@
-    EXE = myexe
-#    OBJS = TelemetryClient.o
-    CPPFLAGS = -Iinclude
+    EXE = appinsights.so
+
+    CPPFLAGS = -Iinclude -std=gnu++11 -shared
     SRCS=TelemetryClient.cpp BaseTelemetryContext.cpp TelemetryContextOther.cpp \
-			common/JsonWriter.cpp common/StreamWriter.cpp common/StringWriter.cpp common/Utils.h \
+			common/JsonWriter.cpp common/StreamWriter.cpp common/StringWriter.cpp common/Utils.cpp \
 			channel/TelemetryChannel.cpp  \
 			channel/utils/HttpHeaderField.cpp channel/utils/HttpRequest.cpp channel/utils/HttpResponse.cpp \
 			contracts/Application.cpp contracts/CrashData.cpp contracts/CrashDataBinary.cpp contracts/CrashDataHeaders.cpp \
@@ -13,11 +13,13 @@
     OBJS=$(SRCS: .cpp=.o)
         
 $(EXE): $(OBJS)
-	g++ -o $@  $(OBJS)
+	g++ $(CPPFLAGS) -o $@  $(OBJS) 
         
 depend: 
 	makedepend -- $(CPPFLAGS) -- $(SRCS)
-        
+
+clean:
+	rm -f $(EXE) $(OBJS)        
         
 
 
@@ -197,18 +199,20 @@ common/StringWriter.o: /usr/include/sys/sysmacros.h
 common/StringWriter.o: /usr/include/bits/pthreadtypes.h /usr/include/alloca.h
 common/StringWriter.o: /usr/include/bits/stdlib-float.h common/Utils.h
 common/StringWriter.o: common/Common.h /usr/include/stdio.h
-common/Utils.o: common/Common.h /usr/include/stdlib.h /usr/include/features.h
-common/Utils.o: /usr/include/stdc-predef.h /usr/include/sys/cdefs.h
-common/Utils.o: /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h
-common/Utils.o: /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h
-common/Utils.o: /usr/include/endian.h /usr/include/bits/endian.h
-common/Utils.o: /usr/include/bits/byteswap.h /usr/include/bits/types.h
-common/Utils.o: /usr/include/bits/typesizes.h /usr/include/bits/byteswap-16.h
-common/Utils.o: /usr/include/sys/types.h /usr/include/time.h
-common/Utils.o: /usr/include/sys/select.h /usr/include/bits/select.h
-common/Utils.o: /usr/include/bits/sigset.h /usr/include/bits/time.h
-common/Utils.o: /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h
-common/Utils.o: /usr/include/alloca.h /usr/include/bits/stdlib-float.h
+common/Utils.o: common/Utils.h common/Common.h /usr/include/stdlib.h
+common/Utils.o: /usr/include/features.h /usr/include/stdc-predef.h
+common/Utils.o: /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h
+common/Utils.o: /usr/include/gnu/stubs.h /usr/include/bits/waitflags.h
+common/Utils.o: /usr/include/bits/waitstatus.h /usr/include/endian.h
+common/Utils.o: /usr/include/bits/endian.h /usr/include/bits/byteswap.h
+common/Utils.o: /usr/include/bits/types.h /usr/include/bits/typesizes.h
+common/Utils.o: /usr/include/bits/byteswap-16.h /usr/include/sys/types.h
+common/Utils.o: /usr/include/time.h /usr/include/sys/select.h
+common/Utils.o: /usr/include/bits/select.h /usr/include/bits/sigset.h
+common/Utils.o: /usr/include/bits/time.h /usr/include/sys/sysmacros.h
+common/Utils.o: /usr/include/bits/pthreadtypes.h /usr/include/alloca.h
+common/Utils.o: /usr/include/bits/stdlib-float.h /usr/include/sys/timeb.h
+common/Utils.o: /usr/include/stdint.h /usr/include/bits/wchar.h
 channel/TelemetryChannel.o: channel/TelemetryChannel.h
 channel/TelemetryChannel.o: TelemetryClientConfig.h TelemetryContext.h
 channel/TelemetryChannel.o: contracts/Contracts.h contracts/Domain.h

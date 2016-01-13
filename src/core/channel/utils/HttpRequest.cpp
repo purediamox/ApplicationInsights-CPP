@@ -2,7 +2,9 @@
 #include "../../common/Utils.h"
 #include <algorithm>
 #include <locale>
-#include <codecvt>
+#ifdef WINAPI_FAMILY_PARTITION
+#include <codecvt>    // codecvt not available on GCC yet
+#endif
 #include <vector>
 
 using namespace ApplicationInsights::core;

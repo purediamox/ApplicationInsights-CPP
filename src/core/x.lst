@@ -1,0 +1,40 @@
+g++ -Iinclude -std=gnu++11 -shared -o appinsights.so  TelemetryClient.cpp BaseTelemetryContext.cpp TelemetryContextOther.cpp common/JsonWriter.cpp common/StreamWriter.cpp common/StringWriter.cpp common/Utils.cpp channel/TelemetryChannel.cpp channel/utils/HttpHeaderField.cpp channel/utils/HttpRequest.cpp channel/utils/HttpResponse.cpp contracts/Application.cpp contracts/CrashData.cpp contracts/CrashDataBinary.cpp contracts/CrashDataHeaders.cpp contracts/CrashDataThread.cpp contracts/CrashDataThreadFrame.cpp contracts/Data.cpp contracts/DataPoint.cpp contracts/Device.cpp contracts/Domain.cpp contracts/Envelope.cpp contracts/EventData.cpp contracts/ExceptionData.cpp 
+In file included from channel/utils/HttpRequest.h:10:0,
+                 from channel/TelemetryChannel.h:10,
+                 from channel/TelemetryChannel.cpp:1:
+channel/utils/HttpHeaderFields.h: In member function ‘bool ApplicationInsights::core::HttpHeaderFields::HasField(const wstring&) const’:
+channel/utils/HttpHeaderFields.h:29:12: error: ‘find’ is not a member of ‘std’
+     return std::find(m_Fields.cbegin(), m_Fields.cend(), HttpHeaderField(fieldName)) != m_Fields.end();
+            ^
+channel/utils/HttpHeaderFields.h: In member function ‘const ApplicationInsights::core::HttpHeaderField& ApplicationInsights::core::HttpHeaderFields::operator[](const wstring&) const’:
+channel/utils/HttpHeaderFields.h:38:13: error: ‘find’ is not a member of ‘std’
+     return *std::find(m_Fields.cbegin(), m_Fields.cend(), HttpHeaderField(fieldName));
+             ^
+channel/utils/HttpHeaderFields.h: In member function ‘const ApplicationInsights::core::HttpHeaderField& ApplicationInsights::core::HttpHeaderFields::GetField(const wstring&) const’:
+channel/utils/HttpHeaderFields.h:47:13: error: ‘find’ is not a member of ‘std’
+     return *std::find(m_Fields.cbegin(), m_Fields.cend(), HttpHeaderField(fieldName));
+             ^
+channel/utils/HttpHeaderFields.h: In member function ‘void ApplicationInsights::core::HttpHeaderFields::SetField(const wstring&, const wstring&)’:
+channel/utils/HttpHeaderFields.h:56:17: error: ‘find’ is not a member of ‘std’
+     auto iter = std::find(m_Fields.cbegin(), m_Fields.cend(), HttpHeaderField(fieldName));
+                 ^
+channel/utils/HttpHeaderField.cpp: In member function ‘std::string ApplicationInsights::core::HttpHeaderField::ToString() const’:
+channel/utils/HttpHeaderField.cpp:29:2: error: ‘wstring_convert’ is not a member of ‘std’
+  std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+  ^
+channel/utils/HttpHeaderField.cpp:29:23: error: ‘codecvt_utf8’ is not a member of ‘std’
+  std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+                       ^
+channel/utils/HttpHeaderField.cpp:29:41: error: expected primary-expression before ‘wchar_t’
+  std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+                                         ^
+channel/utils/HttpHeaderField.cpp:29:41: error: expected ‘;’ before ‘wchar_t’
+channel/utils/HttpHeaderField.cpp:30:9: error: ‘converter’ was not declared in this scope
+  return converter.to_bytes(str);
+         ^
+channel/utils/HttpRequest.cpp:209:23: fatal error: curl/curl.h: No such file or directory
+ #include <curl/curl.h>
+                       ^
+compilation terminated.
+makefile:16: recipe for target 'appinsights.so' failed
+make: *** [appinsights.so] Error 1
