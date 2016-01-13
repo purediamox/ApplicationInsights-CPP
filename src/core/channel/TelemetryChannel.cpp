@@ -1,8 +1,8 @@
 #include "TelemetryChannel.h"
 #include "../TelemetryContext.h"
-#include "../Contracts/Contracts.h"
-#include "../Common/Utils.h"
-#include "../Common/StringWriter.h"
+#include "../contracts/Contracts.h"
+#include "../common/Utils.h"
+#include "../common/StringWriter.h"
 #include <stdlib.h> 
 #include <time.h>
 #include <locale>

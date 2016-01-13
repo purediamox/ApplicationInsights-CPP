@@ -5,9 +5,9 @@
 #include <list>
 #include "../TelemetryClientConfig.h"
 #include "../TelemetryContext.h"
-#include "../Contracts/Contracts.h"
-#include "../Common/Common.h"
-#include "Utils/HttpRequest.h"
+#include "../contracts/Contracts.h"
+#include "../common/Common.h"
+#include "utils/HttpRequest.h"
 
 #ifdef WINAPI_FAMILY_PARTITION
 #if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Windows phone or store

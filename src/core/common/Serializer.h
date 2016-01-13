@@ -3,7 +3,7 @@
 
 #include <stack>
 #include <string>
-#include "../Common/Common.h"
+#include "../common/Common.h"
 
 namespace ApplicationInsights
 {

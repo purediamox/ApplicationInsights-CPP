@@ -1,10 +1,10 @@
 #ifndef TELEMETRYCLIENT_H
 #define TELEMETRYCLIENT_H
 
-#include "Contracts/Contracts.h"
+#include "contracts/Contracts.h"
 #include "TelemetryClientConfig.h"
 #include "TelemetryContext.h"
-#include "Channel/TelemetryChannel.h"
+#include "channel/TelemetryChannel.h"
 #include <string>
 #include <map>
 #include <ctime>

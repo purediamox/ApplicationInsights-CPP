@@ -1,7 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include "../Common/Common.h"
+#include "../common/Common.h"  // TODO: any reason this isnt just "Common.h"
 #include <string>
 
 #define _ARRAY_SIZE(_array)  (sizeof(_array) / sizeof(_array[0]))

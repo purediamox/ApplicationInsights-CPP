@@ -4,8 +4,8 @@
 #include "BaseTelemetryContext.h"
 #include <string>
 #include "TelemetryClientConfig.h"
-#include "Contracts/Contracts.h"
-#include "Common/Common.h"
+#include "contracts/Contracts.h"
+#include "common/Common.h"
 
 namespace ApplicationInsights
 {
