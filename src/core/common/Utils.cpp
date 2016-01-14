@@ -1,3 +1,11 @@
+#ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
+//#define  _USE_CODECVT
+#endif
+
+#ifndef _USE_CODECVT
+#define _CRT_SECURE_NO_WARNINGS  // for testing on Visual C, need to disable secure string library warnings
+#endif 
+
 #include "Utils.h"
 #include <time.h>
 #include <sys/timeb.h>
@@ -5,7 +13,13 @@
 #include <stdint.h>
 #include <random>
 #include <functional>
+
 #include <string.h>
+
+
+#ifdef _USE_CODECVT
+#include <codecvt>    // codecvt not available on GCC yet
+#endif
 
 using namespace ApplicationInsights::core;
 
@@ -17,6 +31,7 @@ using namespace Windows::Foundation;
 using namespace Windows::Storage;
 #endif
 #endif
+
 
 /// <summary>
 /// Gets the current date time.
@@ -149,3 +164,42 @@ Windows::Foundation::Collections::IPropertySet^ Utils::GetLocalSettingsContainer
 }
 #endif
 #endif
+
+#ifdef _USE_CODECVT
+std::string Utils::ConvertToUtf8(const std::wstring& str)
+{
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+	return converter.to_bytes(str);
+}
+
+
+std::wstring Utils::ConvertToUtf16(const std::string& str)
+{
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+	return converter.from_bytes(str);
+}
+
+#else  // Non-CodeCVT versions. NB - this is not strictly correct as we are subject to current locale in the UTF-8 version, but it should
+      // be good enough in most cases. 
+std::string Utils::ConvertToUtf8(const std::wstring& str)
+{
+	std::string result;
+	
+	int len = wcstombs(NULL, &str[0], str.length());
+	result.resize(len);
+	wcstombs(&result[0], &str[0], str.length());
+	return result;
+}
+
+
+std::wstring Utils::ConvertToUtf16(const std::string& str)
+{
+	std::wstring result;
+	int len = mbstowcs(NULL, &str[0], str.length());
+	result.resize(len);		
+	mbstowcs(&result[0], &str[0], str.length());
+	return result;
+}
+
+#endif
+

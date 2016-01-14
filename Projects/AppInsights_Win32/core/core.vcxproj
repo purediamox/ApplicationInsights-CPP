@@ -222,6 +222,7 @@
     <ClCompile Include="..\..\..\src\core\contracts\StackFrame.cpp" />
     <ClCompile Include="..\..\..\src\core\contracts\User.cpp" />
     <ClCompile Include="..\..\..\src\core\TelemetryClient.cpp" />
+    <ClCompile Include="..\..\..\src\core\TelemetryContextOther.cpp" />
     <ClCompile Include="..\..\..\src\core\TelemetryContextWin32.cpp" />
     <ClCompile Include="..\..\..\src\core\TelemetryContextWinPhone.cpp" />
     <ClCompile Include="..\..\..\src\core\TelemetryContextWinStore.cpp" />

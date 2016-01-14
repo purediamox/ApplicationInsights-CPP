@@ -79,7 +79,11 @@ namespace ApplicationInsights
 			static Windows::Foundation::Collections::IPropertySet^ GetLocalSettingsContainer();
 #endif
 #endif
-		};
+			static std::string ConvertToUtf8(const std::wstring& str);
+
+			static std::wstring ConvertToUtf16(const std::string& str);
+
+		};  // class
 	}
 }
 #endif

@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <locale>
 #ifdef WINAPI_FAMILY_PARTITION
-#include <codecvt>    // codecvt not available on GCC yet
+#include <codecvt>    // codecvt not available on GCC yet - but the routines that use this not used on LINUX.
 #endif
 #include <vector>
 

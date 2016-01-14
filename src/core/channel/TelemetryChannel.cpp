@@ -9,7 +9,7 @@
 #include <algorithm>
 
 #ifdef WINAPI_FAMILY_PARTITION
-#include <codecvt>    // codecvt not available on GCC yet
+//#include <codecvt>    // codecvt not available on GCC yet
 #endif
 
 using namespace ApplicationInsights::core;
@@ -169,9 +169,9 @@ void TelemetryChannel::Send()
 		request.GetHeaderFields().SetField(L"Content-Type", L"application/json");
 		request.Send([this, in_progress_buffer](const HttpResponse &response) {
 #ifdef CPP_LIB_DEBUG
-			std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-			std::wstring wstrResp = converter.from_bytes(response.GetPayload());
-			
+			//std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+			//std::wstring wstrResp = converter.from_bytes(response.GetPayload());
+			std::wstring wstrResp = Utils::ConvertToUtf16(response.GetPayload());
 			std::wstring wstrOutput = L"RESPONSE :\r\n" + wstrResp;
 			Utils::WriteDebugLine(wstrOutput);
 #endif

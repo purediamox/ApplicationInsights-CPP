@@ -101,5 +101,6 @@
     <ClCompile Include="..\..\..\test\core\TestTelemetryClient.cpp" />
     <ClCompile Include="..\..\..\test\core\TestTelemetryClientConfig.cpp" />
     <ClCompile Include="..\..\..\test\core\TestTelemetryContext.cpp" />
+    <ClCompile Include="..\..\..\test\core\common\TestUtils.cpp" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 #include "HttpHeaderField.h"
+#include "..\..\common\Utils.h"
 #if defined(WINAPI_FAMILY_PARTITION)
 #include <codecvt>    // codecvt not available on GCC yet
 #endif
@@ -26,8 +27,10 @@ std::string HttpHeaderField::ToString() const
 	std::wstring str = m_strName + L": " + m_strValue;
 
 	// Return the ANSI version of the string we built
-	std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-	return converter.to_bytes(str);
+	//std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+	//return converter.to_bytes(str);
+
+	return Utils::ConvertToUtf8(str);
 }
 
 /// <summary>
