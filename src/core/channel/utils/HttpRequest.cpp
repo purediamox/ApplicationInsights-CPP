@@ -24,6 +24,8 @@ class HttpRequestImplBase {
 #if defined(WINAPI_FAMILY_PARTITION) // it's SOME kind of Windows
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) // Win32, no store, no phone
 #include <winhttp.h>
+#pragma comment (lib, "winhttp.lib")
+
 class HttpRequestImpl : public HttpRequestImplBase
 {
     private:
@@ -207,6 +209,7 @@ class HttpRequestImpl : public HttpRequestImplBase
 #endif
 #else // Everything else - OS X, Linux, Droid; use Curl
 #include <curl/curl.h>
+#pragma comment(lib, "c:\\dev\\libcurl\\lib\\libcurl.lib" )		// TODO remove explicit path... VS2015 doesn't seem to pick it up otherwise.
 
 static size_t curl_write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 {
@@ -253,7 +256,7 @@ class HttpRequestImpl : public HttpRequestImplBase
                 return res;
             }
             
-            std::string url = std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(L"https://" + req.GetHostname() + req.GetRequestUri());
+            std::string url = Utils::ConvertToUtf8(L"https://" + req.GetHostname() + req.GetRequestUri());
             
             curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
             if (req.GetMethod() == HTTP_REQUEST_METHOD::POST || req.GetMethod() == HTTP_REQUEST_METHOD::PUT) {
@@ -269,7 +272,7 @@ class HttpRequestImpl : public HttpRequestImplBase
                 headerlist = curl_slist_append(headerlist, field.ToString().c_str());
             });
             
-            std::string payload = std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(req.GetPayload());
+            std::string payload = Utils::ConvertToUtf8(req.GetPayload());
             std::string responseBuffer;
             
             curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);

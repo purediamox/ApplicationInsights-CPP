@@ -1,5 +1,5 @@
 #include "HttpHeaderField.h"
-#include "..\..\common\Utils.h"
+#include "../../common/Utils.h"
 #if defined(WINAPI_FAMILY_PARTITION)
 #include <codecvt>    // codecvt not available on GCC yet
 #endif
