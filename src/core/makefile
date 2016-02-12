@@ -1,15 +1,40 @@
-    EXE = appinsights.so
+    EXE = libappinsights.so
 
-    CPPFLAGS = -Iinclude -std=gnu++11 -shared
+    CPPFLAGS = -Iinclude -std=gnu++11 -shared -fPIC
     SRCS=TelemetryClient.cpp BaseTelemetryContext.cpp TelemetryContextOther.cpp \
 			common/JsonWriter.cpp common/StreamWriter.cpp common/StringWriter.cpp common/Utils.cpp \
+			common/Serializer.cpp \
 			channel/TelemetryChannel.cpp  \
 			channel/utils/HttpHeaderField.cpp channel/utils/HttpRequest.cpp channel/utils/HttpResponse.cpp \
-			contracts/Application.cpp contracts/CrashData.cpp contracts/CrashDataBinary.cpp contracts/CrashDataHeaders.cpp \
-			contracts/CrashDataThread.cpp contracts/CrashDataThreadFrame.cpp contracts/Data.cpp \
-			contracts/DataPoint.cpp contracts/Device.cpp contracts/Domain.cpp\
-			contracts/Envelope.cpp contracts/EventData.cpp contracts/ExceptionData.cpp
-			
+			contracts/Application.cpp \
+			contracts/Base.cpp \
+			contracts/CrashData.cpp \
+			contracts/CrashDataBinary.cpp \
+			contracts/CrashDataHeaders.cpp \
+			contracts/CrashDataThread.cpp \
+			contracts/CrashDataThreadFrame.cpp \
+			contracts/Data.cpp \
+			contracts/DataPoint.cpp \
+			contracts/Device.cpp \
+			contracts/Domain.cpp \
+			contracts/Envelope.cpp \
+			contracts/EventData.cpp \
+			contracts/ExceptionData.cpp \
+			contracts/ExceptionDetails.cpp \
+			contracts/Internal.cpp \
+			contracts/Location.cpp \
+			contracts/MessageData.cpp \
+			contracts/MetricData.cpp \
+			contracts/Operation.cpp \
+			contracts/PageViewData.cpp \
+			contracts/PageViewPerfData.cpp \
+			contracts/RemoteDependencyData.cpp \
+			contracts/RequestData.cpp \
+			contracts/Session.cpp \
+			contracts/SessionStateData.cpp \
+			contracts/StackFrame.cpp \
+			contracts/User.cpp
+						
     OBJS=$(SRCS:.cpp=.o)
         
 $(EXE): $(OBJS)

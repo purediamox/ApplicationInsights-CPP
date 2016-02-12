@@ -1,7 +1,7 @@
-// Sample.cpp : Defines the entry point for the console application.
+// sample.cpp : Defines the entry point for the console application.
 //
-
-#include "..\src\core\TelemetryClient.h"
+#include <iostream>
+#include "../src/core/TelemetryClient.h"
 
 using namespace ApplicationInsights::core;
 
@@ -11,13 +11,18 @@ using namespace ApplicationInsights::core;
 int main()
 {
 	std::wstring  key = INSTRUMENTATION_KEY;
-	
+
+	wprintf(L"instrumentation key %ls\n", key.c_str());  
+
 	TelemetryClient* pClient = new TelemetryClient(key);
-	
+	wprintf(L"Client created\n");
+
 	pClient->TrackEvent(L"MarkC Event");
-	
+	wprintf(L"TrackEvent\n");
+
 	pClient->Flush();
-	
+	wprintf(L"Flush\n");
+
 	delete pClient;
 	
 	

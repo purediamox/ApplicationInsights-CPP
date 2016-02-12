@@ -85,3 +85,4 @@ lib/
 ssl/
 .deps/
 *.o
+*.so
