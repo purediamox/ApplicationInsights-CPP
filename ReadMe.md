@@ -45,6 +45,25 @@ This SDK will run on Windows C++ - VS 2015 UAP projects
 	tc->TrackMetric(L"Test Metric", 5.03);
 	```
 
+###Building on Linux:###
+Instructions for building on Linux. 
+    - install libcurl package. (Linux version uses libcurl to handle communication to Azure)
+	- ./build.sh  builds a libappinsights.so and a sample.cpp which uses it.
+	- in order to run sample.cpp, need to ensure libappinsights.so can be found at runtime. One way to do this is
+	```shell
+		export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH
+	```
+	
+###Building on Win32:###
+Instructions for building on Windows:
+     - obtain and build libcurl for Windows. http://curl.haxx.se/libcurl/ does not provide a Windows build, so obtain the sources and build the SSPI variant
+	 - build the Win32 version of the source code. this currently creates a static .lib 
+
+
+
+ 	  
+
+
 
 ###APIs###
 ```cpp
