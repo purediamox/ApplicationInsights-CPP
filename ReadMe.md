@@ -46,7 +46,6 @@ This SDK will run on Windows C++ - VS 2015 UAP projects
 	```
 
 ###Building on Linux:###
-Instructions for building on Linux:
 1. Install libcurl package. (Linux version uses libcurl to handle communication to Azure
 2. ./build.sh  builds a libappinsights.so and a sample.cpp which uses it.
 3. In order to run sample.cpp, ensure libappinsights.so can be found at runtime. One way to do this is
@@ -55,7 +54,6 @@ Instructions for building on Linux:
 		```
 	
 ###Building on Win32:###
-Instructions for building on Windows:
 1. obtain and build libcurl for Windows. http://curl.haxx.se/libcurl/ does not provide a Windows build, so obtain the sources and build the SSPI variant
 2. build the Win32 version of the source code. this currently creates a static .lib 
 
