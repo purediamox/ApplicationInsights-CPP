@@ -46,8 +46,18 @@ void HttpResponse::SetPayload(std::string &payload)
 /// <summary>
 /// Gets the payload.
 /// </summary>
-/// <returns>sthe payload</returns>
+/// <returns>the payload</returns>
 const char *HttpResponse::GetPayload() const
 {
 	return m_payload.c_str();
+}
+
+
+/// <summary>
+/// Appends the specified buffer to the payload.
+/// Added to workaround an apparent issue with gcc.
+/// </summary>
+void HttpResponse::AppendPayload(const char* pValue, size_t length)
+{
+	m_payload.append(pValue, length);
 }

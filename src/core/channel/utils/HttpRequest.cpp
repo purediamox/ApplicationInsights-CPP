@@ -214,7 +214,9 @@ class HttpRequestImpl : public HttpRequestImplBase
 
 static size_t curl_write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 {
-    reinterpret_cast<std::string *>(stream)->append(reinterpret_cast<char *>(ptr), size * nmemb);
+	reinterpret_cast<HttpResponse*>(stream)->AppendPayload(reinterpret_cast<char *>(ptr), size * nmemb);
+	
+	//reinterpret_cast<std::string *>(stream)->append(reinterpret_cast<char *>(ptr), size * nmemb);
 	
 	std::string output;
 	output.append(reinterpret_cast<char *>(ptr), size * nmemb);
@@ -285,13 +287,12 @@ class HttpRequestImpl : public HttpRequestImplBase
             });
             
             std::string payload = Utils::ConvertToUtf8(req.GetPayload());
-            //std::string responseBuffer;
 			HttpResponse resp;
 
             curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
             curl_easy_setopt(curl, CURLOPT_POSTFIELDS, payload.c_str());
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_write_data);
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &resp.m_payload);
+            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &resp);
             
             if ((res = curl_easy_perform(curl)) != CURLE_OK) {
                 return res;
@@ -301,9 +302,6 @@ class HttpRequestImpl : public HttpRequestImplBase
             
             curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
             resp.SetErrorCode(http_code);
-            
-			//wprintf(L"%ls\n", Utils::ConvertToUtf16(responseBuffer).c_str());
-			//resp.SetPayload(responseBuffer);
             
             completionCallback(resp);
             return CURLE_OK;
