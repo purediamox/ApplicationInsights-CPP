@@ -46,13 +46,13 @@ This SDK will run on Windows C++ - VS 2015 UAP projects
 	```
 
 ###Building on Linux:###
-Instructions for building on Linux. 
+Instructions for building on Linux:
     - install libcurl package. (Linux version uses libcurl to handle communication to Azure)
 	- ./build.sh  builds a libappinsights.so and a sample.cpp which uses it.
 	- in order to run sample.cpp, need to ensure libappinsights.so can be found at runtime. One way to do this is
-	```shell
-		export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH
-	```
+	    ```shell
+		    export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH
+ 	    ```
 	
 ###Building on Win32:###
 Instructions for building on Windows:
