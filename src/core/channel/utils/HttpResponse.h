@@ -51,8 +51,10 @@ namespace ApplicationInsights
 			/// <returns>sthe payload</returns>
 			const char *GetPayload() const;
 
+
 		private:
 			int m_errorCode;
+		public:		 	
 			std::string m_payload;
 		};
 	}

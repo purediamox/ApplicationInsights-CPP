@@ -1,6 +1,10 @@
 #include "TelemetryContext.h"
-
 #ifndef WINAPI_FAMILY_PARTITION // Not Windows
+#include "common/Utils.h"
+
+#ifdef _LINUX_REAL
+#include <sys/utsname.h>		// this is only available on real Posix OS
+#endif
 
 using namespace ApplicationInsights::core;
 
@@ -21,6 +25,17 @@ TelemetryContext::~TelemetryContext()
 {
 }
 
+
+// Helper function for converting values of char * to Nullable<std::wstring>
+Nullable<std::wstring> GetNullableWString(const std::string& value)
+{
+	Nullable<std::wstring> ret;
+	std::wstring str = Utils::ConvertToUtf16(value);
+	wprintf(L"%ls\n", str.c_str());
+	ret.SetValue(str);
+	return ret;
+}
+
 /// <summary>
 /// Initializes the device.
 /// </summary>
@@ -34,16 +49,26 @@ void TelemetryContext::InitDevice()
 	//device.SetModel();
 	//device.SetNetwork();
 	//device.SetOemName();
-	Nullable<std::wstring> strOs;
-	strOs.SetValue(L"Windows");
-	device.SetOs(strOs);
-
-	//device.SetOsVersion();
-	//device.SetScreenResolution();
-
 	Nullable<std::wstring> strType;
 	strType.SetValue(L"Other");
 	device.SetType(strType);
+
+	std::string sysname = "sysname";   
+	std::string release = "release";
+	std::string machine = "machine";
+
+#ifdef _LINUX_REAL
+	struct utsname uts;
+	uname(&uts);
+	sysname = uts.sysname;
+	release = uts.release;
+	machine = uts.machine;
+#endif
+	device.SetOsVersion(GetNullableWString(sysname + " " + release));
+	device.SetType(GetNullableWString(machine));
+	//device.SetOsVersion();
+	//device.SetScreenResolution();
+
 }
 
 /// <summary>

@@ -16,9 +16,8 @@
 
 #include <string.h>
 
-
 #ifdef _USE_CODECVT
-#include <codecvt>    // codecvt not available on GCC yet
+#include <codecvt>    // not all codecvt is available on GCC yet
 #endif
 
 using namespace ApplicationInsights::core;
@@ -40,7 +39,7 @@ using namespace Windows::Storage;
 std::wstring Utils::GetCurrentDateTime() {
 	struct tm newtime;
 	time_t now;
-	int milli;
+	int milli = 0;							
 	wchar_t date[80] = {0};
 
 #if _WIN32 || WINAPI_FAMILY
@@ -50,18 +49,18 @@ std::wstring Utils::GetCurrentDateTime() {
 	now = timebuffer.time;
 	milli = timebuffer.millitm;
 	
-	errno_t err = gmtime_s(&newtime, &now);
+	errno_t err = gmtime_s(&newtime, &now);			
 	if (err)
 #else
-    now = time(nullptr);
+    now = time(nullptr);                       // TODO - check this is working for Linux properly
     if (!gmtime_r(reinterpret_cast<time_t *>(&now), &newtime))
 #endif
 	{
 		return L"";
 	}
 
-	wcsftime(date, _ARRAY_SIZE(date), L"%Y-%m-%dT%H:%M:%S", &newtime);
-    return std::wstring(date) + L"." + std::to_wstring(milli) + L"Z";
+	wcsftime(date, _ARRAY_SIZE(date), L"%Y-%m-%dT%H:%M:%S", &newtime);  
+    return std::wstring(date) + L"." + std::to_wstring(milli) + L"Z";    
 }
 
 /// <summary>
@@ -125,7 +124,7 @@ void Utils::WriteDebugLine(const std::wstring &output)
 #ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
 	OutputDebugString((L"\r\nAPPLICATION INSIGHTS : \r\n" + output).c_str());
 #else
-	UNUSED(output);
+	wprintf(L"\r\nAPPLICATION INSIGHTS:\r\n%ls\n", output.c_str());
 #endif
 #endif
 }

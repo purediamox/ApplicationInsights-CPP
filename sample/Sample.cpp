@@ -20,6 +20,9 @@ int main()
 	pClient->TrackEvent(L"MarkC Event");
 	wprintf(L"TrackEvent\n");
 
+	pClient->TrackMetric(L"MarkC Metric", 3.14);
+	wprintf(L"TrackMetric\n");
+
 	pClient->Flush();
 	wprintf(L"Flush\n");
 

@@ -11,8 +11,9 @@ using namespace ApplicationInsights::core;
 
 class HttpRequestImplBase { 
     public:
-        HttpRequestImplBase() {}
-        virtual void Init() = 0;
+		HttpRequestImplBase() {}
+		virtual ~HttpRequestImplBase() {}
+		virtual void Init() = 0;
         virtual void Destroy() = 0;
         virtual int Send(const HttpRequest &req, const std::function<void(const HttpResponse &resp)> &completionCallback) = 0;
 };
@@ -214,7 +215,12 @@ class HttpRequestImpl : public HttpRequestImplBase
 static size_t curl_write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 {
     reinterpret_cast<std::string *>(stream)->append(reinterpret_cast<char *>(ptr), size * nmemb);
-    return size * nmemb;
+	
+	std::string output;
+	output.append(reinterpret_cast<char *>(ptr), size * nmemb);
+
+	//wprintf(L"CURL_WRITE_DATA=%ls\n", Utils::ConvertToUtf16(output).c_str());
+	return size * nmemb;
 }
 
 class HttpRequestImpl : public HttpRequestImplBase
@@ -248,9 +254,15 @@ class HttpRequestImpl : public HttpRequestImplBase
         {
             curl_easy_cleanup(curl);
         }
-        virtual int Send(const HttpRequest &req, const std::function<void(const HttpResponse &resp)> &completionCallback)
+
+		virtual ~HttpRequestImpl()		// gcc gives a warning that we need a virtual destructor
+		{
+		}
+
+		virtual int Send(const HttpRequest &req, const std::function<void(const HttpResponse &resp)> &completionCallback)
         {
-            CURLcode res = CURLE_FAILED_INIT;
+			wprintf(L"HtmlRequestImpl::Send()\n");
+			CURLcode res = CURLE_FAILED_INIT;
             
 			if (curl == nullptr) {
                 return res;
@@ -273,27 +285,31 @@ class HttpRequestImpl : public HttpRequestImplBase
             });
             
             std::string payload = Utils::ConvertToUtf8(req.GetPayload());
-            std::string responseBuffer;
-            
+            //std::string responseBuffer;
+			HttpResponse resp;
+
             curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
             curl_easy_setopt(curl, CURLOPT_POSTFIELDS, payload.c_str());
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_write_data);
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &responseBuffer);
+            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &resp.m_payload);
             
             if ((res = curl_easy_perform(curl)) != CURLE_OK) {
                 return res;
             }
             
             int http_code = 0;
-            HttpResponse resp;
             
             curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
             resp.SetErrorCode(http_code);
-            resp.SetPayload(responseBuffer);
+            
+			//wprintf(L"%ls\n", Utils::ConvertToUtf16(responseBuffer).c_str());
+			//resp.SetPayload(responseBuffer);
             
             completionCallback(resp);
             return CURLE_OK;
         }
+
+
 };
 bool HttpRequestImpl::didGlobalInit = false;
 #endif
