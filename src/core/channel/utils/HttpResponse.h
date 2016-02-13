@@ -43,7 +43,7 @@ namespace ApplicationInsights
 			/// Sets the payload.
 			/// </summary>
 			/// <param name="payload">The payload.</param>
-			void SetPayload(std::string payload);
+			void SetPayload(std::string& payload);
 
 			/// <summary>
 			/// Gets the payload.

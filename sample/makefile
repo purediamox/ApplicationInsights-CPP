@@ -1,13 +1,13 @@
 #makefile for sample.cpp
     EXE = sample
 
-    CPPFLAGS = -Iinclude -std=gnu++11 -fPIC  -L./../src/core/ 
+    CPPFLAGS = -Iinclude -std=gnu++11 -fPIC -g  -L./../src/core/ 
     SRCS=sample.cpp
 			
     OBJS=$(SRCS:.cpp=.o)
         
 $(EXE): $(OBJS)
-	g++ $(CPPFLAGS) -o $@  $(OBJS)  -lappinsights -lcurl
+	g++ $(CPPFLAGS) -o $@  $(OBJS)  -lappinsights -lcurl 
         
 depend: cd 
 	makedepend -- $(CPPFLAGS) -- $(SRCS)

@@ -1,6 +1,6 @@
     EXE = libappinsights.so
 
-    CPPFLAGS = -Iinclude -std=gnu++11 -shared -fPIC
+    CPPFLAGS = -Iinclude -std=gnu++11 -shared -fPIC -g
     SRCS=TelemetryClient.cpp BaseTelemetryContext.cpp TelemetryContextOther.cpp \
 			common/JsonWriter.cpp common/StreamWriter.cpp common/StringWriter.cpp common/Utils.cpp \
 			common/Serializer.cpp \

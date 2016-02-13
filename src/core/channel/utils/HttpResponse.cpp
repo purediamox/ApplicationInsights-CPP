@@ -38,7 +38,7 @@ int HttpResponse::GetErrorCode() const
 /// Sets the payload.
 /// </summary>
 /// <param name="payload">The payload.</param>
-void HttpResponse::SetPayload(std::string payload)
+void HttpResponse::SetPayload(std::string &payload)
 {
     m_payload = payload;
 }
