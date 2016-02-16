@@ -125,12 +125,19 @@ void TelemetryClient::TrackTrace(const std::wstring& message, const wstring_wstr
 	Track(telemetry);
 }
 
+
+void TelemetryClient::TrackMetric(const std::wstring& name, const double& value)
+{
+	wstring_wstring_map properties;
+	TrackMetric(name, value, properties);
+}
+
 /// <summary>
 /// Tracks the metric.
 /// </summary>
 /// <param name="name">The name.</param>
 /// <param name="value">The value.</param>
-void TelemetryClient::TrackMetric(const std::wstring& name, const double& value)
+void TelemetryClient::TrackMetric(const std::wstring& name, const double& value, const wstring_wstring_map& properties)
 {
 	MetricData telemetry;
 	DataPoint data;
@@ -144,8 +151,14 @@ void TelemetryClient::TrackMetric(const std::wstring& name, const double& value)
 	metricsList.push_back(&data);
 
 	telemetry.SetMetrics(metricsList);
+	if (properties.size() > 0)
+	{
+		telemetry.SetProperties(properties);
+	}
+
 	Track(telemetry);
 }
+
 
 /// <summary>
 /// Tracks the page view.

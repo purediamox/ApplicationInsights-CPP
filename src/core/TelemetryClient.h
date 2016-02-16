@@ -74,6 +74,16 @@ namespace ApplicationInsights
 			/// <param name="properties">The properties.</param>
 			void TrackTrace(const std::wstring& message, const wstring_wstring_map& properties);
 
+
+			/// <summary>
+			/// Tracks the metric.
+			/// </summary>
+			/// <param name="name">The name.</param>
+			/// <param name="value">The value.</param>
+			/// <param name="properties">The properties.</param>
+			void TrackMetric(const std::wstring& name, const double& value, const wstring_wstring_map& properties);
+
+
 			/// <summary>
 			/// Tracks the metric.
 			/// </summary>
