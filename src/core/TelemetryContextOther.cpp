@@ -2,7 +2,7 @@
 #ifndef WINAPI_FAMILY_PARTITION // Not Windows
 #include "common/Utils.h"
 
-#ifdef _LINUX_REAL
+#ifdef linux			// real linux
 #include <sys/utsname.h>		// this is only available on real Posix OS
 #endif
 
@@ -57,7 +57,7 @@ void TelemetryContext::InitDevice()
 	std::string release = "release";
 	std::string machine = "machine";
 
-#ifdef _LINUX_REAL
+#ifdef linux
 	struct utsname uts;
 	uname(&uts);
 	sysname = uts.sysname;
