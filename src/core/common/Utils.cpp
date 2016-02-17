@@ -1,9 +1,11 @@
 #ifdef WINAPI_FAMILY_PARTITION // it's SOME kind of Windows
-//#define  _USE_CODECVT
+#define  _USE_CODECVT
 #endif
 
 #ifndef _USE_CODECVT
-#define _CRT_SECURE_NO_WARNINGS  // for testing on Visual C, need to disable secure string library warnings
+#define _CRT_SECURE_NO_WARNINGS  // Use of non-secure string functions in UTF-8/16 conversion functions, 
+								// so turn off to prevent warnings when compiling Linux variant under Windows 
+								// needs to come before standard C headers
 #endif 
 
 #include "Utils.h"
@@ -178,8 +180,9 @@ std::wstring Utils::ConvertToUtf16(const std::string& str)
 	return converter.from_bytes(str);
 }
 
-#else  // Non-CodeCVT versions. NB - this is not strictly correct as we are subject to current locale in the UTF-8 version, but it should
-      // be good enough in most cases. 
+#else
+// Non-CodeCVT versions. NB - this is not strictly correct as we are subject to current locale in the UTF-8 version, but it should
+// be good enough in most cases. Consider using custom code or library such as iconv 
 std::string Utils::ConvertToUtf8(const std::wstring& str)
 {
 	std::string result;
