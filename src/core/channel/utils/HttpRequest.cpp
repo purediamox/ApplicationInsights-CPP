@@ -210,13 +210,10 @@ class HttpRequestImpl : public HttpRequestImplBase
 #endif
 #else // Everything else - OS X, Linux, Droid; use Curl
 #include <curl/curl.h>
-#pragma comment(lib, "c:\\dev\\libcurl\\lib\\libcurl.lib" )		// TODO remove explicit path... VS2015 doesn't seem to pick it up otherwise.
 
 static size_t curl_write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 {
 	reinterpret_cast<HttpResponse*>(stream)->AppendPayload(reinterpret_cast<char *>(ptr), size * nmemb);
-	
-	//reinterpret_cast<std::string *>(stream)->append(reinterpret_cast<char *>(ptr), size * nmemb);
 	
 	std::string output;
 	output.append(reinterpret_cast<char *>(ptr), size * nmemb);

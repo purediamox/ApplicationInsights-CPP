@@ -59,7 +59,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Linux|Win32'">
     <IncludePath>$(ProjectDir)\..\..\include;$(LIBCURL_HOME)\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\..\..\lib\win32;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(LIBCURL_HOME)\lib;$(ProjectDir)\..\..\lib\win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(ProjectDir)\..\..\include;$(LIBCURL_HOME)\include;$(IncludePath)</IncludePath>
@@ -103,7 +103,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);libcurl.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(LIBCURL_HOME)/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
     <PreBuildEvent />

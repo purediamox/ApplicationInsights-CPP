@@ -30,7 +30,7 @@ int main()
 	pClient->TrackMetric(L"AppInsightsCPP Metric", 3.14);
 	wprintf(L"TrackMetric\n");
 
-	pClient->TrackMetric(L"AppInsightsCPP Metric Prop", 2.71, properties);  // TODO Base implementation doesn't have properties
+	pClient->TrackMetric(L"AppInsightsCPP Metric Prop", 2.71, properties);  
 	wprintf(L"TrackMetric with Properties\n");
 
 
